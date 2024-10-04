@@ -3,16 +3,33 @@ import { Inter } from "next/font/google";
 import {
   ApolloClient,
   InMemoryCache,
-  ApolloProvider
+  ApolloProvider,
+  createHttpLink
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { ACCESS_TOKEN } from "@/shared/constants/storage";
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
 });
 
-const client = new ApolloClient({
+const httpLink = createHttpLink({
   uri: "https://dev.ntastic.site/graphql",
+});
+
+const authLink = setContext((_, { headers }) => {
+  const token = localStorage.getItem(ACCESS_TOKEN);
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  };
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache()
 });
 

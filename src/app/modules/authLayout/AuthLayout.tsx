@@ -1,6 +1,7 @@
 "use client";
 import { Box, styled } from '@mui/material';
-import React, { PropsWithChildren } from 'react';
+import { resolve } from 'path';
+import React, { PropsWithChildren, useEffect, useState } from 'react';
 
 const Main = styled('main')(({ }) => ({
     width: '100%',
@@ -15,6 +16,29 @@ const Main = styled('main')(({ }) => ({
 }));
 
 const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
+    const [backgroundImage, setBackgroundImage] = useState<string>("#ddd");
+
+    const fetchImageUrl = async (): Promise<string> => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve("url(/images/avstraliia-ozero-skala-northern-territory.jpg)");
+            }, 1000);
+        });
+    };
+
+    const loadBackgroundImage = async () => {
+        try {
+            const imgUrl = await fetchImageUrl();
+            setBackgroundImage(imgUrl);
+        } catch (error) {
+            console.error("Error loading background image:", error);
+        }
+    };
+
+    useEffect(() => {
+        loadBackgroundImage();
+    }, []);
+
     return (
         <Box
             className="h-screen w-screen"
@@ -31,7 +55,7 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
                     bottom: 0,
                     width: "100%",
                     wheight: "100%",
-                    backgroundImage: `url(/images/avstraliia-ozero-skala-northern-territory.jpg)`,
+                    backgroundImage: backgroundImage,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",

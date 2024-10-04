@@ -76,7 +76,7 @@ const PostAQuestion: React.FC = () => {
                 console.log("imageIds: ", imageIds);
             }
             const { data: createResponse } = await createQuestion(
-                { variables: { title: data.title, content: data.content, imageIds: imageIds } }
+                { variables: { title: data.title, content: data.content, tagIds: tags, imageIds: imageIds } }
             );
             if (createResponse) {
                 setSubmitStatus("Submit successfully!");
