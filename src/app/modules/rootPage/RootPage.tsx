@@ -6,7 +6,12 @@ import { ACCESS_TOKEN } from "@/shared/constants/storage";
 
 const RootPage: React.FC = () => {
     const router = useRouter();
-    const accessToken = typeof window !== "undefined" ? localStorage.getItem(ACCESS_TOKEN) : null;
+    const [accessToken, setAccessToken] = useState<string | null>(null);
+
+    useEffect(() => {
+        const accessToken = typeof window !== "undefined" ? localStorage.getItem(ACCESS_TOKEN) : null;
+        setAccessToken(accessToken);
+    }, []);
 
     useEffect(() => {
         if (accessToken) {

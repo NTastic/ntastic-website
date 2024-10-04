@@ -77,7 +77,7 @@ type RelatedQuestionValue = {
 
 const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     const router = useRouter();
-    const accessToken = typeof window !== "undefined" ? localStorage.getItem(ACCESS_TOKEN) : null;
+    const [accessToken, setAccessToken] = useState<string | null>(null);
     const tagIds = typeof window !== "undefined" ? localStorage.getItem(SELECTED_TAGS)?.split(";") : [];
     const [isAuth, setIsAuth] = useState<boolean>(false);
     let currentPage = 1;
@@ -121,6 +121,11 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
             skip: !question
         }
     );
+
+    useEffect(() => {
+        const accessToken = typeof window !== "undefined" ? localStorage.getItem(ACCESS_TOKEN) : null;
+        setAccessToken(accessToken);
+    }, []);
 
     useEffect(() => {
         setIsAuth(!!accessToken);
