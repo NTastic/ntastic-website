@@ -23,7 +23,8 @@ const AskQuestions: React.FC = () => {
             sx={{
                 width: "90%",
                 minHeight: "300px",
-                backgroundImage: "url(/images/uluru.jpg)",
+                backgroundColor: "rgba(153, 153, 255, 0.8)",
+                backgroundImage: "url(https://i.postimg.cc/JnxsqvLh/uluru.jpg)",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
@@ -31,6 +32,8 @@ const AskQuestions: React.FC = () => {
                 flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "space-around",
+                borderRadius: "16px",
+                overflowX: "hidden",
                 padding: 3,
                 mt: 2,
                 mb: 2
@@ -50,22 +53,29 @@ const AskQuestions: React.FC = () => {
                 Ask Qeustions to NTastic
             </Typography>
             <TextField
-                variant="outlined"
-                label="Ask Something"
-                placeholder="Which hot sauce from Coles or Woolies is the best?"
-                multiline
-                minRows={1}
-                maxRows={3}
-                onChange={handleTextFieldChange}
-                sx={{
-                    width: "80%",
-                    backgroundColor: "rgba(255, 255, 255, 0.6)",
-                    transition: "all 0.3s ease",
-                    "&:focus-within": {
-                        backgroundColor: "rgba(255, 255, 255, 0.9)",
-                    }
-                }}
-            />
+                    variant="outlined"
+                    label="Ask Something"
+                    placeholder="Which hot sauce from Coles or Woolies is the best?"
+                    multiline
+                    minRows={1}
+                    maxRows={3}
+                    onChange={handleTextFieldChange}
+                    sx={{
+                        width: "70%",
+                        borderRadius: "16px",
+                        border: "none",
+                        backgroundColor: "rgba(255, 255, 255, 0.6)",
+                        transition: "all 0.3s ease",
+                        "&:focus-within": {
+                            backgroundColor: "rgba(255, 255, 255, 0.9)",
+                        }
+                    }}
+                    InputProps={{
+                        sx: {
+                            borderRadius: "16px",
+                        }
+                    }}
+                />
             <Button
                 variant="contained"
                 sx={{

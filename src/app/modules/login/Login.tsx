@@ -100,14 +100,14 @@ const Login: React.FC = () => {
                     }}
                 >
                     <Avatar
-                        src="/images/NTastic_icon.svg"
-                        sx={{ width: "160px", height: "160px" }}
+                        src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+                        sx={{ width: "160px", height: "160px", objectFit: "cover", backgroundPosition: "center" }}
                     />
                     <Box
                         sx={{
                             height: "70px",
                             width: "120px",
-                            backgroundImage: "url(/images/slogan.png)",
+                            backgroundImage: "url(https://i.postimg.cc/c4HnDx6G/slogan.png)",
                             backgroundSize: "cover",
                             backgroundRepeat: "no-repeat"
                         }}

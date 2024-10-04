@@ -1,4 +1,5 @@
 "use client";
+import React, {useEffect} from "react";
 import { Inter } from "next/font/google";
 import {
   ApolloClient,
@@ -7,7 +8,8 @@ import {
   createHttpLink
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { ACCESS_TOKEN } from "@/shared/constants/storage";
+import { ACCESS_TOKEN, IS_SM } from "@/shared/constants/storage";
+import { useTheme, useMediaQuery } from "@mui/material";
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,10 +36,17 @@ const client = new ApolloClient({
 });
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")) ? "true" : "false";
+
+  useEffect(() => {
+      localStorage.setItem(IS_SM, isSmallScreen);
+  }, [isSmallScreen]);
+
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/images/NTastic_icon.svg" type="image/x-icon"/>
+        <link rel="icon" href="https://i.postimg.cc/mkryN7K0/NTastic-icon.png" type="image/x-icon"/>
       </head>
       <body
         className={`${inter.variable} font-sans subpixel-antialiased`}

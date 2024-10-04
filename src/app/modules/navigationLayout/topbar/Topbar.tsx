@@ -75,10 +75,14 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
                             flexDirection: "row",
                             alignItems: "center",
                             backgroundColor: "transparent",
-                            border: "none"
+                            border: "none",
+                            gap: 1
                         }}
                     >
-                        <Avatar src="/images/NTastic_icon.svg" style={{ width: '56px', height: '56px' }} />
+                        <Avatar
+                            src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+                            style={{ width: '50px', height: '50px', objectFit: "cover", backgroundPosition: "center" }}
+                        />
                         <Typography
                             variant='h6'
                             component='div'

@@ -170,8 +170,6 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 width: "90%",
                 minWidth: 350,
                 maxWidth: 800,
-                height: "100%",
-                overflow: "auto",
                 display: "flex",
                 flexDirection: "column",
                 padding: 3,

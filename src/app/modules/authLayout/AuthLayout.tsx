@@ -16,12 +16,12 @@ const Main = styled('main')(({ }) => ({
 }));
 
 const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
-    const [backgroundImage, setBackgroundImage] = useState<string>("#ddd");
+    const [backgroundImage, setBackgroundImage] = useState<string | null>(null);
 
     const fetchImageUrl = async (): Promise<string> => {
         return new Promise((resolve) => {
             setTimeout(() => {
-                resolve("url(/images/avstraliia-ozero-skala-northern-territory.jpg)");
+                resolve("url(https://i.postimg.cc/NGNy23DJ/avstraliia-ozero-skala-northern-territory.jpg)");
             }, 1000);
         });
     };
@@ -55,6 +55,7 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
                     bottom: 0,
                     width: "100%",
                     wheight: "100%",
+                    backgroundColor: "rgba(241, 90, 34, 0.5)",
                     backgroundImage: backgroundImage,
                     backgroundSize: "cover",
                     backgroundPosition: "center",

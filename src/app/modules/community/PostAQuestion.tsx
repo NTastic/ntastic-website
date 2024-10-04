@@ -191,7 +191,7 @@ const PostAQuestion: React.FC = () => {
                         variant="outlined"
                         onClick={triggerFileInput}
                         startIcon={<UploadIcon />}
-                        sx={{ borderRadius: "8px", textTransform: "none" }}
+                        sx={{ borderRadius: "16px", textTransform: "none" }}
                     >
                         Upload Images
                     </Button>
@@ -200,7 +200,7 @@ const PostAQuestion: React.FC = () => {
                         sx={{
                             width: "60%",
                             borderRadius: "16px",
-                            backgroundColor: "#ccc",
+                            backgroundColor: tags.length > 0 ? "primary" : "#ccc",
                             textTransform: "none",
                             color: "#333",
                             transition: "all 0.5s ease",

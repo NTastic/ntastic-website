@@ -17,7 +17,7 @@ const RootPage: React.FC = () => {
         if (accessToken) {
             router.push(RouteConfig.Community.Path);
         } else {
-            router.push(RouteConfig.Login.Path);
+            router.push(RouteConfig.Community.Path);
         }
     }, [accessToken]);
 

@@ -175,14 +175,14 @@ export default function PostAnAnswer(
                         variant="outlined"
                         onClick={triggerFileInput}
                         startIcon={<UploadIcon />}
-                        sx={{ borderRadius: "8px", textTransform: "none" }}
+                        sx={{ borderRadius: "16px", textTransform: "none" }}
                     >
                         Upload Images
                     </Button>
                     <Button
                         onClick={handleSubmit}
                         variant="contained"
-                        sx={{ borderRadius: "8px", textTransform: "none" }}
+                        sx={{ borderRadius: "16px", textTransform: "none" }}
                     >
                         Submit
                     </Button>

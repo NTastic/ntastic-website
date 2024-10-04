@@ -29,8 +29,6 @@ const CommunityModule: React.FC = () => {
                 width: "95%",
                 minWidth: 350,
                 maxWidth: 800,
-                height: "100%",
-                overflow: "auto",
                 display: "flex",
                 flexDirection: "column",
                 padding: 1,
