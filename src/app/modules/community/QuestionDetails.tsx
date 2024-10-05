@@ -18,6 +18,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { ACCESS_TOKEN, SELECTED_TAGS } from "@/shared/constants/storage";
 import { RouteConfig } from "@/routes/route";
 import PostAnAnswer from "./PostAnAnswer";
+import ReactMarkdown from "react-markdown";
 
 type QuestionValue = {
     id: string;
@@ -250,7 +251,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                             </Typography>
                         </Box>
                         <Typography variant="body1">
-                            {item.content}
+                            <ReactMarkdown>{item.content}</ReactMarkdown>
                         </Typography>
                         <Box display="flex" gap={2}>
                             <Button
@@ -321,7 +322,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                                 </Typography>
                             </Box>
                             <Typography variant="body1">
-                                {truncateContent(item.content)}
+                                <ReactMarkdown>{truncateContent(item.content)}</ReactMarkdown>
                             </Typography>
                             <Box display="flex" gap={2}>
                                 <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
