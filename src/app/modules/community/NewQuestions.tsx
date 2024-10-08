@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { RouteConfig } from "@/routes/route";
 
 interface NewQuestionsProps {
-    selectedTags: string[];
+    selectedTag: string;
 };
 
 type QuestionValue = {
@@ -34,15 +34,16 @@ type QuestionValue = {
     };
 };
 
-const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTags }) => {
+const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
     const router = useRouter();
+    const [tagIds, setTagIds] = useState<string[]>([]);
     const [questions, setQuestions] = useState<QuestionValue[]>([]);
 
     const { data: questionData } = useQuery(
         GET_QUESTIONS,
         {
             variables: {
-                tagIds: selectedTags,
+                tagIds: tagIds,
                 pageOptions: {
                     limit: 10,
                     sortField: "updatedAt",
@@ -62,10 +63,18 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTags }) => {
     }
 
     useEffect(() => {
+        if (selectedTag === "") {
+            setTagIds([]);
+        } else {
+            setTagIds([selectedTag]);
+        }
+    }, [selectedTag]);
+
+    useEffect(() => {
         if (questionData) {
             setQuestions(questionData?.getQuestions.items || [])
         }
-    }, [selectedTags, questionData]);
+    }, [selectedTag, questionData]);
 
     return (
         <Box

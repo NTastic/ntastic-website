@@ -4,20 +4,16 @@ import { Inter } from "next/font/google";
 import {
   ApolloClient,
   InMemoryCache,
-  ApolloProvider,
-  createHttpLink
+  ApolloProvider
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { ACCESS_TOKEN, IS_SM } from "@/shared/constants/storage";
 import { useTheme, useMediaQuery } from "@mui/material";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
-});
-
-const httpLink = createHttpLink({
-  uri: "https://dev.ntastic.site/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -30,8 +26,12 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+const uploadLink = createUploadLink({
+  uri: "https://dev.ntastic.site/graphql",
+});
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink),
+  link: authLink.concat(uploadLink),
   cache: new InMemoryCache()
 });
 

@@ -39,7 +39,7 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
         } else {
             setAuth(false);
         }
-    }, [accessToken]);
+    }, [accessToken, auth]);
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -50,6 +50,7 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
     const handleLogOut = () => {
         localStorage.removeItem(ACCESS_TOKEN);
         localStorage.removeItem(USER_ID);
+        window.location.reload();
     };
 
     return (

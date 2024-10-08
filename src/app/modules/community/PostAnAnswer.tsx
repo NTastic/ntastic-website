@@ -20,13 +20,15 @@ interface PostAnAnswerProps {
     open: boolean;
     questionId: string;
     handleCloseAnswerDialog: () => void;
+    refetchAnswer: () => void;
 };
 
 export default function PostAnAnswer(
     {
         open,
         questionId,
-        handleCloseAnswerDialog
+        handleCloseAnswerDialog,
+        refetchAnswer
     }: PostAnAnswerProps
 ) {
     const [answerContent, setAnswerContent] = useState<string | null>(null);
@@ -62,22 +64,36 @@ export default function PostAnAnswer(
         }
 
         try {
-            if (selectedFiles) {
+            if (selectedFiles.length) {
                 for (const file of selectedFiles) {
-                    const { data: uploadResponse } = await uploadImage({ variables: { file: file } });
-                    imageIds.push(uploadResponse.uploadImage.id);
+                    const { data: uploadResponse } = await uploadImage({
+                        variables: { file: file }
+                    });
+
+                    if (uploadResponse && uploadResponse.uploadImage) {
+                        imageIds.push(uploadResponse.uploadImage.id);
+                    } else {
+                        setSubmitError("Image upload failed.");
+                        return;
+                    }
                 }
-                console.log("imageIds: ", imageIds);
             }
+
             const { data: createResponse } = await createAnswer(
                 { variables: { questionId: questionId, content: answerContent, imageIds: imageIds } }
             );
+
             if (createResponse) {
                 setSubmitStatus("Submit successfully!");
+                setAnswerContent(null);
+                setSelectedFiles([]);
                 setTimeout(() => handleCloseAnswerDialog(), 1000);
             }
         } catch (err) {
             setSubmitError((err as Error).message);
+        } finally {
+            setSubmitStatus(null);
+            refetchAnswer();
         }
     };
 
@@ -157,7 +173,7 @@ export default function PostAnAnswer(
                     type="file"
                     multiple
                     onChange={handleFilesChange}
-                    accept="image/*"
+                    accept="*"
                     ref={fileInputRef}
                     style={{ display: "none" }}
                 />

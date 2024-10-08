@@ -113,3 +113,15 @@ export const CREATE_QUESTION = gql`
         }
     }
 `;
+
+export const VOTE = gql`
+    mutation Vote($targetId: ID!, $targetType: TargetType!, $voteType: VoteType!) {
+        vote(targetId: $targetId, targetType: $targetType, voteType: $voteType) {
+            success
+            voteCount {
+                upvotes
+                downvotes
+            }
+        }
+    }
+`;

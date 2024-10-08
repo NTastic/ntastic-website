@@ -39,12 +39,12 @@ type TagValue = {
 };
 
 interface GetAllTagsProps {
-    selectedTags: string[];
-    handleSelectTags: (id: string | null, append: boolean) => void;
+    selectedTag: string;
+    handleSelectTag: (id: string | null) => void;
 };
 
 const GetAllTags: React.FC<GetAllTagsProps> = ({
-    selectedTags, handleSelectTags
+    selectedTag, handleSelectTag
 }) => {
     const { data: tagData } = useQuery(
         GET_TAGS,
@@ -60,7 +60,7 @@ const GetAllTags: React.FC<GetAllTagsProps> = ({
     const tagList = tagData?.getTags || [];
 
     const isTagSelected = (tagId: string) => {
-        return selectedTags?.includes(tagId);
+        return selectedTag === tagId;
     };
 
     return (
@@ -83,8 +83,8 @@ const GetAllTags: React.FC<GetAllTagsProps> = ({
                 {tagList.length > 0 && (
                     <Button
                         variant="contained"
-                        sx={selectedTags.length > 0 ? buttonStyle : selectedButtonStyle}
-                        onClick={() => handleSelectTags(null, true)}
+                        sx={selectedTag !== "" ? buttonStyle : selectedButtonStyle}
+                        onClick={() => handleSelectTag(null)}
                     >
                         All
                     </Button>
@@ -94,7 +94,7 @@ const GetAllTags: React.FC<GetAllTagsProps> = ({
                         key={item.id}
                         variant="contained"
                         sx={isTagSelected(item.id) ? selectedButtonStyle : buttonStyle}
-                        onClick={() => handleSelectTags(item.id, isTagSelected(item.id) ? false : true)}
+                        onClick={() => handleSelectTag(item.id)}
                     >
                         {item.name}
                     </Button>

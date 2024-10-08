@@ -123,7 +123,7 @@ export default function SelectTags(
                     }}
                     onClick={handleCloseTagsSelection}
                 >
-                    <p>TAG THE QUESTION</p>
+                    <Typography>TAG THE QUESTION</Typography>
                     <ChevronRight sx={{ width: "30px", height: "30px" }} />
                 </Button>
             </DialogContent>

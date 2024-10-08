@@ -4,24 +4,22 @@ import { Box } from "@mui/material";
 import AskQuestions from "@/app/modules/community/AskQuestions";
 import GetAllTags from "@/app/modules/community/GetAllTags";
 import NewQuestions from "@/app/modules/community/NewQuestions";
-import { SELECTED_TAGS } from "@/shared/constants/storage";
+import { SELECTED_TAG } from "@/shared/constants/storage";
 
 const CommunityModule: React.FC = () => {
-    const [selectedTags, setSelectedTags] = useState<string[]>([]);
+    const [selectedTag, setSelectedTag] = useState<string>("");
 
-    const handleSelectTags = (id: string | null, append: boolean) => {
+    const handleSelectTag = (id: string | null) => {
         if (id === null) {
-            setSelectedTags([]);
-        } else if (append) {
-            setSelectedTags((prevList) => [...prevList, id]);
+            setSelectedTag("");
         } else {
-            setSelectedTags((prevList) => prevList.filter((item) => item !== id));
+            setSelectedTag(id);
         }
     };
 
     useEffect(() => {
-        localStorage.setItem(SELECTED_TAGS, selectedTags.join(";"));
-    }, [selectedTags]);
+        localStorage.setItem(SELECTED_TAG, selectedTag);
+    }, [selectedTag]);
 
     return (
         <Box
@@ -40,9 +38,9 @@ const CommunityModule: React.FC = () => {
             {/* Ask Questions to NTastic */}
             <AskQuestions />
             {/* Get All tags */}
-            <GetAllTags selectedTags={selectedTags} handleSelectTags={handleSelectTags} />
+            <GetAllTags selectedTag={selectedTag} handleSelectTag={handleSelectTag} />
             {/* Get questions */}
-            <NewQuestions selectedTags={selectedTags} />
+            <NewQuestions selectedTag={selectedTag} />
         </Box>
     );
 };

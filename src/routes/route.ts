@@ -5,6 +5,13 @@ const Root = {
     Path: "/" as const
 };
 
+const Welcome = {
+    Metadata: {
+        title: "NTastic | Welcome"
+    },
+    Path: "/welcome" as const
+};
+
 const Login = {
     Metadata: {
         title: "NTastic | Login"
@@ -62,6 +69,7 @@ const PostAQuestion = {
 
 export const RouteConfig = {
     Root,
+    Welcome,
     Login,
     Register,
     RegisterQuestion1,
