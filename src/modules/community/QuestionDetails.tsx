@@ -393,9 +393,9 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                                     {item.author.username}
                                 </Typography>
                             </Box>
-                            <Typography variant="body1">
-                                <ReactMarkdown>{truncateContent(item.content)}</ReactMarkdown>
-                            </Typography>
+                            <ReactMarkdown>
+                                {truncateContent(item.content)}
+                            </ReactMarkdown>
                             <Box display="flex" gap={2}>
                                 <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
                                     {item.votes.upvotes} Agree

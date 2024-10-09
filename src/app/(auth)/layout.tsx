@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from "react";
-import AuthLayout from "@/app/modules/authLayout/AuthLayout";
+import AuthLayout from "@/modules/authLayout/AuthLayout";
 
 const AuthLayoutPage: React.FC<PropsWithChildren> = ({children}) => {
     return (

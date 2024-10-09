@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteConfig } from "@/routes/route";
-import Question2 from "@/app/modules/register/Question-2";
+import Question2 from "@/modules/register/Question-2";
 
 export const metadata = RouteConfig.RegisterQuestion2.Metadata;
 

@@ -1,8 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Box, styled } from "@mui/material";
-import Topbar from "@/app/modules/navigationLayout/topbar/Topbar";
-import Sidebar from "@/app/modules/navigationLayout/sidebar/Sidebar";
+import Topbar from "@/modules/navigationLayout/topbar/Topbar";
+import Sidebar from "@/modules/navigationLayout/sidebar/Sidebar";
 
 const Main = styled('main')(({ }) => ({
     width: "100%",

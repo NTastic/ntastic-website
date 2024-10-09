@@ -10,6 +10,9 @@ import SelectTags from "./SelectTags";
 import { UPLOAD_IMAGE, CREATE_QUESTION } from "@/graphql/qa";
 import { useMutation } from "@apollo/client";
 import UploadIcon from "@mui/icons-material/Upload";
+import { IS_LOADING } from "@/shared/constants/storage";
+import { SpinningHourglass } from "@/utils/animations";
+import { compressImage } from "@/utils/compressFile";
 
 type PostValues = {
     title: string;
@@ -17,10 +20,10 @@ type PostValues = {
 };
 
 const PostAQuestion: React.FC = () => {
+    const isLoading = typeof window !== "undefined" ? localStorage.getItem(IS_LOADING) === "true" || false : false;
     const router = useRouter();
     const postTitle = typeof window !== "undefined" ? localStorage.getItem(POST_TITLE) : "";
-    console.log("postTitle: ", postTitle);
-    const { register, getValues, handleSubmit } = useForm<PostValues>({
+    const { register, getValues, handleSubmit, reset: resetForm } = useForm<PostValues>({
         defaultValues: {
             title: postTitle || "",
             content: ""
@@ -28,6 +31,7 @@ const PostAQuestion: React.FC = () => {
     });
     const [tags, setTags] = useState<string[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const MAX_FILES = 6;
     const [openTagsSelection, setOpenTagsSelection] = useState<boolean>(false);
     const [submitStatus, setSubmitStatus] = useState<string | null>(null);
     const [submitError, setSubmitError] = useState<string | null>(null);
@@ -40,9 +44,14 @@ const PostAQuestion: React.FC = () => {
         fileInputRef.current?.click();
     };
 
-    const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(event.target.files || []);
-        setSelectedFiles(files);
+    const handleFilesChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files: File[] = Array.from(event.target.files || []);
+        if (files.length + selectedFiles.length > MAX_FILES) {
+            alert(`You can only upload a maximum of ${MAX_FILES} photos.`);
+            return;
+        }
+        const compressedFiles = await Promise.all(files.map(file => compressImage(file)));
+        setSelectedFiles(compressedFiles);
     };
 
     const handleSelectTag = (selectedTag: string) => {
@@ -57,6 +66,7 @@ const PostAQuestion: React.FC = () => {
     const handleCloseTagsSelection = () => setOpenTagsSelection(false);
 
     const onSubmit = async (data: PostValues) => {
+        localStorage.setItem(IS_LOADING, "true");
         setSubmitStatus(null);
         setSubmitError(null);
         let imageIds: string[] = [];
@@ -67,23 +77,42 @@ const PostAQuestion: React.FC = () => {
         if (data.title.length === 0) {
             setSubmitError("Title is required!");
         }
+
         try {
-            if (selectedFiles) {
+            if (selectedFiles.length) {
                 for (const file of selectedFiles) {
-                    const { data: uploadResponse } = await uploadImage({ variables: { file: file } });
-                    imageIds.push(uploadResponse.uploadImage.id);
+                    const { data: uploadResponse } = await uploadImage({
+                        variables: { file: file }
+                    });
+
+                    if (uploadResponse && uploadResponse.uploadImage) {
+                        imageIds.push(uploadResponse.uploadImage.id);
+                    } else {
+                        setSubmitError("Image upload failed.");
+                        return;
+                    }
                 }
-                console.log("imageIds: ", imageIds);
             }
+
             const { data: createResponse } = await createQuestion(
                 { variables: { title: data.title, content: data.content, tagIds: tags, imageIds: imageIds } }
             );
+
             if (createResponse) {
                 setSubmitStatus("Submit successfully!");
-                setTimeout(() => {router.push(RouteConfig.Community.Path)}, 1000);
+                resetForm();
+                setSelectedFiles([]);
+                setTimeout(() => {
+                    setSubmitStatus(null);
+                    setSubmitError(null);
+                    router.push(RouteConfig.Community.Path);
+                }, 1000);
             }
         } catch (error) {
             setSubmitError((error as Error).message);
+        } finally {
+            localStorage.setItem(IS_LOADING, "false");
+            localStorage.removeItem(POST_TITLE);
         }
     };
 
@@ -125,6 +154,7 @@ const PostAQuestion: React.FC = () => {
                     </Typography>
                     <Button
                         type="submit"
+                        endIcon={isLoading ? <SpinningHourglass/> : null}
                         sx={{
                             fontSize: "large",
                             fontWeight: "bold",
@@ -138,7 +168,7 @@ const PostAQuestion: React.FC = () => {
                             }
                         }}
                     >
-                        Ask
+                        {isLoading ? `Asking...` : `Ask`}
                     </Button>
                 </Box>
                 <TextField

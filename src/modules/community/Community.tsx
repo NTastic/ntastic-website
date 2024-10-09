@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import AskQuestions from "@/app/modules/community/AskQuestions";
-import GetAllTags from "@/app/modules/community/GetAllTags";
-import NewQuestions from "@/app/modules/community/NewQuestions";
+import AskQuestions from "@/modules/community/AskQuestions";
+import GetAllTags from "@/modules/community/GetAllTags";
+import NewQuestions from "@/modules/community/NewQuestions";
 import { SELECTED_TAG } from "@/shared/constants/storage";
 
 const CommunityModule: React.FC = () => {

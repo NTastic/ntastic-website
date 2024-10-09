@@ -6,6 +6,9 @@ import { useMutation } from "@apollo/client";
 import { UPLOAD_IMAGE, CREATE_ANSWER } from "@/graphql/qa";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "@mui/icons-material/Upload";
+import { IS_LOADING } from "@/shared/constants/storage";
+import { SpinningHourglass } from "@/utils/animations";
+import { compressImage } from "@/utils/compressFile";
 
 const transition = React.forwardRef(function transition(
     props: TransitionProps & {
@@ -31,8 +34,10 @@ export default function PostAnAnswer(
         refetchAnswer
     }: PostAnAnswerProps
 ) {
+    const isLoading = typeof window !== "undefined" ? localStorage.getItem(IS_LOADING) === "true" || false : false;
     const [answerContent, setAnswerContent] = useState<string | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const MAX_FILES = 6;
     const [submitStatus, setSubmitStatus] = useState<string | null>(null);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [uploadImage] = useMutation(UPLOAD_IMAGE);
@@ -48,12 +53,18 @@ export default function PostAnAnswer(
         fileInputRef.current?.click();
     };
 
-    const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(event.target.files || []);
-        setSelectedFiles(files);
+    const handleFilesChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files: File[] = Array.from(event.target.files || []);
+        if (files.length + selectedFiles.length > MAX_FILES) {
+            alert(`You can only upload a maximum of ${MAX_FILES} photos.`);
+            return;
+        }
+        const compressedFiles = await Promise.all(files.map(file => compressImage(file)));
+        setSelectedFiles(compressedFiles);
     };
 
     const handleSubmit = async () => {
+        localStorage.setItem(IS_LOADING, "true");
         setSubmitStatus(null);
         setSubmitError(null);
         let imageIds: string[] = [];
@@ -87,12 +98,16 @@ export default function PostAnAnswer(
                 setSubmitStatus("Submit successfully!");
                 setAnswerContent(null);
                 setSelectedFiles([]);
-                setTimeout(() => handleCloseAnswerDialog(), 1000);
+                setTimeout(() => {
+                    setSubmitStatus(null);
+                    setSubmitError(null);
+                    handleCloseAnswerDialog();
+                }, 1000);
             }
         } catch (err) {
             setSubmitError((err as Error).message);
         } finally {
-            setSubmitStatus(null);
+            localStorage.setItem(IS_LOADING, "false");
             refetchAnswer();
         }
     };
@@ -198,9 +213,11 @@ export default function PostAnAnswer(
                     <Button
                         onClick={handleSubmit}
                         variant="contained"
+                        disabled={isLoading}
+                        endIcon={isLoading ? <SpinningHourglass /> : null}
                         sx={{ borderRadius: "16px", textTransform: "none" }}
                     >
-                        Submit
+                        {isLoading ? `Submitting...` : `Submit`}
                     </Button>
                 </Box>
                 {submitStatus && (

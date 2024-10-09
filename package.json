@@ -18,6 +18,7 @@
     "@types/apollo-upload-client": "^18.0.0",
     "apollo-link-error": "^1.1.13",
     "apollo-upload-client": "^18.0.1",
+    "browser-image-compression": "^2.0.2",
     "graphql": "^16.9.0",
     "next": "^14.2.13",
     "ra-data-graphql": "^5.2.1",

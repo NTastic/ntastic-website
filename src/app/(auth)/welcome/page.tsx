@@ -1,6 +1,6 @@
 import React from "react";
 import { RouteConfig } from "@/routes/route";
-import Welcome from "@/app/modules/welcome/Welcome";
+import Welcome from "@/modules/welcome/Welcome";
 
 export const metadata = RouteConfig.Welcome.Metadata;
 
