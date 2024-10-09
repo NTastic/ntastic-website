@@ -19,6 +19,7 @@ import { ACCESS_TOKEN, SELECTED_TAG } from "@/shared/constants/storage";
 import { RouteConfig } from "@/routes/route";
 import PostAnAnswer from "./PostAnAnswer";
 import ReactMarkdown from "react-markdown";
+import DisplayImages from "@/modules/community/DisplayImages";
 
 type QuestionValue = {
     id: string;
@@ -87,6 +88,8 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     const [relatedQuestions, setRelatedQuestions] = useState<RelatedQuestionValue[]>([]);
     const [openAnswerDialog, setOpenAnswerDialog] = useState<boolean>(false);
     const [vote] = useMutation(VOTE);
+
+    console.log("answers: ", answers);
 
     const { data: questionData, refetch: refetchQuestion } = useQuery(
         GET_QUESTION,
@@ -281,6 +284,11 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     <Typography variant="body1">
                         {question.content}
                     </Typography>
+                    {question.images.length > 0 && (
+                        <Box mb={2}>
+                            <DisplayImages images={question.images} height={300} />
+                        </Box>
+                    )}
                     <Box display="flex" flexDirection="row" alignItems="center" gap={2}>
                         <Button
                             variant="contained"
@@ -323,6 +331,11 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                                 {item.content}
                             </ReactMarkdown>
                         </Box>
+                        {item.images.length > 0 && (
+                            <Box mb={2}>
+                                <DisplayImages images={item.images} height={300} />
+                            </Box>
+                        )}
                         <Box display="flex" gap={2}>
                             <Button
                                 variant="contained"

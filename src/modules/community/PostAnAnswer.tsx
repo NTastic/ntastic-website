@@ -7,8 +7,8 @@ import { UPLOAD_IMAGE, CREATE_ANSWER } from "@/graphql/qa";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "@mui/icons-material/Upload";
 import { IS_LOADING } from "@/shared/constants/storage";
-import { SpinningHourglass } from "@/utils/animations";
-import { compressImage } from "@/utils/compressFile";
+import { SpinningHourglass } from "@/utils/Animations";
+import { compressImage } from "@/utils/CompressFile";
 
 const transition = React.forwardRef(function transition(
     props: TransitionProps & {

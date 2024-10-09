@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import { GET_QUESTIONS } from "@/graphql/qa";
 import { useRouter } from "next/navigation";
 import { RouteConfig } from "@/routes/route";
+import DisplayImages from "./DisplayImages";
 
 interface NewQuestionsProps {
     selectedTag: string;
@@ -128,6 +129,11 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
                             <Typography variant="body1">
                                 {truncateContent(item.content)}
                             </Typography>
+                            {item.images.length > 0 && (
+                                <Box mb={1} mt={1}>
+                                    <DisplayImages images={item.images} height={150} />
+                                </Box>
+                            )}
                             <Box display="flex" gap={2}>
                                 <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
                                     {item.votes.upvotes} Agree

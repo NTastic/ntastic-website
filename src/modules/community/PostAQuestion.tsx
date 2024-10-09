@@ -11,8 +11,8 @@ import { UPLOAD_IMAGE, CREATE_QUESTION } from "@/graphql/qa";
 import { useMutation } from "@apollo/client";
 import UploadIcon from "@mui/icons-material/Upload";
 import { IS_LOADING } from "@/shared/constants/storage";
-import { SpinningHourglass } from "@/utils/animations";
-import { compressImage } from "@/utils/compressFile";
+import { SpinningHourglass } from "@/utils/Animations";
+import { compressImage } from "@/utils/CompressFile";
 
 type PostValues = {
     title: string;
