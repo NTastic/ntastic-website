@@ -154,6 +154,7 @@ const PostAQuestion: React.FC = () => {
                     </Typography>
                     <Button
                         type="submit"
+                        disabled={isLoading}
                         endIcon={isLoading ? <SpinningHourglass/> : null}
                         sx={{
                             fontSize: "large",
@@ -219,6 +220,7 @@ const PostAQuestion: React.FC = () => {
                 >
                     <Button
                         variant="outlined"
+                        disabled={isLoading}
                         onClick={triggerFileInput}
                         startIcon={<UploadIcon />}
                         sx={{ borderRadius: "16px", textTransform: "none" }}
@@ -227,6 +229,7 @@ const PostAQuestion: React.FC = () => {
                     </Button>
                     <Button
                         variant="contained"
+                        disabled={isLoading}
                         sx={{
                             width: "60%",
                             borderRadius: "16px",

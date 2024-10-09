@@ -204,6 +204,7 @@ export default function PostAnAnswer(
                 >
                     <Button
                         variant="outlined"
+                        disabled={isLoading}
                         onClick={triggerFileInput}
                         startIcon={<UploadIcon />}
                         sx={{ borderRadius: "16px", textTransform: "none" }}
