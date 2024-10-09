@@ -1,5 +1,5 @@
 import React from "react";
-import RootPage from "./modules/rootPage/RootPage";
+import RootPage from "@/modules/rootPage/RootPage";
 import { RouteConfig } from "@/routes/route";
 
 export const metadata = RouteConfig.Root.Metadata;

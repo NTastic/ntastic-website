@@ -20,62 +20,7 @@ import { RouteConfig } from "@/routes/route";
 import PostAnAnswer from "./PostAnAnswer";
 import ReactMarkdown from "react-markdown";
 import DisplayImages from "@/modules/community/DisplayImages";
-
-type QuestionValue = {
-    id: string;
-    author: {
-        id: string,
-        username: string
-    };
-    title: string;
-    content: string;
-    tags: Array<{
-        id: string;
-        name: string;
-    }>;
-    images: Array<string>;
-    votes: {
-        upvotes: number,
-        downvotes: number
-    }
-};
-
-type AnswerValue = {
-    id: string;
-    author: {
-        id: string,
-        username: string
-    };
-    content: string;
-    votes: {
-        upvotes: number,
-        downvotes: number
-    };
-    images: Array<string>;
-};
-
-type RelatedQuestionValue = {
-    id: string;
-    author: {
-        id: string,
-        username: string
-    };
-    title: string;
-    content: string;
-    tags: Array<{
-        id: string,
-        name: string,
-    }>;
-    answers: {
-        items: Array<{
-            id: string
-        }>
-    };
-    votes: {
-        upvotes: number,
-        downvotes: number
-    };
-};
+import { QuestionValue, AnswerValue, RelatedQuestionValue } from "@/modules/community//types";
 
 const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     const router = useRouter();
@@ -88,8 +33,6 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     const [relatedQuestions, setRelatedQuestions] = useState<RelatedQuestionValue[]>([]);
     const [openAnswerDialog, setOpenAnswerDialog] = useState<boolean>(false);
     const [vote] = useMutation(VOTE);
-
-    console.log("answers: ", answers);
 
     const { data: questionData, refetch: refetchQuestion } = useQuery(
         GET_QUESTION,

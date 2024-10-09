@@ -43,7 +43,7 @@ export default function PostAnAnswer(
     const [uploadImage] = useMutation(UPLOAD_IMAGE);
     const [createAnswer] = useMutation(CREATE_ANSWER);
 
-    const handleAnswerContext = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleAnswerContent = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAnswerContent(event.target.value);
     }
 
@@ -95,7 +95,7 @@ export default function PostAnAnswer(
             );
 
             if (createResponse) {
-                setSubmitStatus("Submit successfully!");
+                setSubmitStatus("Submitted successfully!");
                 setAnswerContent(null);
                 setSelectedFiles([]);
                 setTimeout(() => {
@@ -170,7 +170,7 @@ export default function PostAnAnswer(
                     multiline
                     minRows={8}
                     autoFocus
-                    onChange={handleAnswerContext}
+                    onChange={handleAnswerContent}
                     sx={{
                         width: "100%",
                         "& .MuiInput-underline:before": {
