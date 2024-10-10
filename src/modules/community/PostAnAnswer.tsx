@@ -6,7 +6,6 @@ import { useMutation } from "@apollo/client";
 import { UPLOAD_IMAGE, CREATE_ANSWER } from "@/graphql/qa";
 import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "@mui/icons-material/Upload";
-import { IS_LOADING } from "@/shared/constants/storage";
 import { SpinningHourglass } from "@/utils/Animations";
 import { compressImage } from "@/utils/CompressFile";
 
@@ -34,7 +33,6 @@ export default function PostAnAnswer(
         refetchAnswer
     }: PostAnAnswerProps
 ) {
-    const isLoading = typeof window !== "undefined" ? localStorage.getItem(IS_LOADING) === "true" || false : false;
     const [answerContent, setAnswerContent] = useState<string | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const MAX_FILES = 6;
@@ -42,6 +40,7 @@ export default function PostAnAnswer(
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [uploadImage] = useMutation(UPLOAD_IMAGE);
     const [createAnswer] = useMutation(CREATE_ANSWER);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleAnswerContent = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAnswerContent(event.target.value);
@@ -64,8 +63,8 @@ export default function PostAnAnswer(
     };
 
     const handleSubmit = async () => {
+        setIsLoading(true);
         try {
-            localStorage.setItem(IS_LOADING, "true");
             setSubmitStatus(null);
             setSubmitError(null);
             let imageIds: string[] = [];
@@ -107,7 +106,7 @@ export default function PostAnAnswer(
         } catch (err) {
             setSubmitError((err as Error).message);
         } finally {
-            localStorage.setItem(IS_LOADING, "false");
+            setIsLoading(false);
             refetchAnswer();
         }
     };

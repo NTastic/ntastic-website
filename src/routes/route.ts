@@ -47,6 +47,13 @@ const RegisterQuestion3 = {
     Path: "/register/question-3" as const
 };
 
+const Home = {
+    Metadata: {
+        title: 'NTastic | Home'
+    },
+    Path: "/home" as const
+};
+
 const Community = {
     Metadata: {
         title: 'NTastic | Community'
@@ -75,6 +82,7 @@ export const RouteConfig = {
     RegisterQuestion1,
     RegisterQuestion2,
     RegisterQuestion3,
+    Home,
     Community,
     QuestionDetails,
     PostAQuestion
