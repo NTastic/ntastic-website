@@ -1,5 +1,5 @@
 import React from 'react';
-import QuestionDetails from '@/modules/community/QuestionDetails';
+import QuestionDetails from '@/modules/question/QuestionDetails';
 import { RouteConfig } from '@/routes/route';
 
 export const metadata = RouteConfig.QuestionDetails.Metadata;

@@ -127,10 +127,10 @@ const Welcome: React.FC = () => {
                     }}
                 >
                     <Typography
-                        variant="body1"
                         color="textSecondary"
                         sx={{
                             fontStyle: "italic",
+                            fontSize: 20,
                             mr: 1
                         }}
                     >
@@ -141,8 +141,8 @@ const Welcome: React.FC = () => {
                         sx={{
                             color: "#000",
                             fontStyle: "italic",
-                            fontSize: "larger",
-                            textDecoration: "noneunderline #000"
+                            fontSize: 20,
+                            textDecoration: "noneunderline #000",
                         }}
                     >
                         continue as a guest

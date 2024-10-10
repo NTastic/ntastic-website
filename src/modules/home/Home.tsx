@@ -2,6 +2,8 @@
 import React from "react";
 import { Box } from "@mui/material";
 import AdsBoard from "@/modules/home/AdsBoard";
+import Categories from "@/modules/home/Categories";
+import Recommendations from "@/modules/home/Recommendations";
 
 const Home: React.FC = () => {
     return (
@@ -18,8 +20,9 @@ const Home: React.FC = () => {
                 justifyContent: "space-around"
             }}
         >
-            Home Page
-            <AdsBoard/>
+            <AdsBoard />
+            <Categories />
+            <Recommendations />
         </Box>
     );
 };

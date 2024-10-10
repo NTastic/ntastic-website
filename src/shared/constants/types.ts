@@ -1,4 +1,27 @@
-//types.ts
+export type QuestionsValue = {
+    id: string;
+    author: {
+        id: string,
+        username: string
+    };
+    title: string;
+    content: string;
+    tags: Array<{
+        id: string,
+        name: string,
+    }>;
+    images: Array<string>;
+    answers: {
+        items: Array<{
+            id: string
+        }>
+    };
+    votes: {
+        upvotes: number,
+        downvotes: number
+    };
+};
+
 export type QuestionValue = {
     id: string;
     author: {
