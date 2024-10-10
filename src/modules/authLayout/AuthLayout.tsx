@@ -1,6 +1,5 @@
 "use client";
 import { Box, styled } from '@mui/material';
-import { resolve } from 'path';
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 
 const Main = styled('main')(({ }) => ({

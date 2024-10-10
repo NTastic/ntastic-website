@@ -6,7 +6,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { RouteConfig } from "@/routes/route";
 import { POST_TITLE } from "@/shared/constants/storage";
 import { useForm } from "react-hook-form";
-import SelectTags from "./SelectTags";
+import SelectTags from "@/modules/createQuestion/SelectTags";
 import { UPLOAD_IMAGE, CREATE_QUESTION } from "@/graphql/qa";
 import { useMutation } from "@apollo/client";
 import UploadIcon from "@mui/icons-material/Upload";

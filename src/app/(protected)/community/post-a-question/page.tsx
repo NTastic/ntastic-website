@@ -1,5 +1,5 @@
 import React from "react";
-import PostAQuestion from "@/modules/community/PostAQuestion";
+import PostAQuestion from "@/modules/createQuestion/PostAQuestion";
 import { RouteConfig } from "@/routes/route";
 
 export const metadata = RouteConfig.PostAQuestion.Metadata;
