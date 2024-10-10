@@ -6,7 +6,7 @@ import { registerSchema } from '@/validation/register/register.schema';
 import { useMutation } from '@apollo/client';
 import { REGISTER } from '@/graphql/user';
 import { useRouter } from 'next/navigation';
-import { ACCESS_TOKEN, USER_ID } from '@/shared/constants/storage';
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_ID } from '@/shared/constants/storage';
 import { useForm } from 'react-hook-form';
 import { Avatar, Box, Card, Typography, TextField, Button, Link, InputAdornment, IconButton, Checkbox } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -48,7 +48,8 @@ const Register: React.FC = () => {
                 { variables: { username: data.username, email: data.email, password: data.password } }
             );
             if (response.data.register) {
-                localStorage.setItem(ACCESS_TOKEN, response.data.register.token);
+                localStorage.setItem(ACCESS_TOKEN, response.data.register.accessToken);
+                localStorage.setItem(REFRESH_TOKEN, response.data.register.refreshToken);
                 localStorage.setItem(USER_ID, response.data.register.user.id);
                 setRegisterInfo("Few steps to go ...");
                 setTimeout(() => router.push(RouteConfig.RegisterQuestion1.Path), 1000);
