@@ -1,22 +1,41 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
-import { POST_TITLE } from "@/shared/constants/storage";
+import { POST_TITLE, ACCESS_TOKEN } from "@/shared/constants/storage";
 import { useRouter } from "next/navigation";
 import { RouteConfig } from "@/routes/route";
 
 const AskQuestions: React.FC = () => {
     const router = useRouter();
     const [inputText, setInputText] = useState<string>("");
+    const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [auth, setAuth] = React.useState<boolean>(false);
 
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(event.target.value);
     };
 
     const handleSubmit = () => {
-        localStorage.setItem(POST_TITLE, inputText);
-        router.push(RouteConfig.PostAQuestion.Path);
+        if (!auth) {
+            router.push(RouteConfig.Login.Path);
+        } else {
+            localStorage.setItem(POST_TITLE, inputText);
+            router.push(RouteConfig.PostAQuestion.Path);
+        }
     };
+
+    useEffect(() => {
+        const accessToken = typeof window !== "undefined" ? localStorage.getItem(ACCESS_TOKEN) : null;
+        setAccessToken(accessToken);
+    }, []);
+
+    useEffect(() => {
+        if (accessToken) {
+            setAuth(true);
+        } else {
+            setAuth(false);
+        }
+    }, [accessToken, auth]);
 
     return (
         <Box

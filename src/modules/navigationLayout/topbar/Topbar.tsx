@@ -25,7 +25,7 @@ interface TopbarProps {
 const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
     const router = useRouter();
     const [accessToken, setAccessToken] = useState<string | null>(null);
-    const [auth, setAuth] = React.useState<boolean>(true);
+    const [auth, setAuth] = React.useState<boolean>(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     useEffect(() => {
