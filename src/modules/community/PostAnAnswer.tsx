@@ -64,17 +64,17 @@ export default function PostAnAnswer(
     };
 
     const handleSubmit = async () => {
-        localStorage.setItem(IS_LOADING, "true");
-        setSubmitStatus(null);
-        setSubmitError(null);
-        let imageIds: string[] = [];
-
-        if (!answerContent) {
-            setSubmitError("Content is required!");
-            return;
-        }
-
         try {
+            localStorage.setItem(IS_LOADING, "true");
+            setSubmitStatus(null);
+            setSubmitError(null);
+            let imageIds: string[] = [];
+
+            if (!answerContent) {
+                setSubmitError("Content is required!");
+                return;
+            }
+
             if (selectedFiles.length) {
                 for (const file of selectedFiles) {
                     const { data: uploadResponse } = await uploadImage({

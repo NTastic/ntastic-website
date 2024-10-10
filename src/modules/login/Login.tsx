@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
-import { ACCESS_TOKEN, USER_ID } from '@/shared/constants/storage';
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_ID } from '@/shared/constants/storage';
 import { RouteConfig } from '@/routes/route';
 
 const Login: React.FC = () => {
@@ -49,7 +49,8 @@ const Login: React.FC = () => {
                 { variables: { email: data.email, password: data.password } }
             );
             if (response.data.login) {
-                localStorage.setItem(ACCESS_TOKEN, response.data.login.token);
+                localStorage.setItem(ACCESS_TOKEN, response.data.login.accessToken);
+                localStorage.setItem(REFRESH_TOKEN, response.data.login.refreshToken);
                 localStorage.setItem(USER_ID, response.data.login.user.id);
                 setLoginInfo("Sign in successfully!");
                 setTimeout(() => router.push(RouteConfig.Community.Path), 1000);
