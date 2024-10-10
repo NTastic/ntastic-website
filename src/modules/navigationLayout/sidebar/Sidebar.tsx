@@ -34,7 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     const handleClick = (item: string) => {
         if (item === "Home") {
-            router.push(RouteConfig.Community.Path);
+            router.push(RouteConfig.Home.Path);
         } else if (item === "Community") {
             router.push(RouteConfig.Community.Path);
         }

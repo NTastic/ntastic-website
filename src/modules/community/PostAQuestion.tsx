@@ -10,7 +10,6 @@ import SelectTags from "./SelectTags";
 import { UPLOAD_IMAGE, CREATE_QUESTION } from "@/graphql/qa";
 import { useMutation } from "@apollo/client";
 import UploadIcon from "@mui/icons-material/Upload";
-import { IS_LOADING } from "@/shared/constants/storage";
 import { SpinningHourglass } from "@/utils/Animations";
 import { compressImage } from "@/utils/CompressFile";
 
@@ -20,7 +19,6 @@ type PostValues = {
 };
 
 const PostAQuestion: React.FC = () => {
-    const isLoading = typeof window !== "undefined" ? localStorage.getItem(IS_LOADING) === "true" || false : false;
     const router = useRouter();
     const postTitle = typeof window !== "undefined" ? localStorage.getItem(POST_TITLE) : "";
     const { register, getValues, handleSubmit, reset: resetForm } = useForm<PostValues>({
@@ -37,6 +35,7 @@ const PostAQuestion: React.FC = () => {
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [uploadImage] = useMutation(UPLOAD_IMAGE);
     const [createQuestion] = useMutation(CREATE_QUESTION);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -66,19 +65,20 @@ const PostAQuestion: React.FC = () => {
     const handleCloseTagsSelection = () => setOpenTagsSelection(false);
 
     const onSubmit = async (data: PostValues) => {
-        localStorage.setItem(IS_LOADING, "true");
+        setIsLoading(true);
         setSubmitStatus(null);
         setSubmitError(null);
         let imageIds: string[] = [];
 
-        if (tags.length === 0) {
-            setSubmitError("At least 1 tag is required!");
-        }
-        if (data.title.length === 0) {
-            setSubmitError("Title is required!");
-        }
-
         try {
+            if (tags.length === 0) {
+                throw new Error("At least 1 tag is required!");
+            }
+            
+            if (data.title.length === 0) {
+                throw new Error("Title is required!");
+            }
+
             if (selectedFiles.length) {
                 for (const file of selectedFiles) {
                     const { data: uploadResponse } = await uploadImage({
@@ -111,7 +111,7 @@ const PostAQuestion: React.FC = () => {
         } catch (error) {
             setSubmitError((error as Error).message);
         } finally {
-            localStorage.setItem(IS_LOADING, "false");
+            setIsLoading(false);
             localStorage.removeItem(POST_TITLE);
         }
     };
