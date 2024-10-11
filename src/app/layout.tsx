@@ -32,7 +32,6 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (graphQLErrors) {
     for (const err of graphQLErrors) {
       const contxt = operation.getContext();
-      debugger
       console.log('context', contxt);
       if (
         err.extensions && err.extensions.code === "UNAUTHENTICATED" &&
