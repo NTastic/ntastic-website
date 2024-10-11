@@ -76,7 +76,6 @@ const AdsBoard: React.FC = () => {
                 borderRadius: "16px",
                 overflow: "hidden",
                 position: "relative",
-                padding: 3,
                 mt: 2,
                 mb: 2
             }}

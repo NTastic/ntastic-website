@@ -77,3 +77,8 @@ export type RelatedQuestionValue = {
         downvotes: number
     };
 };
+
+export type CategoryValue = {
+    id: string;
+    name: string;
+};
