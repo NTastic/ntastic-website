@@ -89,17 +89,19 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
                 padding: 3
             }}
         >
-            <Typography variant="body2" gutterBottom sx={{ fontWeight: "bold" }}>
+            <Typography variant="body2" gutterBottom sx={{ fontWeight: "bold", mb: 1 }}>
                 The newest asked questions:
             </Typography>
             <Box
                 ref={listInnerRef}
                 sx={{
-                    height: "600px",
-                    overflowY: "auto"
+                    width: "100%",
+                    height: "800px",
+                    overflowY: "auto",
+                    borderRadius: "16px"
                 }}
             >
-                <List sx={{ width: "100%" }}>
+                <List sx={{ width: "95%", paddingLeft: 1, paddingRight: 1 }}>
                     {questions.map((item: QuestionsValue) => (
                         <ListItem key={item.id}>
                             <ListItemButton
@@ -116,7 +118,7 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
                                     transition: "all 0.5s ease",
                                     "&:hover": {
                                         backgroundColor: "rgba(80, 80, 200, 0.5)",
-                                        transform: "scale(1.05)",
+                                        transform: "scale(1.03)",
                                         boxShadow: "0 8px 15px rgba(0, 0, 0, 0.3)",
                                     }
                                 }}
