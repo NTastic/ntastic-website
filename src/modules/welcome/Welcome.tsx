@@ -137,7 +137,7 @@ const Welcome: React.FC = () => {
                         Or
                     </Typography>
                     <Link
-                        href={RouteConfig.Community.Path}
+                        href={RouteConfig.Home.Path}
                         sx={{
                             color: "#000",
                             fontStyle: "italic",

@@ -153,8 +153,9 @@ const AdsBoard: React.FC = () => {
                         <CircleIcon
                             sx={{
                                 transition: "all 0.5s ease",
-                                color: index === currentIndex ? "#0000ff" : "#ccc",
+                                color: index === currentIndex ? "coral" : "#ccc",
                                 fontSize: index === currentIndex ? 25 : 15,
+                                
                             }}
                         />
                     </IconButton>
