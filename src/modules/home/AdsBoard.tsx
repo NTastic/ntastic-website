@@ -44,6 +44,14 @@ const AdsBoard: React.FC = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % ads.length);
     };
 
+    const handleMouseOver = (): void => {
+        setIsHovered(true);
+    };
+
+    const handleMouseLeave = (): void => {
+        setIsHovered(false);
+    };
+
     useEffect(() => {
         if (!isHovered) {
             const interval = setInterval(() => {
@@ -54,14 +62,6 @@ const AdsBoard: React.FC = () => {
             };
         }
     }, [isHovered]);
-
-    const handleMouseOver = (): void => {
-        setIsHovered(true);
-    };
-
-    const handleMouseLeave = (): void => {
-        setIsHovered(false);
-    };
 
     return (
         <Box

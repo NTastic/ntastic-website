@@ -70,7 +70,7 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
                     flexGrow={1}
                 >
                     <Button
-                        onClick={() => { router.push(RouteConfig.Community.Path) }}
+                        onClick={() => { router.push(RouteConfig.Home.Path) }}
                         sx={{
                             display: "flex",
                             flexDirection: "row",

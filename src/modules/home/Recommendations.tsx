@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Avatar, Box, Button, IconButton, ImageList, ImageListItem, Stack, Typography } from '@mui/material';
 import { truncateContent } from '@/utils/TruncateContent';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { useRouter } from 'next/navigation';
+import { RouteConfig } from '@/routes/route';
 
 const test_pois = [
     {
@@ -78,6 +80,7 @@ const test_pois = [
 ];
 
 const Recommendations: React.FC = () => {
+    const router = useRouter();
 
     return (
         <Box
@@ -114,6 +117,9 @@ const Recommendations: React.FC = () => {
                                     "&:hover": {
                                         transform: "translateY(-5px)"
                                     }
+                                }}
+                                onClick={() => {
+                                    router.push(RouteConfig.POI("restaurant", "1").Path)
                                 }}
                             >
                                 <img
