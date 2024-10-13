@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Button, IconButton, Stack, TextField, Typography, InputAdornment, Divider, List, ListItem } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Stack, TextField, Typography, InputAdornment } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import IosShareIcon from '@mui/icons-material/IosShare';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -11,10 +11,12 @@ import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { useRouter } from "next/navigation";
 import { handleShare } from "@/utils/HandleShare";
+import { RouteConfig } from "@/routes/route";
 
-interface POIProps {
+interface RecommendationProps {
     category: string;
     poi_id: string;
+    recommendation_id: string;
 };
 
 const images = [
@@ -24,20 +26,7 @@ const images = [
     "https://picsum.photos/450/300"
 ];
 
-const comments = [
-    {
-        id: 0,
-        author: {
-            username: "Jack"
-        },
-        comment: "This is my favorite restaurant in Darwin cause Every time I go there on Turesday, I can have the voucher of main meal with the kid meal for free.",
-        votes: {
-            upvotes: 7
-        }
-    },
-];
-
-const POI: React.FC<POIProps> = ({ category, poi_id }) => {
+const Recommendation: React.FC<RecommendationProps> = ({ category, poi_id, recommendation_id }) => {
     const router = useRouter();
     const [followed, setFollowed] = useState<boolean>(false);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -89,7 +78,6 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                 display="flex"
                 flexDirection="row"
                 alignItems="center"
-                justifyContent="space-between"
                 mt={2}
                 mb={2}
             // position="fixed"
@@ -97,6 +85,22 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                 <IconButton sx={{ color: "#000", mr: 2 }}>
                     <ChevronLeft />
                 </IconButton>
+                <Avatar sx={{ width: "30px", height: "30px", mr: 2 }} />
+                <Typography variant="h6" fontWeight="bold" flexGrow={1}>
+                    Jack
+                </Typography>
+                <Button
+                    variant="contained"
+                    color={followed ? "success" : "warning"}
+                    onClick={handleFollow}
+                    sx={{
+                        borderRadius: "16px",
+                        textTransform: "none",
+                        mr: 1
+                    }}
+                >
+                    {followed ? "Following" : "Follow"}
+                </Button>
                 <IconButton onClick={handleShare} color="primary">
                     <IosShareIcon />
                 </IconButton>
@@ -167,62 +171,46 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                     ))}
                 </Stack>
             </Box>
-            <Box width="90%" mb={2}>
-                <Typography variant="h5" gutterBottom>
-                    Breezes Bar & Bistro
-                </Typography>
-                <Box
-                    display="flex"
-                    flexDirection="row"
-                    alignItems="center"
-                    justifyContent="space-between"
-                >
-                    <Typography variant="body1">
-                        Stars: 4.7
-                    </Typography>
-                    <Typography variant="body1">
-                        11 Comments
-                    </Typography>
-                    <Typography variant="body1">
-                        $60 / each
-                    </Typography>
-                </Box>
-                <Typography variant="body1">
-                    Opened time: 09:00 - 20:00
+            <Box width="100%" mb={2}>
+                <Typography variant="h6">
+                    The best restaurant in Darwin
                 </Typography>
                 <Typography variant="body1">
-                    Location: 480 Lee Point Rd, Muirhead NT 0810
+                    This is my favorite restaurant in Darwin cause Every time I go there on Turesday, I can have the voucher of main meal with the kid meal for free.
                 </Typography>
             </Box>
-            <Divider sx={{ width: "100%", marginTop: 2, marginBottom: 2 }} />
-            {comments.length > 0 && (
-                <List sx={{ width: "90%" }}>
-                    {comments.map((item) => (
-                        <ListItem
-                            key={item.id}
-                            sx={{
-                                width: "100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "start",
-                                borderRadius: "16px",
-                                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
-                                mb: 2
-                            }}
-                        >
-                            <Box display="flex" flexDirection="row" alignItems="center" mb={1}>
-                                <Avatar sx={{ width: "15px", height: "15px", mr: 1 }} />
-                                <Typography variant="body2" fontSize="small">
-                                    {item.author.username}
-                                </Typography>
-                            </Box>
-                            <Typography variant="body1" fontSize="small">
-                                {item.comment}
-                            </Typography>
-                        </ListItem>
-                    ))}
-                </List>
-            )}
+            <Button
+                variant="contained"
+                onClick={() => {router.push(RouteConfig.POI("restaurant", "001").Path)}}
+                sx={{
+                    width: "100%",
+                    borderRadius: "16px",
+                    boxShadow: "0 8px 15px rgba(0, 0, 0, 0.15)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "start",
+                    position: "relative",
+                    textTransform: "none",
+                    padding: 2
+                }}
+            >
+                <Typography variant="h5">
+                    Breezes Bar & Bistro
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                    480 Lee Point Rd, Muirhead NT 0810
+                </Typography>
+                <Box
+                    sx={{
+                        position: "absolute",
+                        right: 5,
+                        top: "50%",
+                        transform: "translateY(-50%)"
+                    }}
+                >
+                    <ChevronRight />
+                </Box>
+            </Button>
             <Box width="100%" position="relative">
                 <Box
                     width="750px"
@@ -241,13 +229,17 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                 >
                     <TextField
                         variant="outlined"
-                        placeholder={`Comment this ${category}...`}
+                        placeholder="Say something ..."
                         multiline
                         sx={{
                             flexGrow: 1,
                             borderRadius: "16px",
                             border: "none",
                             backgroundColor: "rgba(255, 255, 255)",
+                            transition: "all 0.3s ease",
+                            "&:focus-within": {
+                                backgroundColor: "rgba(255, 255, 255)",
+                            }
                         }}
                         InputProps={{
                             sx: {
@@ -318,4 +310,4 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
     );
 };
 
-export default POI;
+export default Recommendation;

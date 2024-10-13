@@ -12,7 +12,7 @@ const POIPage: React.FC<{
         document.title = metadata.title;
     }, [metadata.title]);
 
-    return <POI />;
+    return <POI category={params.category} poi_id={params.poi_id}/>;
 };
 
 export default POIPage;

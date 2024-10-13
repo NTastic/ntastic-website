@@ -68,6 +68,17 @@ const POI = (category_name: string, poi_id: string) => ({
     Path: `/${category_name}/${poi_id}` as const
 });
 
+const Recommendation = (
+    category_name: string, 
+    poi_id: string, 
+    recommendation_id: string
+) => ({
+    Metadata: {
+        title: `NTastic | ${category_name}`
+    },
+    Path: `/${category_name}/${poi_id}/${recommendation_id}` as const
+});
+
 const Community = {
     Metadata: {
         title: 'NTastic | Community'
@@ -99,6 +110,7 @@ export const RouteConfig = {
     Home,
     Category,
     POI,
+    Recommendation,
     Community,
     QuestionDetails,
     PostAQuestion

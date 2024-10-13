@@ -119,7 +119,7 @@ const Recommendations: React.FC = () => {
                                     }
                                 }}
                                 onClick={() => {
-                                    router.push(RouteConfig.POI("restaurant", "1").Path)
+                                    router.push(RouteConfig.Recommendation("restaurant", "001", "001").Path)
                                 }}
                             >
                                 <img
