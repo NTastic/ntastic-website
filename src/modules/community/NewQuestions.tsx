@@ -8,6 +8,7 @@ import { RouteConfig } from "@/routes/route";
 import DisplayImages from "@/utils/DisplayImages";
 import { QuestionsValue } from "@/shared/constants/types";
 import { SpinningHourglass } from "@/utils/Animations";
+import { truncateContent } from "@/utils/TruncateContent";
 
 interface NewQuestionsProps {
     selectedTag: string;
@@ -35,14 +36,6 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
             fetchPolicy: "no-cache"
         }
     );
-
-    const truncateContent = (content: string, wordLimit: number = 50) => {
-        const words = content.split(" ");
-        if (words.length > wordLimit) {
-            return words.slice(0, wordLimit).join(" ") + " ...";
-        }
-        return content;
-    };
 
     const handleScroll = () => {
         if (listInnerRef.current) {
@@ -133,7 +126,7 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
                                     </Typography>
                                 </Box>
                                 <Typography variant="body1">
-                                    {truncateContent(item.content)}
+                                    {truncateContent(item.content, 50)}
                                 </Typography>
                                 {item.images.length > 0 && (
                                     <Box mb={1} mt={1}>

@@ -54,6 +54,31 @@ const Home = {
     Path: "/home" as const
 };
 
+const Category = (category_name: string) => ({
+    Metadata: {
+        title: `NTastic | ${category_name}`
+    },
+    Path: `/${category_name}` as const
+});
+
+const POI = (category_name: string, poi_id: string) => ({
+    Metadata: {
+        title: `NTastic | ${category_name}`
+    },
+    Path: `/${category_name}/${poi_id}` as const
+});
+
+const Recommendation = (
+    category_name: string, 
+    poi_id: string, 
+    recommendation_id: string
+) => ({
+    Metadata: {
+        title: `NTastic | ${category_name}`
+    },
+    Path: `/${category_name}/${poi_id}/${recommendation_id}` as const
+});
+
 const Community = {
     Metadata: {
         title: 'NTastic | Community'
@@ -83,6 +108,9 @@ export const RouteConfig = {
     RegisterQuestion2,
     RegisterQuestion3,
     Home,
+    Category,
+    POI,
+    Recommendation,
     Community,
     QuestionDetails,
     PostAQuestion

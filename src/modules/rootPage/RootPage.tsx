@@ -15,7 +15,7 @@ const RootPage: React.FC = () => {
 
     useEffect(() => {
         if (accessToken) {
-            router.push(RouteConfig.Community.Path);
+            router.push(RouteConfig.Home.Path);
         } else {
             router.push(RouteConfig.Welcome.Path);
         }

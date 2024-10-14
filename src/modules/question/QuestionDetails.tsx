@@ -5,6 +5,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { GET_QUESTION, GET_ANSWERS, GET_QUESTIONS, VOTE } from "@/graphql/qa";
 import { Box, Button, Divider, IconButton, Typography } from "@mui/material";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import { ACCESS_TOKEN, SELECTED_TAG } from "@/shared/constants/storage";
 import { RouteConfig } from "@/routes/route";
 import { QuestionValue, AnswerValue, RelatedQuestionValue } from "@/shared/constants/types";
@@ -12,6 +13,7 @@ import AnswerList from "@/modules/question/AnswerList";
 import QuestionDesc from "@/modules/question/QuestionDesc";
 import RelatedQuestions from "@/modules/question/RelatedQuestions";
 import PostAnAnswer from "@/modules/question/PostAnAnswer";
+import { handleShare } from "@/utils/HandleShare";
 
 const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     const router = useRouter();
@@ -211,6 +213,9 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 >
                     Ask
                 </Button>
+                <IconButton onClick={handleShare} color="primary">
+                    <IosShareIcon/>
+                </IconButton>
             </Box>
             {/* Question Description */}
             {question && (

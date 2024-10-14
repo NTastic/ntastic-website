@@ -49,7 +49,7 @@ const Categories: React.FC = () => {
                 width="100%"
                 padding={1}
                 >
-                    <Collapse in={openCollapse} collapsedSize={130} timeout={1000}>
+                    <Collapse in={openCollapse} collapsedSize={130} timeout={500}>
                         <Grid container spacing={2} columns={16}>
                             {categories.map((item) => (
                                 <Grid size={4} key={item.id}>
