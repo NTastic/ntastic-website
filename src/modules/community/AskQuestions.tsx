@@ -69,7 +69,7 @@ const AskQuestions: React.FC = () => {
                     mb: 1
                 }}
             >
-                Ask Qeustions to NTastic
+                Ask Questions to NTastic
             </Typography>
             <TextField
                     variant="outlined"
