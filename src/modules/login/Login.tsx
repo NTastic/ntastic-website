@@ -53,7 +53,7 @@ const Login: React.FC = () => {
                 localStorage.setItem(REFRESH_TOKEN, response.data.login.refreshToken);
                 localStorage.setItem(USER_ID, response.data.login.user.id);
                 setLoginInfo("Sign in successfully!");
-                setTimeout(() => router.push(RouteConfig.Community.Path), 1000);
+                setTimeout(() => router.push(RouteConfig.Home.Path), 1000);
             } else {
                 throw new Error("Invalid email or password!");
             }

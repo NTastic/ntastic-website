@@ -12,16 +12,16 @@ const iconStyle = {
 }
 
 const GetCategoryIcon: React.FC<{ category: string }> = ({ category }) => {
-    if (category === "Restaurants") {
+    if (category === "Restaurant") {
         return <DinnerDiningIcon sx={iconStyle} />;
     }
-    if (category === "Groceries") {
+    if (category === "Shopping") {
         return <LocalGroceryStoreIcon sx={iconStyle} />;
     }
-    if (category === "Hotels") {
+    if (category === "Hotel") {
         return <BedIcon sx={iconStyle} />;
     }
-    if (category === "Attractions") {
+    if (category === "Attraction") {
         return <AttractionsIcon sx={iconStyle} />;
     }
     if (category === "Cafe") {

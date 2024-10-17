@@ -44,7 +44,7 @@ const Question3: React.FC = () => {
         localStorage.setItem(REG_LABELS_3, selectedLabels.join(";"));
         setSubmitStatus("You are all set!");
         setTimeout(() => {
-            router.push(RouteConfig.Community.Path);
+            router.push(RouteConfig.Home.Path);
         }, 1000);
     };
 
