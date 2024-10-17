@@ -54,29 +54,34 @@ const Home = {
     Path: "/home" as const
 };
 
-const Category = (category_name: string) => ({
+const Category = (categoryId: string, categoryName: string) => ({
     Metadata: {
-        title: `NTastic | ${category_name}`
+        title: `NTastic | ${categoryName}`
     },
-    Path: `/${category_name}` as const
+    Path: `/${categoryId}` as const
 });
 
-const POI = (category_name: string, poi_id: string) => ({
+const POI = (
+    categoryId: string, 
+    categoryName: string, 
+    poiId: string
+) => ({
     Metadata: {
-        title: `NTastic | ${category_name}`
+        title: `NTastic | ${categoryName}`
     },
-    Path: `/${category_name}/${poi_id}` as const
+    Path: `/${categoryId}/${poiId}` as const
 });
 
 const Recommendation = (
-    category_name: string, 
-    poi_id: string, 
-    recommendation_id: string
+    categoryId: string, 
+    categoryName: string, 
+    poiId: string, 
+    recommendationId: string
 ) => ({
     Metadata: {
-        title: `NTastic | ${category_name}`
+        title: `NTastic | ${categoryName}`
     },
-    Path: `/${category_name}/${poi_id}/${recommendation_id}` as const
+    Path: `/${categoryId}/${poiId}/${recommendationId}` as const
 });
 
 const Community = {

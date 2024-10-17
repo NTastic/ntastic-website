@@ -33,7 +33,7 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
                     order: "DESC"
                 }
             },
-            fetchPolicy: "no-cache"
+            fetchPolicy: "no-cache",
         }
     );
 

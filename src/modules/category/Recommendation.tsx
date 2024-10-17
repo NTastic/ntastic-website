@@ -82,7 +82,10 @@ const Recommendation: React.FC<RecommendationProps> = ({ category, poi_id, recom
                 mb={2}
             // position="fixed"
             >
-                <IconButton sx={{ color: "#000", mr: 2 }}>
+                <IconButton
+                    onClick={() => router.back()}
+                    sx={{ color: "#000", mr: 2 }}
+                >
                     <ChevronLeft />
                 </IconButton>
                 <Avatar sx={{ width: "30px", height: "30px", mr: 2 }} />
@@ -181,7 +184,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category, poi_id, recom
             </Box>
             <Button
                 variant="contained"
-                onClick={() => {router.push(RouteConfig.POI("restaurant", "001").Path)}}
+                onClick={() => { router.push(RouteConfig.POI("restaurant", "001", "001").Path) }}
                 sx={{
                     width: "100%",
                     borderRadius: "16px",

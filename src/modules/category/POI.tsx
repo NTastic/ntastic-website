@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Button, IconButton, Stack, TextField, Typography, InputAdornment, Divider, List, ListItem } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Stack, TextField, Typography, InputAdornment, Divider, List, ListItem, Link } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import IosShareIcon from '@mui/icons-material/IosShare';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -11,18 +11,16 @@ import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { useRouter } from "next/navigation";
 import { handleShare } from "@/utils/HandleShare";
+import { CategoryValue, POIValue } from "@/shared/constants/types";
+import { GET_CATEGORIES, GET_ONE_POI } from "@/graphql/poi";
+import { useQuery } from "@apollo/client";
+import { SpinningHourglass } from "@/utils/Animations";
+import { RouteConfig } from "@/routes/route";
 
 interface POIProps {
-    category: string;
-    poi_id: string;
+    categoryId: string;
+    poiId: string;
 };
-
-const images = [
-    "https://picsum.photos/500/300",
-    "https://picsum.photos/550/300",
-    "https://picsum.photos/600/300",
-    "https://picsum.photos/450/300"
-];
 
 const comments = [
     {
@@ -37,20 +35,38 @@ const comments = [
     },
 ];
 
-const POI: React.FC<POIProps> = ({ category, poi_id }) => {
+const bottomIconStyle = {
+    display: "flex",
+    flex: "row",
+    alignItems: "center",
+    gap: 0.5,
+    ml: 1,
+    mr: 1
+};
+
+const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
     const router = useRouter();
-    const [followed, setFollowed] = useState<boolean>(false);
+    const [categoryName, setCategoryName] = useState<string | null>(null);
+    const [categories, setCategories] = useState<CategoryValue[]>([]);
+    const [POIData, setPOIData] = useState<POIValue | null>(null);
+    const [POIImages, setPOIImages] = useState<string[]>([]);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
-    const handleFollow = () => setFollowed(prev => !prev);
+    const { data: categoriesData } = useQuery(GET_CATEGORIES);
+
+    const { data } = useQuery(GET_ONE_POI, { variables: { getPoiId: poiId } });
 
     const prevSlide = (): void => {
-        setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
+        if (POIImages.length > 0) {
+            setCurrentIndex(prev => (prev - 1 + POIImages.length) % POIImages.length);
+        }
     };
 
     const nextSlide = (): void => {
-        setCurrentIndex(prev => (prev + 1) % images.length);
+        if (POIImages.length > 0) {
+            setCurrentIndex(prev => (prev + 1) % POIImages.length);
+        }
     };
 
     const handleMouseOver = (): void => {
@@ -62,6 +78,33 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
     };
 
     useEffect(() => {
+        if (categoriesData) {
+            setCategories(categoriesData.getCategories || []);
+        }
+    }, [categoriesData]);
+
+    useEffect(() => {
+        if (categories.length > 0) {
+            const currentCategory = categories.filter(item => item.id === categoryId)[0];
+            setCategoryName(currentCategory.name);
+        }
+    }, [categories])
+
+    useEffect(() => {
+        if (categoryName) {
+            const metadata = RouteConfig.POI(categoryId, categoryName, poiId).Metadata;
+            document.title = metadata.title;
+        }
+    }, [categoryName]);
+
+    useEffect(() => {
+        if (data) {
+            setPOIData(data.getPOI || null);
+            setPOIImages(data.getPOI.photoUrls.slice(0, 9) || []);
+        }
+    }, [data]);
+
+    useEffect(() => {
         if (!isHovered) {
             const interval = setInterval(() => {
                 nextSlide();
@@ -69,6 +112,20 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
             return () => clearInterval(interval);
         }
     }, [isHovered]);
+
+    if (!POIData) {
+        return (
+            <Box
+                width="100%"
+                height="100%"
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <SpinningHourglass />
+            </Box>);
+    }
 
     return (
         <Box
@@ -92,9 +149,11 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                 justifyContent="space-between"
                 mt={2}
                 mb={2}
-            // position="fixed"
             >
-                <IconButton sx={{ color: "#000", mr: 2 }}>
+                <IconButton
+                    onClick={() => router.back()}
+                    sx={{ color: "#000", mr: 2 }}
+                >
                     <ChevronLeft />
                 </IconButton>
                 <IconButton onClick={handleShare} color="primary">
@@ -115,7 +174,7 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                 onMouseLeave={handleMouseLeave}
             >
                 <img
-                    src={images[currentIndex]}
+                    src={POIImages[currentIndex]}
                     style={{ height: "80%", width: "auto" }}
                     loading="lazy"
                 />
@@ -144,7 +203,7 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                     <ChevronRight />
                 </Button>
                 <Stack direction="row" spacing={2}>
-                    {images.map((_, index) => (
+                    {POIImages.map((_, index) => (
                         <IconButton
                             key={index}
                             sx={{
@@ -159,7 +218,7 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                                 sx={{
                                     transition: "all 0.5s ease",
                                     color: index === currentIndex ? "coral" : "#ccc",
-                                    fontSize: index === currentIndex ? 25 : 15,
+                                    fontSize: index === currentIndex ? 20 : 10,
 
                                 }}
                             />
@@ -167,32 +226,73 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                     ))}
                 </Stack>
             </Box>
-            <Box width="90%" mb={2}>
+            <Box
+                width="90%"
+                display="flex"
+                flexDirection="column"
+                alignItems="start"
+                gap={1}
+                mt={2}
+                mb={2}
+            >
                 <Typography variant="h5" gutterBottom>
-                    Breezes Bar & Bistro
+                    {POIData.name}
                 </Typography>
+                <Typography variant="body1">
+                    Stars: {POIData.rating || "unknown"}
+                </Typography>
+                <Typography variant="body1">
+                    Location: {POIData.address || "unknown"}
+                </Typography>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="start"
+                >
+                    <Typography variant="body1">
+                        Opened time:
+                    </Typography>
+                    {POIData.workingHours.length > 0 ? (
+                        <List>
+                            {POIData.workingHours.map((item, index) => (
+                                <ListItem key={index}>
+                                    <Typography variant="body2" color="#333">
+                                        {item.day}: {item.time}
+                                    </Typography>
+                                </ListItem>
+                            ))}
+                        </List>
+                    ) : (
+                        <Typography variant="body2" color="#333">
+                            unknown
+                        </Typography>
+                    )}
+                </Box>
                 <Box
                     display="flex"
                     flexDirection="row"
                     alignItems="center"
-                    justifyContent="space-between"
+                    gap={1}
                 >
                     <Typography variant="body1">
-                        Stars: 4.7
+                        Website:
                     </Typography>
-                    <Typography variant="body1">
-                        11 Comments
-                    </Typography>
-                    <Typography variant="body1">
-                        $60 / each
-                    </Typography>
+                    {POIData.website ? (
+                        <Link
+                            href={POIData.website}
+                            variant="body1"
+                            underline="hover"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {POIData.website}
+                        </Link>
+                    ) : (
+                        <Typography variant="body2" color="#333">
+                            unknown
+                        </Typography>
+                    )}
                 </Box>
-                <Typography variant="body1">
-                    Opened time: 09:00 - 20:00
-                </Typography>
-                <Typography variant="body1">
-                    Location: 480 Lee Point Rd, Muirhead NT 0810
-                </Typography>
             </Box>
             <Divider sx={{ width: "100%", marginTop: 2, marginBottom: 2 }} />
             {comments.length > 0 && (
@@ -241,7 +341,7 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                 >
                     <TextField
                         variant="outlined"
-                        placeholder={`Comment this ${category}...`}
+                        placeholder={`Comment this ${categoryName}...`}
                         multiline
                         sx={{
                             flexGrow: 1,
@@ -268,29 +368,15 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                         }}
                     />
                     <IconButton
-                        sx={{
-                            display: "flex",
-                            flex: "row",
-                            alignItems: "center",
-                            gap: 0.5,
-                            ml: 1,
-                            mr: 1
-                        }}
+                        sx={bottomIconStyle}
                     >
                         <FavoriteBorderIcon />
                         <Typography variant="body1">
-                            45
+                            {POIData.votes.upvotes || 0}
                         </Typography>
                     </IconButton>
                     <IconButton
-                        sx={{
-                            display: "flex",
-                            flex: "row",
-                            alignItems: "center",
-                            gap: 0.5,
-                            ml: 1,
-                            mr: 1
-                        }}
+                        sx={bottomIconStyle}
                     >
                         <StarBorderOutlinedIcon />
                         <Typography variant="body1">
@@ -298,18 +384,11 @@ const POI: React.FC<POIProps> = ({ category, poi_id }) => {
                         </Typography>
                     </IconButton>
                     <IconButton
-                        sx={{
-                            display: "flex",
-                            flex: "row",
-                            alignItems: "center",
-                            gap: 0.5,
-                            ml: 1,
-                            mr: 1
-                        }}
+                        sx={bottomIconStyle}
                     >
                         <ChatBubbleOutlineOutlinedIcon />
                         <Typography variant="body1">
-                            22
+                            {POIData.reviewsCount || 0}
                         </Typography>
                     </IconButton>
                 </Box>
