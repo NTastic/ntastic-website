@@ -1,181 +1,53 @@
 "use client";
-import React, { useState, useEffect, useRef } from 'react';
-import { Avatar, Box, Button, IconButton, ImageList, ImageListItem, Stack, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Avatar, Box, Button, IconButton, ImageList, ImageListItem, Typography } from '@mui/material';
 import { truncateContent } from '@/utils/TruncateContent';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useRouter } from 'next/navigation';
 import { RouteConfig } from '@/routes/route';
 import { SpinningHourglass } from '@/utils/Animations';
-
-const test_pois = [
-    {
-        id: 0,
-        author: "James",
-        comments: ["The food is absolutely delicious!"],
-        photoUrls: ["https://picsum.photos/200/300"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 1,
-        author: "James",
-        comments: ["The staff is so friendly and attentive!"],
-        photoUrls: ["https://picsum.photos/300/400"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 2,
-        author: "James",
-        comments: ["The ambiance is perfect for a relaxing meal."],
-        photoUrls: ["https://picsum.photos/150/200"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 3,
-        author: "James",
-        comments: ["The presentation of the dishes is amazing!"],
-        photoUrls: ["https://picsum.photos/500/800"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 4,
-        author: "James",
-        comments: ["I love the variety on the menu!"],
-        photoUrls: ["https://picsum.photos/400/400"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 5,
-        author: "James",
-        comments: ["The portion sizes are just right!"],
-        photoUrls: ["https://picsum.photos/200/300"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 6,
-        author: "James",
-        comments: ["Everything tastes so fresh and flavorful!"],
-        photoUrls: ["https://picsum.photos/500/300"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 7,
-        author: "James",
-        comments: ["The drinks are perfectly made!"],
-        photoUrls: ["https://picsum.photos/200/400"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 8,
-        author: "James",
-        comments: ["The dessert here is a must-try!"],
-        photoUrls: ["https://picsum.photos/450/320"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 9,
-        author: "James",
-        comments: ["I can’t wait to come back!"],
-        photoUrls: ["https://picsum.photos/400/300"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 10,
-        author: "James",
-        comments: ["The food is absolutely delicious!"],
-        photoUrls: ["https://picsum.photos/200/300"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 11,
-        author: "James",
-        comments: ["The staff is so friendly and attentive!"],
-        photoUrls: ["https://picsum.photos/300/400"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 12,
-        author: "James",
-        comments: ["The ambiance is perfect for a relaxing meal."],
-        photoUrls: ["https://picsum.photos/150/200"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 13,
-        author: "James",
-        comments: ["The presentation of the dishes is amazing!"],
-        photoUrls: ["https://picsum.photos/500/800"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 14,
-        author: "James",
-        comments: ["I love the variety on the menu!"],
-        photoUrls: ["https://picsum.photos/400/400"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 15,
-        author: "James",
-        comments: ["The portion sizes are just right!"],
-        photoUrls: ["https://picsum.photos/200/300"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 16,
-        author: "James",
-        comments: ["Everything tastes so fresh and flavorful!"],
-        photoUrls: ["https://picsum.photos/500/300"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 17,
-        author: "James",
-        comments: ["The drinks are perfectly made!"],
-        photoUrls: ["https://picsum.photos/200/400"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 18,
-        author: "James",
-        comments: ["The dessert here is a must-try!"],
-        photoUrls: ["https://picsum.photos/450/320"],
-        votes: { upvotes: 6 }
-    },
-    {
-        id: 19,
-        author: "James",
-        comments: ["I can’t wait to come back!"],
-        photoUrls: ["https://picsum.photos/400/300"],
-        votes: { upvotes: 6 }
-    },
-];
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { GET_RECOMMENDATIONS } from '@/graphql/poi';
+import { useQuery } from '@apollo/client';
+import { RecommendationValue } from '@/shared/constants/types';
+import StarIcon from '@mui/icons-material/Star';
 
 const Recommendations: React.FC = () => {
     const router = useRouter();
-    const [recLimit, setRecLimit] = useState<number>(9);
+    const [recList, setRecList] = useState<RecommendationValue[]>([]);
+    const [recPage, setRecPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const listInnerRef = useRef<HTMLDivElement | null>(null);
 
-    const handleScroll = () => {
-        if (listInnerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
-            if (scrollTop + clientHeight >= scrollHeight - 5) {
-                setIsLoading(true);
-                setTimeout(() => setIsLoading(false), 1000);
-                setRecLimit(prev => prev + 10);
+    const { data: recData, refetch } = useQuery(
+        GET_RECOMMENDATIONS,
+        {
+            variables: {
+                catIds: [
+                    "6711feb037c20e220b1c00df",
+                    "6711feb037c20e220b1c021f",
+                    "6711feb037c20e220b1c0100",
+                    "6711feb037c20e220b1c00d0"
+                ],
+                "pageOptions": {
+                    limit: 12,
+                    page: recPage,
+                }
             }
         }
+    );
+
+    const handleMoreRecs = () => {
+        setIsLoading(true);
+        setRecPage(prev => prev + 1);
+        refetch().then(() => setIsLoading(false));
     };
 
     useEffect(() => {
-        const boxElement = listInnerRef.current;
-        if (boxElement) {
-            boxElement.addEventListener("scroll", handleScroll);
-            return () => {
-                boxElement.removeEventListener("scroll", handleScroll);
-            };
+        if (recData) {
+            setRecList((prev) => {
+                return [...prev, ...recData.getRecommendations.items];
+            });
         }
-    }, [listInnerRef])
+    }, [recData]);
 
     return (
         <Box
@@ -198,20 +70,18 @@ const Recommendations: React.FC = () => {
                     Recommendations
                 </Typography>
                 <Box
-                    ref={listInnerRef}
                     sx={{
                         width: "100%",
-                        height: "800px",
-                        overflowY: "auto",
                         borderRadius: "16px"
                     }}
 
                 >
                     <ImageList variant="masonry" cols={3} gap={8} sx={{ width: "95%" }}>
-                        {test_pois.slice(0, recLimit > test_pois.length ? test_pois.length : recLimit).map((item) => (
+                        {recList.map((item) => (
                             <ImageListItem key={item.id}>
                                 <Button
                                     sx={{
+                                        borderRadius: "16px",
                                         textTransform: "none",
                                         color: "black",
                                         display: "flex",
@@ -220,23 +90,28 @@ const Recommendations: React.FC = () => {
                                         padding: 1,
                                         transition: "all 0.5s ease",
                                         "&:hover": {
-                                            transform: "translateY(-5px)"
+                                            transform: "translateY(-5px)",
+                                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)"
                                         }
                                     }}
                                     onClick={() => {
                                         router.push(
-                                            RouteConfig.Recommendation("restaurant", "001", "001", "001").Path
+                                            RouteConfig.Recommendation(
+                                                item.catIds[0], 
+                                                item.list[0].poi.id, 
+                                                item.id
+                                            ).Path
                                         )
                                     }}
                                 >
                                     <img
-                                        srcSet={`${item.photoUrls[0]}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                                        src={`${item.photoUrls[0]}?w=248&fit=crop&auto=format`}
+                                        srcSet={`${item.list[0].poi.photoUrls[0]}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                                        src={`${item.list[0].poi.photoUrls[0]}?w=248&fit=crop&auto=format`}
                                         loading="lazy"
-                                        style={{ width: "100%", height: "auto" }}
+                                        style={{ width: "100%", height: "auto", borderRadius: "16px" }}
                                     />
-                                    <Typography variant="body1" textAlign="start" fontWeight="bold">
-                                        {truncateContent(item.comments[0], 20)}
+                                    <Typography width="95%" variant="body2" textAlign="start">
+                                        {truncateContent(item.title, 20)}
                                     </Typography>
                                     <Box
                                         display="flex"
@@ -244,31 +119,46 @@ const Recommendations: React.FC = () => {
                                         alignItems="center"
                                         width="100%"
                                     >
-                                        <Avatar sx={{ width: "15px", height: "15px", mr: 1 }} />
-                                        <Typography variant="body2" color="textSecondary" flexGrow={1} textAlign="start">
-                                            {item.author}
-                                        </Typography>
-                                        <FavoriteBorderIcon
+                                        <StarIcon
                                             sx={{
                                                 mr: 0.5,
                                                 color: "rgba(255, 0, 0, 0.5)"
                                             }}
                                         />
                                         <Typography variant="body2" color="textSecondary">
-                                            {item.votes.upvotes}
+                                            {item.list[0].poi.rating}
                                         </Typography>
                                     </Box>
                                 </Button>
                             </ImageListItem>
                         ))}
                     </ImageList>
+                    <IconButton
+                        color="primary"
+                        onClick={handleMoreRecs}
+                        sx={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}
+                    >
+                        <ExpandMoreIcon />
+                        <Typography>More</Typography>
+                    </IconButton>
                     {isLoading && (
-                        <SpinningHourglass
+                        <Box
                             sx={{
-                                left: "50%",
-                                transform: "translateX(-50%)"
+                                display: "flex",
+                                justifyContent: "center",
+                                width: "100%",
+                                position: "relative",
+                                bottom: 0
                             }}
-                        />
+                        >
+                            <SpinningHourglass />
+                        </Box>
                     )}
                 </Box>
             </Box>

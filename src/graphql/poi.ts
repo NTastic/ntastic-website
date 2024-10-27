@@ -57,3 +57,25 @@ export const GET_ONE_POI = gql`
         }
     }
 `;
+
+export const GET_RECOMMENDATIONS = gql`
+    query GetRecommendations($catIds: [ID!], $pageOptions: PageOptions) {
+        getRecommendations(catIds: $catIds, pageOptions: $pageOptions) {
+            items {
+                ... on Recommendation {
+                    id
+                    title
+                    list {
+                        poi {
+                            id
+                            photoUrls
+                            rating
+                            reviewsCount
+                        }
+                    }
+                    catIds
+                }
+            }
+        }
+    }
+`;

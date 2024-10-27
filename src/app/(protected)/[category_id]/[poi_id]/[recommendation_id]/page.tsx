@@ -1,6 +1,4 @@
-"use client";
-import React, { useEffect } from "react";
-import { RouteConfig } from "@/routes/route";
+import React from "react";
 import Recommendation from "@/modules/category/Recommendation";
 
 const RecommendationPage: React.FC<{
@@ -10,20 +8,9 @@ const RecommendationPage: React.FC<{
         recommendation_id: string
     }
 }> = ({ params }) => {
-    const metadata = RouteConfig.Recommendation(
-        params.category_id, 
-        "",
-        params.poi_id, 
-        params.recommendation_id
-    ).Metadata;
-
-    useEffect(() => {
-        document.title = metadata.title;
-    }, [metadata.title]);
-
     return (
         <Recommendation
-            category={params.category_id}
+            category_id={params.category_id}
             poi_id={params.poi_id}
             recommendation_id={params.recommendation_id}
         />
