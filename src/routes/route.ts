@@ -74,13 +74,9 @@ const POI = (
 
 const Recommendation = (
     categoryId: string, 
-    categoryName: string, 
     poiId: string, 
     recommendationId: string
 ) => ({
-    Metadata: {
-        title: `NTastic | ${categoryName}`
-    },
     Path: `/${categoryId}/${poiId}/${recommendationId}` as const
 });
 

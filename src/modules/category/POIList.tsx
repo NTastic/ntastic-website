@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { RouteConfig } from "@/routes/route";
 import { GET_CATEGORIES, GET_POI_LIST } from "@/graphql/poi";
@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import StarIcon from '@mui/icons-material/Star';
 import { truncateContent } from "@/utils/TruncateContent";
 import { SpinningHourglass } from "@/utils/Animations";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface POIListProps {
     categoryId: string;
@@ -20,9 +21,8 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
     const [categoryName, setCategoryName] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryValue[]>([]);
     const [POIList, setPOIList] = useState<POIListItemValue[]>([]);
-    const [POIListLimit, setPOIListLimit] = useState<number>(10);
+    const [POIListPage, setPOIListPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const listInnerRef = useRef<HTMLDivElement | null>(null);
 
     const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
@@ -32,8 +32,8 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
             variables: {
                 catIds: [categoryId],
                 pageOptions: {
-                    "limit": POIListLimit,
-                    "page": 1,
+                    "limit": 10,
+                    "page": POIListPage,
                     "sortField": "rating",
                     "order": "DESC"
                 }
@@ -42,16 +42,10 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
         }
     );
 
-    const handleScroll = () => {
-        if (listInnerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
-            if (scrollTop + clientHeight >= scrollHeight - 5) {
-                setPOIListLimit(prev => prev + 10);
-                setIsLoading(true);
-                setTimeout(() => setIsLoading(false), 1000);
-                refetchPOIList();
-            }
-        }
+    const handleMorePOI = () => {
+        setIsLoading(true);
+        setPOIListPage(prev => prev + 1);
+        refetchPOIList().then(() => setIsLoading(false));
     };
 
     useEffect(() => {
@@ -76,19 +70,9 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
 
     useEffect(() => {
         if (POIListData) {
-            setPOIList(POIListData.getPOIs.items || []);
+            setPOIList(prev => [...prev, ...POIListData.getPOIs.items]);
         }
     }, [POIListData]);
-
-    useEffect(() => {
-        const boxElement = listInnerRef.current;
-        if (boxElement) {
-            boxElement.addEventListener("scroll", handleScroll);
-            return () => {
-                boxElement.removeEventListener("scroll", handleScroll);
-            };
-        }
-    }, [listInnerRef])
 
     return (
         <Box
@@ -121,17 +105,17 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                 </IconButton>
             </Box>
             <Box
-                ref={listInnerRef}
                 sx={{
                     width: "100%",
-                    height: "800px",
-                    overflowY: "auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                     borderRadius: "16px"
                 }}
             >
                 <List
                     sx={{
-                        width: "95%"
+                        width: "90%"
                     }}
                 >
                     {POIList.map((item: POIListItemValue) => (
@@ -205,13 +189,32 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                         </ListItem>
                     ))}
                 </List>
+                <IconButton
+                    color="primary"
+                    onClick={handleMorePOI}
+                    sx={{
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}
+                >
+                    <ExpandMoreIcon />
+                    <Typography>More</Typography>
+                </IconButton>
                 {isLoading && (
-                    <SpinningHourglass
+                    <Box
                         sx={{
-                            left: "50%",
-                            transform: "translateX(-50%)"
+                            display: "flex",
+                            justifyContent: "center",
+                            width: "100%",
+                            position: "relative",
+                            bottom: 0
                         }}
-                    />
+                    >
+                        <SpinningHourglass />
+                    </Box>
                 )}
             </Box>
         </Box>

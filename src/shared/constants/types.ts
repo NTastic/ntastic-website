@@ -118,3 +118,19 @@ export type POIValue = {
         upvotes: number;
     };
 };
+
+export type RecommendationValue = {
+    id: string;
+    title: string;
+    list: Array<
+        {
+            poi: {
+                id: string;
+                photoUrls: Array<string>;
+                rating: number;
+                reviewsCount: number;
+            }
+        }
+    >;
+    catIds: Array<string>;
+};

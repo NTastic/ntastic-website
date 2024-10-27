@@ -12,9 +12,12 @@ import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutline
 import { useRouter } from "next/navigation";
 import { handleShare } from "@/utils/HandleShare";
 import { RouteConfig } from "@/routes/route";
+import { CategoryValue } from "@/shared/constants/types";
+import { GET_CATEGORIES } from "@/graphql/poi";
+import { useQuery } from "@apollo/client";
 
 interface RecommendationProps {
-    category: string;
+    category_id: string;
     poi_id: string;
     recommendation_id: string;
 };
@@ -26,11 +29,15 @@ const images = [
     "https://picsum.photos/450/300"
 ];
 
-const Recommendation: React.FC<RecommendationProps> = ({ category, poi_id, recommendation_id }) => {
+const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, recommendation_id }) => {
     const router = useRouter();
+    const [categoryName, setCategoryName] = useState<string | null>(null);
+    const [categories, setCategories] = useState<CategoryValue[]>([]);
     const [followed, setFollowed] = useState<boolean>(false);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [isHovered, setIsHovered] = useState<boolean>(false);
+
+    const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
     const handleFollow = () => setFollowed(prev => !prev);
 
@@ -49,6 +56,25 @@ const Recommendation: React.FC<RecommendationProps> = ({ category, poi_id, recom
     const handleMouseLeave = (): void => {
         setIsHovered(false);
     };
+
+    useEffect(() => {
+        if (categoriesData) {
+            setCategories(categoriesData.getCategories || []);
+        }
+    }, [categoriesData]);
+
+    useEffect(() => {
+        if (categories.length > 0) {
+            const currentCategory = categories.filter(item => item.id === category_id)[0];
+            setCategoryName(currentCategory.name);
+        }
+    }, [categories])
+
+    useEffect(() => {
+        if (categoryName) {
+            document.title = `NTastic | ${categoryName}`;
+        }
+    }, [categoryName]);
 
     useEffect(() => {
         if (!isHovered) {

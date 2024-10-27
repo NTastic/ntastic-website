@@ -1,6 +1,6 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
-import { Avatar, Box, List, ListItem, ListItemButton, Typography } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Avatar, Box, IconButton, List, ListItem, ListItemButton, Typography } from "@mui/material";
 import { useQuery } from "@apollo/client";
 import { GET_QUESTIONS } from "@/graphql/qa";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import DisplayImages from "@/utils/DisplayImages";
 import { QuestionsValue } from "@/shared/constants/types";
 import { SpinningHourglass } from "@/utils/Animations";
 import { truncateContent } from "@/utils/TruncateContent";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface NewQuestionsProps {
     selectedTag: string;
@@ -18,9 +19,8 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
     const router = useRouter();
     const [tagIds, setTagIds] = useState<string[]>([]);
     const [questions, setQuestions] = useState<QuestionsValue[]>([]);
-    const [queryLimit, setQueryLimit] = useState<number>(10);
+    const [queryPage, setQueryPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const listInnerRef = useRef<HTMLDivElement | null>(null);
 
     const { data: questionData, refetch } = useQuery(
         GET_QUESTIONS,
@@ -28,7 +28,8 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
             variables: {
                 tagIds: tagIds,
                 pageOptions: {
-                    limit: queryLimit,
+                    limit: 10,
+                    page: queryPage,
                     sortField: "updatedAt",
                     order: "DESC"
                 }
@@ -37,21 +38,15 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
         }
     );
 
-    const handleScroll = () => {
-        if (listInnerRef.current) {
-            const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
-            if (scrollTop + clientHeight >= scrollHeight - 5) {
-                setQueryLimit((prevLimit) => prevLimit + 10);
-                setIsLoading(true);
-                setTimeout(() => setIsLoading(false), 1000);
-                refetch();
-            }
-        }
+    const handleMoreQuestions = () => {
+        setIsLoading(true);
+        setQueryPage(prev => prev + 1);
+        refetch().then(() => setIsLoading(false));
     };
 
     useEffect(() => {
         if (questionData) {
-            setQuestions(questionData?.getQuestions.items || []);
+            setQuestions(prev => [...prev, ...questionData.getQuestions.items]);
         }
     }, [questionData]);
 
@@ -62,16 +57,6 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
             setTagIds([selectedTag]);
         }
     }, [selectedTag]);
-
-    useEffect(() => {
-        const boxElement = listInnerRef.current;
-        if (boxElement) {
-            boxElement.addEventListener("scroll", handleScroll);
-            return () => {
-                boxElement.removeEventListener("scroll", handleScroll);
-            };
-        }
-    }, [listInnerRef]);
 
     return (
         <Box
@@ -86,11 +71,8 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
                 The newest asked questions:
             </Typography>
             <Box
-                ref={listInnerRef}
                 sx={{
                     width: "100%",
-                    height: "800px",
-                    overflowY: "auto",
                     borderRadius: "16px"
                 }}
             >
@@ -145,15 +127,34 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
                         </ListItem>
                     ))}
                 </List>
-            </Box>
-            {isLoading && (
-                <SpinningHourglass
+                <IconButton
+                    color="primary"
+                    onClick={handleMoreQuestions}
                     sx={{
-                        left: "50%",
-                        transform: "translateX(-50%)"
+                        width: "100%",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center"
                     }}
-                />
-            )}
+                >
+                    <ExpandMoreIcon />
+                    <Typography>More</Typography>
+                </IconButton>
+                {isLoading && (
+                    <Box
+                        sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            width: "100%",
+                            position: "relative",
+                            bottom: 0
+                        }}
+                    >
+                        <SpinningHourglass />
+                    </Box>
+                )}
+            </Box>
         </Box>
     );
 };

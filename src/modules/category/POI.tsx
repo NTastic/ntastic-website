@@ -121,7 +121,7 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 display="flex"
                 flexDirection="column"
                 alignItems="center"
-                justifyContent="center"
+                justifyContent="space-between"
             >
                 <SpinningHourglass />
             </Box>);
