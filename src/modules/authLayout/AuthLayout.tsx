@@ -40,8 +40,9 @@ const AuthLayout: React.FC<PropsWithChildren> = ({ children }) => {
 
     return (
         <Box
-            className="h-screen w-screen"
             sx={{
+                height: "100%",
+                width: "100%",
                 overflow: "hidden"
             }}
         >

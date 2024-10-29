@@ -10,7 +10,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { ACCESS_TOKEN, IS_SM, REFRESH_TOKEN } from "@/shared/constants/storage";
-import { useTheme, useMediaQuery } from "@mui/material";
+import { useTheme, useMediaQuery, styled } from "@mui/material";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 import { onError } from "@apollo/client/link/error";
 import { refreshAccessToken } from "@/validation/auth/auth";
@@ -91,6 +91,12 @@ const client = new ApolloClient({
   cache: new InMemoryCache()
 });
 
+const StyledBody = styled('body')(({theme}) => ({
+  fontFamily: inter.variable,
+  WebkitFontSmoothing: 'subpixel-antialiased',
+  backgroundColor: theme.palette.background.default,
+}));
+
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")) ? "true" : "false";
@@ -102,15 +108,17 @@ const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="https://i.postimg.cc/mkryN7K0/NTastic-icon.png" type="image/x-icon" />
+        <link
+          rel="icon"
+          href="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+          type="image/x-icon"
+        />
       </head>
-      <body
-        className={`${inter.variable} font-sans subpixel-antialiased`}
-      >
+      <StyledBody>
         <ApolloProvider client={client}>
           {children}
         </ApolloProvider>
-      </body>
+      </StyledBody>
     </html>
   );
 };

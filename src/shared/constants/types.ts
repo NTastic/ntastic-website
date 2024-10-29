@@ -119,6 +119,20 @@ export type POIValue = {
     };
 };
 
+export type CommentValue = {
+    id: string;
+    author: {
+        id: string;
+        avatar: string;
+        username: string;
+    };
+    content: string;
+    rating: number;
+    votes: {
+        upvotes: number;
+    };
+};
+
 export type RecommendationValue = {
     id: string;
     title: string;
@@ -126,6 +140,8 @@ export type RecommendationValue = {
         {
             poi: {
                 id: string;
+                name: string;
+                address: string;
                 photoUrls: Array<string>;
                 rating: number;
                 reviewsCount: number;

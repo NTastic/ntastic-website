@@ -11,18 +11,13 @@ import {
     Button,
     Box
 } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useRouter } from 'next/navigation';
 import { RouteConfig } from '@/routes/route';
 import { ACCESS_TOKEN, USER_ID } from '@/shared/constants/storage';
 
-interface TopbarProps {
-    handleDrawerOpen: () => void;
-};
-
-const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
+const Topbar: React.FC = () => {
     const router = useRouter();
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [auth, setAuth] = React.useState<boolean>(false);
@@ -56,18 +51,12 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
     return (
         <AppBar position='fixed' sx={{ backgroundColor: '#f8f8f8' }}>
             <Toolbar>
-                <IconButton
-                    size='large'
-                    edge='start'
-                    color='info'
-                    aria-label='menu'
-                    sx={{ mr: 2 }}
-                    onClick={handleDrawerOpen}
-                >
-                    <MenuIcon />
-                </IconButton>
                 <Box
-                    flexGrow={1}
+                    sx={{
+                        position: "absolute",
+                        left: "calc(50% + 30px)",
+                        transform: "translateX(-50%)"
+                    }}
                 >
                     <Button
                         onClick={() => { router.push(RouteConfig.Home.Path) }}
@@ -93,17 +82,23 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
                         </Typography>
                     </Button>
                 </Box>
-                <IconButton
-                    size='large'
-                    edge='start'
-                    color='warning'
-                    aria-label='notifications'
-                    sx={{ mr: 2 }}
-                >
-                    <NotificationsIcon />
-                </IconButton>
                 {auth && (
-                    <div>
+                    <Box
+                        sx={{
+                            position: "absolute",
+                            right: "3%",
+                            transform: "translateX(3%)"
+                        }}
+                    >
+                        <IconButton
+                            size='large'
+                            edge='end'
+                            color='warning'
+                            aria-label='notifications'
+                            sx={{ mr: 2 }}
+                        >
+                            <NotificationsIcon />
+                        </IconButton>
                         <IconButton
                             size='large'
                             aria-label='account'
@@ -135,13 +130,16 @@ const Topbar: React.FC<TopbarProps> = ({ handleDrawerOpen }) => {
                                 Log out
                             </MenuItem>
                         </Menu>
-                    </div>
+                    </Box>
                 )}
                 {!auth && (
                     <Button
                         variant='contained'
                         color='primary'
                         sx={{
+                            position: "absolute",
+                            right: "3%",
+                            transform: "translateX(3%)",
                             borderRadius: "16px"
                         }}
                         onClick={() => {

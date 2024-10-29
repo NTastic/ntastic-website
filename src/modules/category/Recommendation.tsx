@@ -13,8 +13,10 @@ import { useRouter } from "next/navigation";
 import { handleShare } from "@/utils/HandleShare";
 import { RouteConfig } from "@/routes/route";
 import { CategoryValue } from "@/shared/constants/types";
-import { GET_CATEGORIES } from "@/graphql/poi";
+import { GET_CATEGORIES, GET_ONE_RECOMMENDATION } from "@/graphql/poi";
 import { useQuery } from "@apollo/client";
+import { RecommendationValue } from "@/shared/constants/types";
+import { SpinningHourglass } from "@/utils/Animations";
 
 interface RecommendationProps {
     category_id: string;
@@ -22,31 +24,31 @@ interface RecommendationProps {
     recommendation_id: string;
 };
 
-const images = [
-    "https://picsum.photos/500/300",
-    "https://picsum.photos/550/300",
-    "https://picsum.photos/600/300",
-    "https://picsum.photos/450/300"
-];
-
 const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, recommendation_id }) => {
     const router = useRouter();
     const [categoryName, setCategoryName] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryValue[]>([]);
+    const [recData, setRecData] = useState<RecommendationValue | null>(null);
+    const [POIImages, setPOIImages] = useState<string[]>([]);
     const [followed, setFollowed] = useState<boolean>(false);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
     const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
+    const { data: recommendationData } = useQuery(
+        GET_ONE_RECOMMENDATION,
+        { variables: { getRecommendationId: recommendation_id } }
+    );
+
     const handleFollow = () => setFollowed(prev => !prev);
 
     const prevSlide = (): void => {
-        setCurrentIndex(prev => (prev - 1 + images.length) % images.length);
+        setCurrentIndex(prev => (prev - 1 + POIImages.length) % POIImages.length);
     };
 
     const nextSlide = (): void => {
-        setCurrentIndex(prev => (prev + 1) % images.length);
+        setCurrentIndex(prev => (prev + 1) % POIImages.length);
     };
 
     const handleMouseOver = (): void => {
@@ -77,6 +79,13 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
     }, [categoryName]);
 
     useEffect(() => {
+        if (recommendationData) {
+            setRecData(recommendationData.getRecommendation || null);
+            setPOIImages(recommendationData.getRecommendation.list[0].poi.photoUrls || []);
+        }
+    }, [recommendationData]);
+
+    useEffect(() => {
         if (!isHovered) {
             const interval = setInterval(() => {
                 nextSlide();
@@ -84,6 +93,22 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
             return () => clearInterval(interval);
         }
     }, [isHovered]);
+
+    if (!recData) {
+        return (
+            <Box
+                sx={{
+                    width: "95%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}
+            >
+                <SpinningHourglass />
+            </Box>
+        );
+    }
 
     return (
         <Box
@@ -148,7 +173,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                 onMouseLeave={handleMouseLeave}
             >
                 <img
-                    src={images[currentIndex]}
+                    src={POIImages[currentIndex]}
                     style={{ height: "80%", width: "auto" }}
                     loading="lazy"
                 />
@@ -177,7 +202,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                     <ChevronRight />
                 </Button>
                 <Stack direction="row" spacing={2}>
-                    {images.map((_, index) => (
+                    {POIImages.map((_, index) => (
                         <IconButton
                             key={index}
                             sx={{
@@ -201,16 +226,16 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                 </Stack>
             </Box>
             <Box width="100%" mb={2}>
-                <Typography variant="h6">
+                {/* <Typography variant="h6">
                     The best restaurant in Darwin
-                </Typography>
+                </Typography> */}
                 <Typography variant="body1">
-                    This is my favorite restaurant in Darwin cause Every time I go there on Turesday, I can have the voucher of main meal with the kid meal for free.
+                    {recData.title}
                 </Typography>
             </Box>
             <Button
                 variant="contained"
-                onClick={() => { router.push(RouteConfig.POI("restaurant", "001", "001").Path) }}
+                onClick={() => { router.push(RouteConfig.POI(category_id, categoryName!, poi_id).Path) }}
                 sx={{
                     width: "100%",
                     borderRadius: "16px",
@@ -224,10 +249,10 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                 }}
             >
                 <Typography variant="h5">
-                    Breezes Bar & Bistro
+                    {recData.list[0].poi.name}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                    480 Lee Point Rd, Muirhead NT 0810
+                    {recData.list[0].poi.address}
                 </Typography>
                 <Box
                     sx={{
@@ -240,100 +265,98 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                     <ChevronRight />
                 </Box>
             </Button>
-            <Box width="100%" position="relative">
-                <Box
-                    width="750px"
-                    position="fixed"
-                    display="flex"
-                    flex="row"
-                    alignItems="center"
-                    bottom="10px"
-                    borderRadius="16px"
-                    padding={1}
+            <Box
+                width="750px"
+                position="fixed"
+                display="flex"
+                flex="row"
+                alignItems="center"
+                bottom="10px"
+                borderRadius="16px"
+                padding={1}
+                sx={{
+                    backgroundColor: "#00FF9C",
+                    left: "calc(50% + 30px)",
+                    transform: "translateX(-50%)"
+                }}
+            >
+                <TextField
+                    variant="outlined"
+                    placeholder="Say something ..."
+                    multiline
                     sx={{
-                        backgroundColor: "#00FF9C",
-                        left: "50%",
-                        transform: "translateX(-50%)"
+                        flexGrow: 1,
+                        borderRadius: "16px",
+                        border: "none",
+                        backgroundColor: "rgba(255, 255, 255)",
+                        transition: "all 0.3s ease",
+                        "&:focus-within": {
+                            backgroundColor: "rgba(255, 255, 255)",
+                        }
+                    }}
+                    InputProps={{
+                        sx: {
+                            borderRadius: "16px",
+                        },
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                                <CreateIcon />
+                            </InputAdornment>
+                        ),
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton edge="end">
+                                    <SendIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                />
+                <IconButton
+                    sx={{
+                        display: "flex",
+                        flex: "row",
+                        alignItems: "center",
+                        gap: 0.5,
+                        ml: 1,
+                        mr: 1
                     }}
                 >
-                    <TextField
-                        variant="outlined"
-                        placeholder="Say something ..."
-                        multiline
-                        sx={{
-                            flexGrow: 1,
-                            borderRadius: "16px",
-                            border: "none",
-                            backgroundColor: "rgba(255, 255, 255)",
-                            transition: "all 0.3s ease",
-                            "&:focus-within": {
-                                backgroundColor: "rgba(255, 255, 255)",
-                            }
-                        }}
-                        InputProps={{
-                            sx: {
-                                borderRadius: "16px",
-                            },
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <CreateIcon />
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton edge="end">
-                                        <SendIcon />
-                                    </IconButton>
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                    <IconButton
-                        sx={{
-                            display: "flex",
-                            flex: "row",
-                            alignItems: "center",
-                            gap: 0.5,
-                            ml: 1,
-                            mr: 1
-                        }}
-                    >
-                        <FavoriteBorderIcon />
-                        <Typography variant="body1">
-                            45
-                        </Typography>
-                    </IconButton>
-                    <IconButton
-                        sx={{
-                            display: "flex",
-                            flex: "row",
-                            alignItems: "center",
-                            gap: 0.5,
-                            ml: 1,
-                            mr: 1
-                        }}
-                    >
-                        <StarBorderOutlinedIcon />
-                        <Typography variant="body1">
-                            21
-                        </Typography>
-                    </IconButton>
-                    <IconButton
-                        sx={{
-                            display: "flex",
-                            flex: "row",
-                            alignItems: "center",
-                            gap: 0.5,
-                            ml: 1,
-                            mr: 1
-                        }}
-                    >
-                        <ChatBubbleOutlineOutlinedIcon />
-                        <Typography variant="body1">
-                            22
-                        </Typography>
-                    </IconButton>
-                </Box>
+                    <FavoriteBorderIcon />
+                    <Typography variant="body1">
+                        45
+                    </Typography>
+                </IconButton>
+                <IconButton
+                    sx={{
+                        display: "flex",
+                        flex: "row",
+                        alignItems: "center",
+                        gap: 0.5,
+                        ml: 1,
+                        mr: 1
+                    }}
+                >
+                    <StarBorderOutlinedIcon />
+                    <Typography variant="body1">
+                        21
+                    </Typography>
+                </IconButton>
+                <IconButton
+                    sx={{
+                        display: "flex",
+                        flex: "row",
+                        alignItems: "center",
+                        gap: 0.5,
+                        ml: 1,
+                        mr: 1
+                    }}
+                >
+                    <ChatBubbleOutlineOutlinedIcon />
+                    <Typography variant="body1">
+                        22
+                    </Typography>
+                </IconButton>
             </Box>
         </Box>
     );
