@@ -58,6 +58,28 @@ export const GET_ONE_POI = gql`
     }
 `;
 
+export const GET_COMMENTS = gql`
+    query GetComments($poiId: ID!, $pageOptions: PageOptions) {
+        getComments(poiId: $poiId, pageOptions: $pageOptions) {
+            items {
+                ... on Comment {
+                    id
+                    author {
+                        id
+                        avatar
+                        username
+                    }
+                    content
+                    rating
+                    votes {
+                        upvotes
+                    }
+                }
+            }
+        }
+    }
+`;
+
 export const GET_RECOMMENDATIONS = gql`
     query GetRecommendations($catIds: [ID!], $pageOptions: PageOptions) {
         getRecommendations(catIds: $catIds, pageOptions: $pageOptions) {
@@ -68,12 +90,33 @@ export const GET_RECOMMENDATIONS = gql`
                     list {
                         poi {
                             id
+                            name
+                            address
                             photoUrls
                             rating
                             reviewsCount
                         }
                     }
                     catIds
+                }
+            }
+        }
+    }
+`;
+
+export const GET_ONE_RECOMMENDATION = gql`
+    query GetRecommendation($getRecommendationId: ID!) {
+        getRecommendation(id: $getRecommendationId) {
+            id
+            title
+            list {
+                poi {
+                    id
+                    name
+                    address
+                    photoUrls
+                    rating
+                    reviewsCount
                 }
             }
         }

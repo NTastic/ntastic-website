@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Button, IconButton, Stack, TextField, Typography, InputAdornment, Divider, List, ListItem, Link } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Stack, TextField, Typography, InputAdornment, Divider, List, ListItem, Link, Icon } from "@mui/material";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import IosShareIcon from '@mui/icons-material/IosShare';
 import CircleIcon from '@mui/icons-material/Circle';
@@ -11,29 +11,18 @@ import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import ChatBubbleOutlineOutlinedIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import { useRouter } from "next/navigation";
 import { handleShare } from "@/utils/HandleShare";
-import { CategoryValue, POIValue } from "@/shared/constants/types";
-import { GET_CATEGORIES, GET_ONE_POI } from "@/graphql/poi";
+import { CategoryValue, CommentValue, POIValue } from "@/shared/constants/types";
+import { GET_CATEGORIES, GET_ONE_POI, GET_COMMENTS } from "@/graphql/poi";
 import { useQuery } from "@apollo/client";
 import { SpinningHourglass } from "@/utils/Animations";
 import { RouteConfig } from "@/routes/route";
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface POIProps {
     categoryId: string;
     poiId: string;
 };
-
-const comments = [
-    {
-        id: 0,
-        author: {
-            username: "Jack"
-        },
-        comment: "This is my favorite restaurant in Darwin cause Every time I go there on Turesday, I can have the voucher of main meal with the kid meal for free.",
-        votes: {
-            upvotes: 7
-        }
-    },
-];
 
 const bottomIconStyle = {
     display: "flex",
@@ -50,12 +39,31 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
     const [categories, setCategories] = useState<CategoryValue[]>([]);
     const [POIData, setPOIData] = useState<POIValue | null>(null);
     const [POIImages, setPOIImages] = useState<string[]>([]);
+    const [comments, setComments] = useState<CommentValue[]>([]);
+    const [commentPage, setCommentPage] = useState<number>(1);
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [isHovered, setIsHovered] = useState<boolean>(false);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { data: categoriesData } = useQuery(GET_CATEGORIES);
-
-    const { data } = useQuery(GET_ONE_POI, { variables: { getPoiId: poiId } });
+    const { data: currentPOIData } = useQuery(
+        GET_ONE_POI,
+        { variables: { getPoiId: poiId } }
+    );
+    const { data: commentsData, refetch: refetchComments } = useQuery(
+        GET_COMMENTS,
+        {
+            variables: {
+                poiId: poiId,
+                pageOptions: {
+                    limit: 10,
+                    page: commentPage,
+                    sortField: "votes.upvotes",
+                    order: "DESC"
+                }
+            }
+        }
+    );
 
     const prevSlide = (): void => {
         if (POIImages.length > 0) {
@@ -75,6 +83,12 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
 
     const handleMouseLeave = (): void => {
         setIsHovered(false);
+    };
+
+    const handleMoreComments = () => {
+        setIsLoading(true);
+        setCommentPage(prev => prev + 1);
+        refetchComments().then(() => setIsLoading(false));
     };
 
     useEffect(() => {
@@ -98,11 +112,17 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
     }, [categoryName]);
 
     useEffect(() => {
-        if (data) {
-            setPOIData(data.getPOI || null);
-            setPOIImages(data.getPOI.photoUrls.slice(0, 9) || []);
+        if (currentPOIData) {
+            setPOIData(currentPOIData.getPOI || null);
+            setPOIImages(currentPOIData.getPOI.photoUrls.slice(0, 9) || []);
         }
-    }, [data]);
+    }, [currentPOIData]);
+
+    useEffect(() => {
+        if (commentsData) {
+            setComments(prev => [...prev, ...commentsData.getComments.items]);
+        }
+    }, [commentsData]);
 
     useEffect(() => {
         if (!isHovered) {
@@ -317,81 +337,114 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                                 </Typography>
                             </Box>
                             <Typography variant="body1" fontSize="small">
-                                {item.comment}
+                                {item.content}
                             </Typography>
+                            <Box display="flex" flexDirection="row" alignItems="center" mr={1}>
+                                <IconButton>
+                                    <ThumbUpIcon />
+                                </IconButton>
+                                <Typography variant="body2">
+                                    {item.votes.upvotes}
+                                </Typography>
+                            </Box>
                         </ListItem>
                     ))}
                 </List>
             )}
-            <Box width="100%" position="relative">
+            <IconButton
+                color="primary"
+                onClick={handleMoreComments}
+                sx={{
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center"
+                }}
+            >
+                <ExpandMoreIcon />
+                <Typography>More</Typography>
+            </IconButton>
+            {isLoading && (
                 <Box
-                    width="750px"
-                    position="fixed"
-                    display="flex"
-                    flex="row"
-                    alignItems="center"
-                    bottom="10px"
-                    borderRadius="16px"
-                    padding={1}
                     sx={{
-                        backgroundColor: "#00FF9C",
-                        left: "50%",
-                        transform: "translateX(-50%)"
+                        display: "flex",
+                        justifyContent: "center",
+                        width: "100%",
+                        position: "relative",
+                        bottom: 0
                     }}
                 >
-                    <TextField
-                        variant="outlined"
-                        placeholder={`Comment this ${categoryName}...`}
-                        multiline
-                        sx={{
-                            flexGrow: 1,
-                            borderRadius: "16px",
-                            border: "none",
-                            backgroundColor: "rgba(255, 255, 255)",
-                        }}
-                        InputProps={{
-                            sx: {
-                                borderRadius: "16px",
-                            },
-                            startAdornment: (
-                                <InputAdornment position='start'>
-                                    <CreateIcon />
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton edge="end">
-                                        <SendIcon />
-                                    </IconButton>
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                    <IconButton
-                        sx={bottomIconStyle}
-                    >
-                        <FavoriteBorderIcon />
-                        <Typography variant="body1">
-                            {POIData.votes.upvotes || 0}
-                        </Typography>
-                    </IconButton>
-                    <IconButton
-                        sx={bottomIconStyle}
-                    >
-                        <StarBorderOutlinedIcon />
-                        <Typography variant="body1">
-                            21
-                        </Typography>
-                    </IconButton>
-                    <IconButton
-                        sx={bottomIconStyle}
-                    >
-                        <ChatBubbleOutlineOutlinedIcon />
-                        <Typography variant="body1">
-                            {POIData.reviewsCount || 0}
-                        </Typography>
-                    </IconButton>
+                    <SpinningHourglass />
                 </Box>
+            )}
+            <Box
+                width="750px"
+                position="fixed"
+                display="flex"
+                flex="row"
+                alignItems="center"
+                bottom="10px"
+                borderRadius="16px"
+                padding={1}
+                sx={{
+                    backgroundColor: "#00FF9C",
+                    left: "calc(50% + 30px)",
+                    transform: "translateX(-50%)"
+                }}
+            >
+                <TextField
+                    variant="outlined"
+                    placeholder={`Comment this ${categoryName}...`}
+                    multiline
+                    sx={{
+                        flexGrow: 1,
+                        borderRadius: "16px",
+                        border: "none",
+                        backgroundColor: "rgba(255, 255, 255)",
+                    }}
+                    InputProps={{
+                        sx: {
+                            borderRadius: "16px",
+                        },
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                                <CreateIcon />
+                            </InputAdornment>
+                        ),
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton edge="end">
+                                    <SendIcon />
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                />
+                <IconButton
+                    sx={bottomIconStyle}
+                >
+                    <FavoriteBorderIcon />
+                    <Typography variant="body1">
+                        {POIData.votes.upvotes || 0}
+                    </Typography>
+                </IconButton>
+                <IconButton
+                    sx={bottomIconStyle}
+                >
+                    <StarBorderOutlinedIcon />
+                    <Typography variant="body1">
+                        21
+                    </Typography>
+                </IconButton>
+                <IconButton
+                    sx={bottomIconStyle}
+                >
+                    <ChatBubbleOutlineOutlinedIcon />
+                    <Typography variant="body1">
+                        {POIData.reviewsCount || 0}
+                    </Typography>
+                </IconButton>
             </Box>
         </Box>
     );
