@@ -31,7 +31,8 @@ const Recommendations: React.FC = () => {
                     limit: 12,
                     page: recPage,
                 }
-            }
+            },
+            fetchPolicy: "no-cache"
         }
     );
 
@@ -105,8 +106,7 @@ const Recommendations: React.FC = () => {
                                     }}
                                 >
                                     <img
-                                        srcSet={`${item.list[0].poi.photoUrls[0]}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                                        src={`${item.list[0].poi.photoUrls[0]}?w=248&fit=crop&auto=format`}
+                                        src={item.list[0].poi.photoUrls[0]}
                                         loading="lazy"
                                         style={{ width: "100%", height: "auto", borderRadius: "16px" }}
                                     />
