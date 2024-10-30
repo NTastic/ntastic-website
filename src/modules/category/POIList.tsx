@@ -1,10 +1,10 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import { RouteConfig } from "@/routes/route";
-import { GET_CATEGORIES, GET_POI_LIST } from "@/graphql/poi";
+import { GET_CATEGORIES, GET_SUB_CATEGORIES, GET_POI_LIST } from "@/graphql/poi";
 import { useQuery } from "@apollo/client";
 import { CategoryValue, POIListItemValue } from "@/shared/constants/types";
-import { Box, Icon, IconButton, List, ListItem, ListItemButton, Typography } from "@mui/material";
+import { Box, Button, Collapse, Icon, IconButton, List, ListItem, ListItemButton, Typography } from "@mui/material";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useRouter } from "next/navigation";
 import StarIcon from '@mui/icons-material/Star';
@@ -16,21 +16,62 @@ interface POIListProps {
     categoryId: string;
 };
 
+const buttonStyle = {
+    borderRadius: "16px",
+    margin: 1,
+    textTransform: "none",
+    backgroundColor: "#d0d0d0",
+    color: "#000",
+    fontSize: "small",
+    transition: "all 0.3s ease",
+    "&:hover": {
+        backgroundColor: "#3388cc",
+        color: "#fff",
+        transform: "scale(1.03) translateY(-3px)"
+    }
+};
+
+const selectedButtonStyle = {
+    borderRadius: "16px",
+    margin: 1,
+    textTransform: "none",
+    backgroundColor: "#3388cc",
+    color: "#fff",
+    fontSize: "small",
+    transition: "all 0.3s ease",
+    "&:hover": {
+        transform: "scale(1.03) translateY(-3px)"
+    }
+};
+
 const POIList: React.FC<POIListProps> = ({ categoryId }) => {
     const router = useRouter();
     const [categoryName, setCategoryName] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryValue[]>([]);
+    const [openCollapse, setOpenCollapse] = useState<boolean>(false);
+    const [subCats, setSubCats] = useState<CategoryValue[]>([]);
+    const [selectedSubCatId, setSelectedSubCatId] = useState<string | null>(null);
+    const [selectedSubCatName, setSelectedSubCatName] = useState<string | null>(null);
+    const [isSubCatChanged, setIsSubCatChanged] = useState<boolean>(false);
     const [POIList, setPOIList] = useState<POIListItemValue[]>([]);
     const [POIListPage, setPOIListPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
+    const { data: subCatsData } = useQuery(
+        GET_SUB_CATEGORIES,
+        {
+            variables: { parentCatId: categoryId },
+            fetchPolicy: "no-cache"
+        }
+    );
+
     const { data: POIListData, refetch: refetchPOIList } = useQuery(
         GET_POI_LIST,
         {
             variables: {
-                catIds: [categoryId],
+                catIds: [selectedSubCatId || categoryId],
                 pageOptions: {
                     "limit": 10,
                     "page": POIListPage,
@@ -46,6 +87,21 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
         setIsLoading(true);
         setPOIListPage(prev => prev + 1);
         refetchPOIList().then(() => setIsLoading(false));
+    };
+
+    const handleCollapse = () => setOpenCollapse(prev => !prev);
+
+    const handleSelectSubCat = (item: CategoryValue | null) => {
+        setIsSubCatChanged(true);
+        setTimeout(() => { }, 100);
+        if (!item || selectedSubCatId === item.id) {
+            setSelectedSubCatId(null);
+            setSelectedSubCatName(null);
+        } else {
+            setSelectedSubCatId(item.id);
+            setSelectedSubCatName(item.name);
+        }
+        setOpenCollapse(false);
     };
 
     useEffect(() => {
@@ -67,6 +123,20 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
             document.title = metadata.title;
         }
     }, [categoryName]);
+
+    useEffect(() => {
+        if (subCatsData) {
+            setSubCats(subCatsData.getCategories);
+        }
+    }, [subCatsData]);
+
+    useEffect(() => {
+        if (isSubCatChanged) {
+            setPOIList([]);
+            setPOIListPage(1);
+            setIsSubCatChanged(false);
+        }
+    }, [isSubCatChanged]);
 
     useEffect(() => {
         if (POIListData) {
@@ -104,6 +174,48 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                     <ChevronLeftIcon />
                 </IconButton>
             </Box>
+            {subCats.length > 0 && (
+                <Box width="100%" display="flex" flexDirection="column" alignItems="center">
+                    <Box width="85%" display="flex" flexDirection="row" alignItems="center">
+                        <Typography variant="body1" fontWeight="bold" flexGrow={1}>
+                            Current Display: {selectedSubCatName || "All"}
+                        </Typography>
+                        <Button
+                            onClick={handleCollapse}
+                            sx={{ textTransform: "none" }}
+                        >
+                            {openCollapse ? "Show Less" : "Show More"}
+                        </Button>
+                    </Box>
+                    <Collapse
+                        in={openCollapse}
+                        collapsedSize={50}
+                        timeout={500}
+                    >
+                        <Box width="100%" display="flex" flexDirection="column" alignItems="center">
+                            <Box width="85%" display="flex" flexWrap="wrap">
+                                <Button
+                                    variant="contained"
+                                    sx={!selectedSubCatId ? selectedButtonStyle : buttonStyle}
+                                    onClick={() => handleSelectSubCat(null)}
+                                >
+                                    All
+                                </Button>
+                                {subCats.map((item: CategoryValue) => (
+                                    <Button
+                                        key={item.id}
+                                        variant="contained"
+                                        sx={selectedSubCatId === item.id ? selectedButtonStyle : buttonStyle}
+                                        onClick={() => handleSelectSubCat(item)}
+                                    >
+                                        {item.name}
+                                    </Button>
+                                ))}
+                            </Box>
+                        </Box>
+                    </Collapse>
+                </Box>
+            )}
             <Box
                 sx={{
                     width: "100%",

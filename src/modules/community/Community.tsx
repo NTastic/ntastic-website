@@ -8,14 +8,19 @@ import { SELECTED_TAG } from "@/shared/constants/storage";
 
 const CommunityModule: React.FC = () => {
     const [selectedTag, setSelectedTag] = useState<string>("");
+    const [isTagChanged, setIsTagChanged] = useState<boolean>(false);
 
     const handleSelectTag = (id: string | null) => {
+        setIsTagChanged(true);
+        setTimeout(() => {}, 100);
         if (id === null) {
             setSelectedTag("");
         } else {
             setSelectedTag(id);
         }
     };
+
+    const handleIsTagChanged = () => setIsTagChanged(prev => !prev);
 
     useEffect(() => {
         localStorage.setItem(SELECTED_TAG, selectedTag);
@@ -38,9 +43,16 @@ const CommunityModule: React.FC = () => {
             {/* Ask Questions to NTastic */}
             <AskQuestions />
             {/* Get All tags */}
-            <GetAllTags selectedTag={selectedTag} handleSelectTag={handleSelectTag} />
+            <GetAllTags
+                selectedTag={selectedTag}
+                handleSelectTag={handleSelectTag}
+            />
             {/* Get questions */}
-            <NewQuestions selectedTag={selectedTag} />
+            <NewQuestions
+                selectedTag={selectedTag}
+                isTagChanged={isTagChanged}
+                handleIsTagChanged={handleIsTagChanged}
+            />
         </Box>
     );
 };

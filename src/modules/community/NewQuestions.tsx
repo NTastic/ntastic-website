@@ -13,9 +13,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 interface NewQuestionsProps {
     selectedTag: string;
+    isTagChanged: boolean;
+    handleIsTagChanged: () => void;
 };
 
-const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
+const NewQuestions: React.FC<NewQuestionsProps> = ({ 
+    selectedTag, isTagChanged, handleIsTagChanged
+ }) => {
     const router = useRouter();
     const [tagIds, setTagIds] = useState<string[]>([]);
     const [questions, setQuestions] = useState<QuestionsValue[]>([]);
@@ -43,6 +47,14 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({ selectedTag }) => {
         setQueryPage(prev => prev + 1);
         refetch().then(() => setIsLoading(false));
     };
+
+    useEffect(() => {
+        if (isTagChanged) {
+            setQuestions([]);
+            setQueryPage(1);
+            handleIsTagChanged();
+        }
+    }, [isTagChanged]);
 
     useEffect(() => {
         if (questionData) {

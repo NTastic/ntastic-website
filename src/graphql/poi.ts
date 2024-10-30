@@ -9,6 +9,15 @@ export const GET_CATEGORIES = gql`
     }
 `;
 
+export const GET_SUB_CATEGORIES = gql`
+    query Query($parentCatId: ID) {
+        getCategories(parentCatId: $parentCatId) {
+            id
+            name
+        }
+    }
+`;
+
 export const GET_POI_LIST = gql`
     query GetPOIs($catIds: [ID!], $pageOptions: PageOptions) {
         getPOIs(catIds: $catIds, pageOptions: $pageOptions) {

@@ -1,10 +1,7 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Typography, Collapse } from '@mui/material';
 import Grid from "@mui/material/Grid2"
-import { GET_CATEGORIES } from '@/graphql/poi';
-import { useQuery } from '@apollo/client';
-import { CategoryValue } from '@/shared/constants/types';
 import GetCategoryIcon from '@/modules/home/GetCatIcon';
 import { useRouter } from 'next/navigation';
 import { RouteConfig } from '@/routes/route';
@@ -31,17 +28,8 @@ const categories = [
 const Categories: React.FC = () => {
     const router = useRouter();
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
-    // const [categories, setCategories] = useState<CategoryValue[]>([]);
-
-    // const { data: categoriesData } = useQuery(GET_CATEGORIES);
 
     const handleCollapse = () => setOpenCollapse(prev => !prev);
-
-    // useEffect(() => {
-    //     if (categoriesData) {
-    //         setCategories(categoriesData.getCategories || []);
-    //     }
-    // }, [categoriesData]);
 
     return (
         <Box
