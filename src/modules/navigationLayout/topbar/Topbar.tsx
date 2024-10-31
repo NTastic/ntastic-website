@@ -19,11 +19,14 @@ import { ACCESS_TOKEN, USER_ID } from '@/shared/constants/storage';
 
 const Topbar: React.FC = () => {
     const router = useRouter();
+    const [userId, setUserId] = useState<string | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [auth, setAuth] = React.useState<boolean>(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     useEffect(() => {
+        const userId = typeof window !== "undefined" ? localStorage.getItem(USER_ID) : null;
+        setUserId(userId);
         const accessToken = typeof window !== "undefined" ? localStorage.getItem(ACCESS_TOKEN) : null;
         setAccessToken(accessToken);
     }, []);
@@ -118,7 +121,7 @@ const Topbar: React.FC = () => {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <MenuItem>
+                            <MenuItem onClick={() => { router.push(RouteConfig.Profile(userId!).Path); }}>
                                 Profile
                             </MenuItem>
                             <MenuItem>

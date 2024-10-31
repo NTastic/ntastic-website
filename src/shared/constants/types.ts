@@ -150,3 +150,45 @@ export type RecommendationValue = {
     >;
     catIds: Array<string>;
 };
+
+export type UserValue = {
+    id: string;
+    avatar: string | null;
+    username: string;
+    description: string | null;
+};
+
+export type ProfileQuestionValue = {
+    id: string;
+    author: {
+        id: string;
+        avatar: string | null;
+        username: string;
+    };
+    title: string;
+    content: string;
+    answers: {
+        totalItems: number;
+    };
+    votes: {
+        upvotes: number;
+    };
+};
+
+export type ProfileAnswerValue = {
+    id: string;
+    question: {
+        id: string;
+        author: {
+            id: string;
+            avatar: string | null;
+            username: string;
+        };
+        title: string;
+        content: string;
+    };
+    content: string;
+    votes: {
+        upvotes: number;
+    };
+};
