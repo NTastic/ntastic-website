@@ -47,6 +47,13 @@ const RegisterQuestion3 = {
     Path: "/register/question-3" as const
 };
 
+const Profile = (user_id: string) => ({
+    Metadata: {
+        title: "NTastic | Profile"
+    },
+    Path: `/profile/${user_id}` as const
+});
+
 const Home = {
     Metadata: {
         title: 'NTastic | Home'
@@ -108,6 +115,7 @@ export const RouteConfig = {
     RegisterQuestion1,
     RegisterQuestion2,
     RegisterQuestion3,
+    Profile,
     Home,
     Category,
     POI,

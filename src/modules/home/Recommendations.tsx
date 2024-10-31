@@ -16,6 +16,7 @@ const Recommendations: React.FC = () => {
     const [recList, setRecList] = useState<RecommendationValue[]>([]);
     const [recPage, setRecPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [location, setLocation] = useState<{latitude: number; longtitude: number} | null>(null);
 
     const { data: recData, refetch } = useQuery(
         GET_RECOMMENDATIONS,
@@ -36,6 +37,16 @@ const Recommendations: React.FC = () => {
         }
     );
 
+    const getCurrentLocation = (): Promise<GeolocationPosition> => {
+        return new Promise((resolve, reject) => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            } else {
+                reject(new Error("Geolocation is not supported by this browser."));
+            }
+        });
+    };
+
     const handleMoreRecs = () => {
         setIsLoading(true);
         setRecPage(prev => prev + 1);
@@ -50,11 +61,19 @@ const Recommendations: React.FC = () => {
         }
     }, [recData]);
 
+    useEffect(() => {
+        getCurrentLocation().then((position) => {
+            setLocation({
+                latitude: position.coords.latitude,
+                longtitude: position.coords.longitude
+            });
+        }).catch((error) => console.error("Error getting location:", error.message));
+    }, []);
+
     return (
         <Box
             sx={{
                 width: "90%",
-                minHeight: "300px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
