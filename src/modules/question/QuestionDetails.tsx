@@ -42,10 +42,12 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 pageOptions: {
                     limit: answerLimit,
                     page: 1,
-                    sortOpts: {
-                        field: "votes.upvotes",
-                        order: "DESC",
-                    }
+                    sortOpts: [
+                        {
+                            field: "votes.upvotes",
+                            order: "DESC",
+                        }
+                    ]
                 }
             },
             skip: !question
@@ -58,10 +60,12 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 tagIds: tagIds && tagIds[0] && tagIds[0].length > 0 ? tagIds : [],
                 pageOptions: {
                     limit: relatedQuestionsLimit,
-                    sortOpts: {
-                        field: "updatedAt",
-                        order: "DESC"
-                    }
+                    sortOpts: [
+                        {
+                            field: "updatedAt",
+                            order: "DESC"
+                        }
+                    ]
                 }
             },
             skip: !question

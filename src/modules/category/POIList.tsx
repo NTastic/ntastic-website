@@ -75,10 +75,12 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                 pageOptions: {
                     limit: 10,
                     page: POIListPage,
-                    sortOpts: {
-                        field: "rating",
-                        order: "DESC"
-                    }
+                    sortOpts: [
+                        {
+                            field: "rating",
+                            order: "DESC"
+                        }
+                    ]
                 }
             },
             fetchPolicy: "no-cache",

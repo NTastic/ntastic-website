@@ -58,10 +58,12 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 pageOptions: {
                     limit: 10,
                     page: commentPage,
-                    sortOpts: {
-                        field: "votes.upvotes",
-                        order: "DESC"
-                    }
+                    sortOpts: [
+                        {
+                            field: "votes.upvotes",
+                            order: "DESC"
+                        }
+                    ]
                 }
             }
         }
