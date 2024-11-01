@@ -34,10 +34,12 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({
                 pageOptions: {
                     limit: 10,
                     page: queryPage,
-                    sortOpts: {
-                        field: "updatedAt",
-                        order: "DESC"
-                    }
+                    sortOpts: [
+                        {
+                            field: "updatedAt",
+                            order: "DESC"
+                        }
+                    ]
                 }
             },
             fetchPolicy: "no-cache",

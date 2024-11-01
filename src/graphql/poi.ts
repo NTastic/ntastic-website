@@ -90,8 +90,8 @@ export const GET_COMMENTS = gql`
 `;
 
 export const GET_RECOMMENDATIONS = gql`
-    query GetRecommendations($catIds: [ID!], $pageOptions: PageOptions) {
-        getRecommendations(catIds: $catIds, pageOptions: $pageOptions) {
+    query GetRecommendations($catIds: [ID!], $pageOptions: PageOptions, $location: LocationFilter) {
+        getRecommendations(catIds: $catIds, pageOptions: $pageOptions, location: $location) {
             items {
                 ... on Recommendation {
                     id

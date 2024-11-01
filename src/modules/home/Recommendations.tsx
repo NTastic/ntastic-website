@@ -16,7 +16,14 @@ const Recommendations: React.FC = () => {
     const [recList, setRecList] = useState<RecommendationValue[]>([]);
     const [recPage, setRecPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
-    const [location, setLocation] = useState<{latitude: number; longtitude: number} | null>(null);
+    const [defaultLocation, setDefaultLocation] = useState<{
+        latitude: number; longtitude: number
+    }>({
+        latitude: -12.4637, longtitude: 130.8444
+    });
+    const [location, setLocation] = useState<{
+        latitude: number; longtitude: number
+    } | null>(null);
 
     const { data: recData, refetch } = useQuery(
         GET_RECOMMENDATIONS,
@@ -28,12 +35,24 @@ const Recommendations: React.FC = () => {
                     "6711feb037c20e220b1c0100",
                     "6711feb037c20e220b1c00d0"
                 ],
-                "pageOptions": {
+                pageOptions: {
                     limit: 12,
                     page: recPage,
+                    sortOpts: [
+                        { field: "comment.rating", order: "DESC" },
+                        { field: "poi.rating", order: "DESC" },
+                        { field: "poi.reviewsCount", order: "DESC"},
+                    ]
+                },
+                location: {
+                    near: {
+                        latitude: location ? location.latitude : defaultLocation.latitude,
+                        longitude: location ? location.longtitude : defaultLocation.longtitude
+                    },
+                    maxDistance: location ? 3000 : 100000
                 }
             },
-            fetchPolicy: "no-cache"
+            fetchPolicy: "network-only"
         }
     );
 
@@ -55,8 +74,13 @@ const Recommendations: React.FC = () => {
 
     useEffect(() => {
         if (recData) {
+            const filteredItems = recData.getRecommendations.items.filter(
+                (item: RecommendationValue) => !recList.some(
+                    exist => exist.id === item.id
+                )
+            );
             setRecList((prev) => {
-                return [...prev, ...recData.getRecommendations.items];
+                return [...prev, ...filteredItems];
             });
         }
     }, [recData]);
@@ -69,6 +93,13 @@ const Recommendations: React.FC = () => {
             });
         }).catch((error) => console.error("Error getting location:", error.message));
     }, []);
+
+    useEffect(() => {
+        if (location && location !== defaultLocation) {
+            setRecList([]);
+            setDefaultLocation(location);
+        }
+    }, [location]);
 
     return (
         <Box
@@ -117,8 +148,8 @@ const Recommendations: React.FC = () => {
                                     onClick={() => {
                                         router.push(
                                             RouteConfig.Recommendation(
-                                                item.catIds[0], 
-                                                item.poi.id, 
+                                                item.catIds[0],
+                                                item.poi.id,
                                                 item.id
                                             ).Path
                                         )
