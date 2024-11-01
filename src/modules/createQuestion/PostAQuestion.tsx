@@ -12,6 +12,7 @@ import { useMutation } from "@apollo/client";
 import UploadIcon from "@mui/icons-material/Upload";
 import { SpinningHourglass } from "@/utils/Animations";
 import { compressImage } from "@/utils/CompressFile";
+import DisplayImages from "@/utils/DisplayImages";
 
 type PostValues = {
     title: string;
@@ -29,6 +30,7 @@ const PostAQuestion: React.FC = () => {
     });
     const [tags, setTags] = useState<string[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [selectedFileUrls, setSelectedFileUrls] = useState<string[]>([]);
     const MAX_FILES = 6;
     const [openTagsSelection, setOpenTagsSelection] = useState<boolean>(false);
     const [submitStatus, setSubmitStatus] = useState<string | null>(null);
@@ -51,6 +53,16 @@ const PostAQuestion: React.FC = () => {
         }
         const compressedFiles = await Promise.all(files.map(file => compressImage(file)));
         setSelectedFiles(compressedFiles);
+        const fileUrls = await Promise.all(compressedFiles.map(file => {
+            return new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result as string);
+                };
+                reader.readAsDataURL(file);
+            });
+        }));
+        setSelectedFileUrls(fileUrls);
     };
 
     const handleSelectTag = (selectedTag: string) => {
@@ -74,7 +86,7 @@ const PostAQuestion: React.FC = () => {
             if (tags.length === 0) {
                 throw new Error("At least 1 tag is required!");
             }
-            
+
             if (data.title.length === 0) {
                 throw new Error("Title is required!");
             }
@@ -155,7 +167,7 @@ const PostAQuestion: React.FC = () => {
                     <Button
                         type="submit"
                         disabled={isLoading}
-                        endIcon={isLoading ? <SpinningHourglass/> : null}
+                        endIcon={isLoading ? <SpinningHourglass /> : null}
                         sx={{
                             fontSize: "large",
                             fontWeight: "bold",
@@ -200,6 +212,11 @@ const PostAQuestion: React.FC = () => {
                         },
                     }}
                 />
+                {selectedFileUrls.length > 0 && (
+                    <Box mb={2}>
+                        <DisplayImages images={selectedFileUrls} height={300} />
+                    </Box>
+                )}
                 <input
                     type="file"
                     multiple

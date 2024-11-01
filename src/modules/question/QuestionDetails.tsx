@@ -41,9 +41,11 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 questionId: params.id,
                 pageOptions: {
                     limit: answerLimit,
-                    sortField: "votes.upvotes",
-                    order: "DESC",
-                    page: 1
+                    page: 1,
+                    sortOpts: {
+                        field: "votes.upvotes",
+                        order: "DESC",
+                    }
                 }
             },
             skip: !question
@@ -56,8 +58,10 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 tagIds: tagIds && tagIds[0] && tagIds[0].length > 0 ? tagIds : [],
                 pageOptions: {
                     limit: relatedQuestionsLimit,
-                    sortField: "updatedAt",
-                    order: "DESC"
+                    sortOpts: {
+                        field: "updatedAt",
+                        order: "DESC"
+                    }
                 }
             },
             skip: !question
@@ -214,7 +218,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     Ask
                 </Button>
                 <IconButton onClick={handleShare} color="primary">
-                    <IosShareIcon/>
+                    <IosShareIcon />
                 </IconButton>
             </Box>
             {/* Question Description */}
@@ -253,7 +257,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     borderRadius: "16px",
                     position: "fixed",
                     bottom: 10,
-                    left: "50%",
+                    left: "calc(50% + 30px)",
                     transform: "translateX(-50%)",
                 }}
                 onClick={handleOpenAnswerDialog}

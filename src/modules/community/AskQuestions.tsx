@@ -7,7 +7,7 @@ import { RouteConfig } from "@/routes/route";
 
 const AskQuestions: React.FC = () => {
     const router = useRouter();
-    const [inputText, setInputText] = useState<string>("");
+    const [inputText, setInputText] = useState<string | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [auth, setAuth] = React.useState<boolean>(false);
 
@@ -16,6 +16,9 @@ const AskQuestions: React.FC = () => {
     };
 
     const handleSubmit = () => {
+        if (!inputText) {
+            return;
+        }
         if (!auth) {
             router.push(RouteConfig.Login.Path);
         } else {
@@ -94,6 +97,9 @@ const AskQuestions: React.FC = () => {
                             borderRadius: "16px",
                         }
                     }}
+                    InputLabelProps={{
+                        shrink: !!inputText
+                    }}
                 />
             <Button
                 variant="contained"
@@ -110,6 +116,7 @@ const AskQuestions: React.FC = () => {
                     }
                 }}
                 onClick={() => handleSubmit()}
+                disabled={inputText ? false : true}
             >
                 Ask NTastic
             </Button>

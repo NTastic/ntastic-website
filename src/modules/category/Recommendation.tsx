@@ -81,7 +81,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
     useEffect(() => {
         if (recommendationData) {
             setRecData(recommendationData.getRecommendation || null);
-            setPOIImages(recommendationData.getRecommendation.list[0].poi.photoUrls || []);
+            setPOIImages(recommendationData.getRecommendation.poi.photoUrls || []);
         }
     }, [recommendationData]);
 
@@ -249,10 +249,10 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                 }}
             >
                 <Typography variant="h5">
-                    {recData.list[0].poi.name}
+                    {recData.poi.name}
                 </Typography>
                 <Typography variant="body1" color="textSecondary">
-                    {recData.list[0].poi.address}
+                    {recData.poi.address}
                 </Typography>
                 <Box
                     sx={{

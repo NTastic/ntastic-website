@@ -96,15 +96,13 @@ export const GET_RECOMMENDATIONS = gql`
                 ... on Recommendation {
                     id
                     title
-                    list {
-                        poi {
-                            id
-                            name
-                            address
-                            photoUrls
-                            rating
-                            reviewsCount
-                        }
+                    poi {
+                        id
+                        name
+                        address
+                        photoUrls
+                        rating
+                        reviewsCount
                     }
                     catIds
                 }
@@ -118,15 +116,13 @@ export const GET_ONE_RECOMMENDATION = gql`
         getRecommendation(id: $getRecommendationId) {
             id
             title
-            list {
-                poi {
-                    id
-                    name
-                    address
-                    photoUrls
-                    rating
-                    reviewsCount
-                }
+            poi {
+                id
+                name
+                address
+                photoUrls
+                rating
+                reviewsCount
             }
         }
     }

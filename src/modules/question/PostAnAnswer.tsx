@@ -8,6 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import UploadIcon from "@mui/icons-material/Upload";
 import { SpinningHourglass } from "@/utils/Animations";
 import { compressImage } from "@/utils/CompressFile";
+import DisplayImages from "@/utils/DisplayImages";
 
 const transition = React.forwardRef(function transition(
     props: TransitionProps & {
@@ -35,6 +36,7 @@ export default function PostAnAnswer(
 ) {
     const [answerContent, setAnswerContent] = useState<string | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [selectedFileUrls, setSelectedFileUrls] = useState<string[]>([]);
     const MAX_FILES = 6;
     const [submitStatus, setSubmitStatus] = useState<string | null>(null);
     const [submitError, setSubmitError] = useState<string | null>(null);
@@ -60,6 +62,16 @@ export default function PostAnAnswer(
         }
         const compressedFiles = await Promise.all(files.map(file => compressImage(file)));
         setSelectedFiles(compressedFiles);
+        const fileUrls = await Promise.all(compressedFiles.map(file => {
+            return new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result as string);
+                };
+                reader.readAsDataURL(file);
+            });
+        }))
+        setSelectedFileUrls(fileUrls);
     };
 
     const handleSubmit = async () => {
@@ -183,6 +195,11 @@ export default function PostAnAnswer(
                         },
                     }}
                 />
+                {selectedFileUrls.length > 0 && (
+                    <Box mb={2}>
+                        <DisplayImages images={selectedFileUrls} height={300} />
+                    </Box>
+                )}
                 <input
                     type="file"
                     multiple

@@ -16,13 +16,34 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useRouter } from 'next/navigation';
 import { RouteConfig } from '@/routes/route';
 import { ACCESS_TOKEN, USER_ID } from '@/shared/constants/storage';
+import { GET_USER } from '@/graphql/user';
+import { useQuery } from '@apollo/client';
+import { UserValue } from '@/shared/constants/types';
 
 const Topbar: React.FC = () => {
     const router = useRouter();
     const [userId, setUserId] = useState<string | null>(null);
+    const [user, setUser] = useState<UserValue | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [auth, setAuth] = React.useState<boolean>(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+    const { data: userData } = useQuery(
+        GET_USER,
+        { variables: { getUserId: userId }, skip: !userId }
+    );
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => setAnchorEl(null);
+
+    const handleLogOut = () => {
+        localStorage.removeItem(ACCESS_TOKEN);
+        localStorage.removeItem(USER_ID);
+        window.location.reload();
+    };
 
     useEffect(() => {
         const userId = typeof window !== "undefined" ? localStorage.getItem(USER_ID) : null;
@@ -39,17 +60,11 @@ const Topbar: React.FC = () => {
         }
     }, [accessToken, auth]);
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => setAnchorEl(null);
-
-    const handleLogOut = () => {
-        localStorage.removeItem(ACCESS_TOKEN);
-        localStorage.removeItem(USER_ID);
-        window.location.reload();
-    };
+    useEffect(() => {
+        if (userData) {
+            setUser(userData.getUser || null);
+        }
+    }, [userData]);
 
     return (
         <AppBar position='fixed' sx={{ backgroundColor: '#f8f8f8' }}>
@@ -90,7 +105,10 @@ const Topbar: React.FC = () => {
                         sx={{
                             position: "absolute",
                             right: "3%",
-                            transform: "translateX(3%)"
+                            transform: "translateX(3%)",
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center"
                         }}
                     >
                         <IconButton
@@ -110,7 +128,15 @@ const Topbar: React.FC = () => {
                             onClick={handleMenu}
                             color='primary'
                         >
-                            <AccountCircleIcon />
+                            <Avatar
+                                src={user?.avatar || "none"}
+                                sx={{
+                                    width: "25px",
+                                    height: "25px",
+                                    objectFit: "cover",
+                                    backgroundPosition: "center",
+                                }}
+                            />
                         </IconButton>
                         <Menu
                             id='menu-appbar'
@@ -124,9 +150,9 @@ const Topbar: React.FC = () => {
                             <MenuItem onClick={() => { router.push(RouteConfig.Profile(userId!).Path); }}>
                                 Profile
                             </MenuItem>
-                            <MenuItem>
+                            {/* <MenuItem>
                                 My account
-                            </MenuItem>
+                            </MenuItem> */}
                             <MenuItem
                                 onClick={() => handleLogOut()}
                             >

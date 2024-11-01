@@ -76,7 +76,8 @@ export default function SelectTags(
                     backdropFilter: "blur(8px)",
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center"
+                    alignItems: "center",
+                    transform: "translateX(30px)"
                 }
             }}
         >

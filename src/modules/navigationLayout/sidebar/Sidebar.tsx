@@ -17,7 +17,11 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { useRouter } from "next/navigation";
 import { RouteConfig } from "@/routes/route";
 
-const sidebarItems = ["Home", "Community", "Settings"];
+const sidebarItems = [
+    "Home", 
+    "Community", 
+    // "Settings"
+];
 const iconList: { [key: string]: React.ReactNode } = {
     Home: <HomeIcon />,
     Community: <ForumIcon />,

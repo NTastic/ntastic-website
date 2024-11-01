@@ -17,9 +17,9 @@ interface NewQuestionsProps {
     handleIsTagChanged: () => void;
 };
 
-const NewQuestions: React.FC<NewQuestionsProps> = ({ 
+const NewQuestions: React.FC<NewQuestionsProps> = ({
     selectedTag, isTagChanged, handleIsTagChanged
- }) => {
+}) => {
     const router = useRouter();
     const [tagIds, setTagIds] = useState<string[]>([]);
     const [questions, setQuestions] = useState<QuestionsValue[]>([]);
@@ -34,8 +34,10 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({
                 pageOptions: {
                     limit: 10,
                     page: queryPage,
-                    sortField: "updatedAt",
-                    order: "DESC"
+                    sortOpts: {
+                        field: "updatedAt",
+                        order: "DESC"
+                    }
                 }
             },
             fetchPolicy: "no-cache",

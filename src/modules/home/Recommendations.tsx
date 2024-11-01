@@ -118,14 +118,14 @@ const Recommendations: React.FC = () => {
                                         router.push(
                                             RouteConfig.Recommendation(
                                                 item.catIds[0], 
-                                                item.list[0].poi.id, 
+                                                item.poi.id, 
                                                 item.id
                                             ).Path
                                         )
                                     }}
                                 >
                                     <img
-                                        src={item.list[0].poi.photoUrls[0]}
+                                        src={item.poi.photoUrls[0]}
                                         loading="lazy"
                                         style={{ width: "100%", height: "auto", borderRadius: "16px" }}
                                     />
@@ -145,7 +145,7 @@ const Recommendations: React.FC = () => {
                                             }}
                                         />
                                         <Typography variant="body2" color="textSecondary">
-                                            {item.list[0].poi.rating}
+                                            {item.poi.rating}
                                         </Typography>
                                     </Box>
                                 </Button>
