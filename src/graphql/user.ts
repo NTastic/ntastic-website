@@ -102,3 +102,11 @@ export const GET_ANSWERS_BY_USER_ID = gql`
         }
     }
 `;
+
+export const UPDATE_USER = gql`
+    mutation UpdateUser($input: UserInput) {
+        updateUser(input: $input) {
+            id
+        }
+    }
+`;

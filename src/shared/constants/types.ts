@@ -136,18 +136,14 @@ export type CommentValue = {
 export type RecommendationValue = {
     id: string;
     title: string;
-    list: Array<
-        {
-            poi: {
-                id: string;
-                name: string;
-                address: string;
-                photoUrls: Array<string>;
-                rating: number;
-                reviewsCount: number;
-            }
-        }
-    >;
+    poi: {
+        id: string;
+        name: string;
+        address: string;
+        photoUrls: Array<string>;
+        rating: number;
+        reviewsCount: number;
+    }
     catIds: Array<string>;
 };
 

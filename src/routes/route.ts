@@ -54,6 +54,13 @@ const Profile = (user_id: string) => ({
     Path: `/profile/${user_id}` as const
 });
 
+const EditProfile = {
+    Metadata: {
+        title: "NTastic | Profile | Edit"
+    },
+    Path: `/profile/edit` as const
+};
+
 const Home = {
     Metadata: {
         title: 'NTastic | Home'
@@ -116,6 +123,7 @@ export const RouteConfig = {
     RegisterQuestion2,
     RegisterQuestion3,
     Profile,
+    EditProfile,
     Home,
     Category,
     POI,

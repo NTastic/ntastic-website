@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { SpinningHourglass } from "@/utils/Animations";
 import { truncateContent } from "@/utils/TruncateContent";
+import { RouteConfig } from "@/routes/route";
 
 interface ProfileProps {
     user_id: string
@@ -180,6 +181,7 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                         fontWeight: "bold",
                         padding: 1
                     }}
+                    onClick={() => { router.push(RouteConfig.EditProfile.Path); }}
                 >
                     Edit Profile
                 </Button>
@@ -225,145 +227,149 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                 }}
             />
             {/* Question List */}
-            {questions.length > 0 && selectedButton === "Questions" && (
-                <List
-                    sx={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "start"
-                    }}
-                >
-                    {questions.map((item) => (
-                        <ListItem key={item.id}>
-                            <ListItemButton
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "start",
-                                    gap: 0.5,
-                                    borderRadius: "16px",
-                                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
-                                    transition: "all 0.5s ease",
-                                    "&:hover": {
-                                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
-                                        backgroundColor: "#ccff90",
-                                        transform: "translateY(-5px)"
-                                    }
-                                }}
-                            >
-                                <Typography variant="h6" fontWeight="bold">
-                                    {item.title}
-                                </Typography>
-                                <Box
-                                    display="flex"
-                                    flexDirection="row"
-                                    alignItems="center"
+            {
+                questions.length > 0 && selectedButton === "Questions" && (
+                    <List
+                        sx={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "start"
+                        }}
+                    >
+                        {questions.map((item) => (
+                            <ListItem key={item.id}>
+                                <ListItemButton
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "start",
+                                        gap: 0.5,
+                                        borderRadius: "16px",
+                                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
+                                        transition: "all 0.5s ease",
+                                        "&:hover": {
+                                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                                            backgroundColor: "#ccff90",
+                                            transform: "translateY(-5px)"
+                                        }
+                                    }}
                                 >
-                                    <Avatar
-                                        src={item.author.avatar || "none"}
-                                        sx={{
-                                            width: "15px",
-                                            height: "15px",
-                                            objectFit: "cover",
-                                            backgroundPosition: "center",
-                                            mr: 1
-                                        }}
-                                    />
-                                    <Typography variant="body2" color="textSecondary">
-                                        {item.author.username}
+                                    <Typography variant="h6" fontWeight="bold">
+                                        {item.title}
                                     </Typography>
-                                </Box>
-                                <Typography variant="body1" color="textPrimary">
-                                    {item.content}
-                                </Typography>
-                                <Box
-                                    display="flex"
-                                    flexDirection="row"
-                                    alignItems="center"
-                                    gap={1}
-                                >
-                                    <Typography variant="body2" color="textSecondary">
-                                        {item.votes.upvotes} Agree
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        alignItems="center"
+                                    >
+                                        <Avatar
+                                            src={item.author.avatar || "none"}
+                                            sx={{
+                                                width: "15px",
+                                                height: "15px",
+                                                objectFit: "cover",
+                                                backgroundPosition: "center",
+                                                mr: 1
+                                            }}
+                                        />
+                                        <Typography variant="body2" color="textSecondary">
+                                            {item.author.username}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="body1" color="textPrimary">
+                                        {item.content}
                                     </Typography>
-                                    <Typography variant="body2" color="textSecondary">
-                                        {item.answers.totalItems} Answers
-                                    </Typography>
-                                </Box>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            )}
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        alignItems="center"
+                                        gap={1}
+                                    >
+                                        <Typography variant="body2" color="textSecondary">
+                                            {item.votes.upvotes} Agree
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {item.answers.totalItems} Answers
+                                        </Typography>
+                                    </Box>
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                )
+            }
             {/* Answer List */}
-            {answers.length > 0 && selectedButton === "Answers" && (
-                <List
-                    sx={{
-                        width: "100%",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "start"
-                    }}
-                >
-                    {answers.map((item) => (
-                        <ListItem key={item.id}>
-                            <ListItemButton
-                                sx={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "start",
-                                    gap: 0.5,
-                                    borderRadius: "16px",
-                                    boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
-                                    transition: "all 0.5s ease",
-                                    "&:hover": {
-                                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
-                                        backgroundColor: "#ccff90",
-                                        transform: "translateY(-5px)"
-                                    }
-                                }}
-                            >
-                                <Typography variant="h6" fontWeight="bold">
-                                    {item.question.title}
-                                </Typography>
-                                <Box
-                                    display="flex"
-                                    flexDirection="row"
-                                    alignItems="center"
+            {
+                answers.length > 0 && selectedButton === "Answers" && (
+                    <List
+                        sx={{
+                            width: "100%",
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "start"
+                        }}
+                    >
+                        {answers.map((item) => (
+                            <ListItem key={item.id}>
+                                <ListItemButton
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "start",
+                                        gap: 0.5,
+                                        borderRadius: "16px",
+                                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
+                                        transition: "all 0.5s ease",
+                                        "&:hover": {
+                                            boxShadow: "0 8px 16px rgba(0, 0, 0, 0.3)",
+                                            backgroundColor: "#ccff90",
+                                            transform: "translateY(-5px)"
+                                        }
+                                    }}
                                 >
-                                    <Avatar
-                                        src={item.question.author.avatar || "none"}
-                                        sx={{
-                                            width: "15px",
-                                            height: "15px",
-                                            objectFit: "cover",
-                                            backgroundPosition: "center",
-                                            mr: 1
-                                        }}
-                                    />
-                                    <Typography variant="body2" color="textSecondary">
-                                        {item.question.author.username}
+                                    <Typography variant="h6" fontWeight="bold">
+                                        {item.question.title}
                                     </Typography>
-                                </Box>
-                                <Typography variant="body1" color="textPrimary">
-                                    {item.content}
-                                </Typography>
-                                <Box
-                                    display="flex"
-                                    flexDirection="row"
-                                    alignItems="center"
-                                    gap={1}
-                                >
-                                    <Typography variant="body2" color="textSecondary">
-                                        {item.votes.upvotes} Agree
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        alignItems="center"
+                                    >
+                                        <Avatar
+                                            src={item.question.author.avatar || "none"}
+                                            sx={{
+                                                width: "15px",
+                                                height: "15px",
+                                                objectFit: "cover",
+                                                backgroundPosition: "center",
+                                                mr: 1
+                                            }}
+                                        />
+                                        <Typography variant="body2" color="textSecondary">
+                                            {item.question.author.username}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="body1" color="textPrimary">
+                                        {truncateContent(item.content, 30)}
                                     </Typography>
-                                </Box>
-                            </ListItemButton>
-                        </ListItem>
-                    ))}
-                </List>
-            )}
-        </Box>
+                                    <Box
+                                        display="flex"
+                                        flexDirection="row"
+                                        alignItems="center"
+                                        gap={1}
+                                    >
+                                        <Typography variant="body2" color="textSecondary">
+                                            {item.votes.upvotes} Agree
+                                        </Typography>
+                                    </Box>
+                                </ListItemButton>
+                            </ListItem>
+                        ))}
+                    </List>
+                )
+            }
+        </Box >
     );
 };
 

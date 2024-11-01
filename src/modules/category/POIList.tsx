@@ -73,10 +73,12 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
             variables: {
                 catIds: [selectedSubCatId || categoryId],
                 pageOptions: {
-                    "limit": 10,
-                    "page": POIListPage,
-                    "sortField": "rating",
-                    "order": "DESC"
+                    limit: 10,
+                    page: POIListPage,
+                    sortOpts: {
+                        field: "rating",
+                        order: "DESC"
+                    }
                 }
             },
             fetchPolicy: "no-cache",

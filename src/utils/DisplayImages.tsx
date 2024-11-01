@@ -16,6 +16,9 @@ const DisplayImages: React.FC<Props> = ({ images, height }) => {
         case 1:
             colNum = 1;
             break;
+        case 3:
+            colNum = 3;
+            break;
         case 5:
             colNum = 3;
             break;
@@ -32,6 +35,9 @@ const DisplayImages: React.FC<Props> = ({ images, height }) => {
             rowNum = 1;
             break;
         case 2:
+            rowNum = 1;
+            break;
+        case 3:
             rowNum = 1;
             break;
         default:
