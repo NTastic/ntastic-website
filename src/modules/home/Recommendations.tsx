@@ -30,10 +30,10 @@ const Recommendations: React.FC = () => {
         {
             variables: {
                 catIds: [
-                    "6711feb037c20e220b1c00df",
-                    "6711feb037c20e220b1c021f",
-                    "6711feb037c20e220b1c0100",
-                    "6711feb037c20e220b1c00d0"
+                    "67256db36a861fb8b153a283",
+                    "67256db36a861fb8b153a3d2",
+                    "67256db36a861fb8b153a2c2",
+                    "67256db36a861fb8b153a302"
                 ],
                 pageOptions: {
                     limit: 12,
