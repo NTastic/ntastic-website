@@ -8,19 +8,19 @@ import { RouteConfig } from '@/routes/route';
 
 const categories = [
     {
-        "id": "6711feb037c20e220b1c00df",
+        "id": "67256db36a861fb8b153a283",
         "name": "Restaurant"
     },
     {
-        "id": "6711feb037c20e220b1c021f",
+        "id": "67256db36a861fb8b153a3d2",
         "name": "Shopping"
     },
     {
-        "id": "6711feb037c20e220b1c0100",
+        "id": "67256db36a861fb8b153a2c2",
         "name": "Hotel"
     },
     {
-        "id": "6711feb037c20e220b1c00d0",
+        "id": "67256db36a861fb8b153a302",
         "name": "Attraction"
     }
 ];
