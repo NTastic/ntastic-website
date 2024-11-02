@@ -18,6 +18,7 @@ export const GET_QUESTIONS = gql`
                     id
                     author {
                         id
+                        avatar
                         username
                     }
                     title
@@ -50,6 +51,7 @@ query GetQuestion($getQuestionId: ID!) {
         id
         author {
             id
+            avatar
             username
         }
         title
@@ -76,6 +78,7 @@ export const GET_ANSWERS = gql`
                     id
                     author {
                         id
+                        avatar
                         username
                     }
                     content

@@ -2,6 +2,7 @@ export type QuestionsValue = {
     id: string;
     author: {
         id: string,
+        avatar: string | null,
         username: string
     };
     title: string;
@@ -26,6 +27,7 @@ export type QuestionValue = {
     id: string;
     author: {
         id: string,
+        avatar: string | null,
         username: string
     };
     title: string;
@@ -45,6 +47,7 @@ export type AnswerValue = {
     id: string;
     author: {
         id: string,
+        avatar: string | null,
         username: string
     };
     content: string;
@@ -59,6 +62,7 @@ export type RelatedQuestionValue = {
     id: string;
     author: {
         id: string,
+        avatar: string | null,
         username: string
     };
     title: string;

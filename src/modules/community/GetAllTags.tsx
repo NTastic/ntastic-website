@@ -66,12 +66,12 @@ const GetAllTags: React.FC<GetAllTagsProps> = ({
     return (
         <Box
             sx={{
-                width: "90%",
+                width: "95%",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: 3
+                mb: 1
             }}
         >
             <Box

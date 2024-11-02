@@ -77,35 +77,41 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({
     return (
         <Box
             sx={{
-                width: "90%",
+                width: "95%",
                 display: "flex",
                 flexDirection: "column",
-                padding: 3
             }}
         >
             <Typography variant="body2" gutterBottom sx={{ fontWeight: "bold", mb: 1 }}>
-                The newest asked questions:
+                Trending Topics:
             </Typography>
             <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
                 sx={{
                     width: "100%",
                     borderRadius: "16px"
                 }}
             >
-                <List sx={{ width: "95%", paddingLeft: 1, paddingRight: 1 }}>
+                <List sx={{ width: "100%" }}>
                     {questions.map((item: QuestionsValue) => (
-                        <ListItem key={item.id}>
+                        <ListItem
+                            key={item.id}
+                            sx={{ width: "100%", padding: 0, margin: 0, mb: 1 }}
+                        >
                             <ListItemButton
                                 onClick={() => {
                                     router.push(`${RouteConfig.Community.Path}/${item.id}`);
                                 }}
                                 sx={{
+                                    width: "100%",
                                     display: "flex",
                                     flexDirection: "column",
                                     alignItems: "flex-start",
-                                    mb: 2,
                                     borderRadius: "16px",
                                     boxShadow: "0 8px 15px rgba(0, 0, 0, 0.15)",
+                                    padding: 2,
                                     transition: "all 0.5s ease",
                                     "&:hover": {
                                         backgroundColor: "rgba(80, 80, 200, 0.5)",
@@ -117,13 +123,21 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({
                                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                                     {item.title}
                                 </Typography>
-                                <Box display="flex">
-                                    <Avatar sx={{ width: "15px", height: "15px", mr: 1 }} />
+                                <Box
+                                    display="flex"
+                                    flexDirection="row"
+                                    alignItems="center"
+                                    mb={1}
+                                >
+                                    <Avatar
+                                        src={item.author.avatar || "none"}
+                                        sx={{ width: "20px", height: "20px", mr: 1 }}
+                                    />
                                     <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
                                         {item.author.username}
                                     </Typography>
                                 </Box>
-                                <Typography variant="body1">
+                                <Typography variant="body1" mb={1}>
                                     {truncateContent(item.content, 50)}
                                 </Typography>
                                 {item.images.length > 0 && (

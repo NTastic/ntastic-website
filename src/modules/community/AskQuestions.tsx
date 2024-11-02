@@ -57,8 +57,8 @@ const AskQuestions: React.FC = () => {
                 borderRadius: "16px",
                 overflowX: "hidden",
                 padding: 3,
-                mt: 2,
-                mb: 2
+                mt: 1,
+                mb: 1
             }}
         >
             <Typography
@@ -83,7 +83,7 @@ const AskQuestions: React.FC = () => {
                     maxRows={3}
                     onChange={handleTextFieldChange}
                     sx={{
-                        width: "70%",
+                        width: "80%",
                         borderRadius: "16px",
                         border: "none",
                         backgroundColor: "rgba(255, 255, 255, 0.6)",

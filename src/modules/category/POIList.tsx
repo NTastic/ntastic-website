@@ -156,8 +156,6 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                 maxWidth: 800,
                 display: "flex",
                 flexDirection: "column",
-                padding: 1,
-                margin: { xs: 1, md: 0 },
                 alignItems: "center",
                 justifyContent: "space-around",
             }}
@@ -180,7 +178,7 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
             </Box>
             {subCats.length > 0 && (
                 <Box width="100%" display="flex" flexDirection="column" alignItems="center">
-                    <Box width="85%" display="flex" flexDirection="row" alignItems="center">
+                    <Box width="95%" display="flex" flexDirection="row" alignItems="center">
                         <Typography variant="body1" fontWeight="bold" flexGrow={1}>
                             Current Display: {selectedSubCatName || "All"}
                         </Typography>
@@ -197,7 +195,7 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                         timeout={500}
                     >
                         <Box width="100%" display="flex" flexDirection="column" alignItems="center">
-                            <Box width="85%" display="flex" flexWrap="wrap">
+                            <Box width="90%" display="flex" flexWrap="wrap">
                                 <Button
                                     variant="contained"
                                     sx={!selectedSubCatId ? selectedButtonStyle : buttonStyle}
@@ -229,13 +227,9 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                     borderRadius: "16px"
                 }}
             >
-                <List
-                    sx={{
-                        width: "90%"
-                    }}
-                >
+                <List>
                     {POIList.map((item: POIListItemValue) => (
-                        <ListItem key={item.id}>
+                        <ListItem key={item.id} sx={{ mb: 1 }}>
                             <ListItemButton
                                 onClick={() => {
                                     router.push(RouteConfig.POI(categoryId, categoryName!, item.id).Path)
@@ -244,7 +238,7 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                                     width: "95%",
                                     display: "flex",
                                     flexDirection: "row",
-                                    gap: 2,
+                                    gap: 1,
                                     alignItems: "center",
                                     borderRadius: "16px",
                                     boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
