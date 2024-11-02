@@ -20,7 +20,7 @@ const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
     const router = useRouter();
 
     return (
-        <Box width="100%">
+        <Box width="95%">
             <Typography variant="body1" gutterBottom sx={{ fontWeight: "bold" }}>
                 Related questions
             </Typography>
@@ -32,6 +32,7 @@ const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
                 {relatedQuestions.map((item: RelatedQuestionValue) => (
                     <ListItem
                         key={item.id}
+                        sx={{ width: "100%", padding: 0, margin: 0, mb: 1 }}
                     >
                         <ListItemButton
                             onClick={() => {
@@ -41,13 +42,12 @@ const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
                                 display: "flex",
                                 flexDirection: "column",
                                 alignItems: "flex-start",
-                                mb: 2,
                                 borderRadius: "16px",
                                 boxShadow: "0 8px 15px rgba(0, 0, 0, 0.15)",
                                 transition: "all 0.5s ease",
                                 "&:hover": {
                                     backgroundColor: "rgba(80, 80, 200, 0.5)",
-                                    transform: "scale(1.05)",
+                                    transform: "scale(1.03)",
                                     boxShadow: "0 8px 15px rgba(0, 0, 0, 0.3)",
                                 }
                             }}
@@ -56,7 +56,10 @@ const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
                                 {item.title}
                             </Typography>
                             <Box display="flex">
-                                <Avatar sx={{ width: "15px", height: "15px", mr: 1 }} />
+                                <Avatar 
+                                src={item.author.avatar || "none"}
+                                sx={{ width: "20px", height: "20px", mr: 1 }} 
+                                />
                                 <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
                                     {item.author.username}
                                 </Typography>

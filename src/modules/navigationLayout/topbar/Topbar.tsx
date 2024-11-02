@@ -11,7 +11,6 @@ import {
     Button,
     Box
 } from '@mui/material';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useRouter } from 'next/navigation';
 import { RouteConfig } from '@/routes/route';
@@ -116,9 +115,14 @@ const Topbar: React.FC = () => {
                             edge='end'
                             color='warning'
                             aria-label='notifications'
-                            sx={{ mr: 2 }}
+                            sx={{ mr: 1 }}
                         >
-                            <NotificationsIcon />
+                            <NotificationsIcon
+                                sx={{
+                                    width: "25px",
+                                    height: "25px",
+                                }}
+                            />
                         </IconButton>
                         <IconButton
                             size='large'

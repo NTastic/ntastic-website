@@ -183,16 +183,22 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     return (
         <Box
             sx={{
-                width: "90%",
+                width: "95%",
                 minWidth: 350,
                 maxWidth: 800,
                 display: "flex",
                 flexDirection: "column",
-                padding: 3,
-                margin: { xs: 1, md: 0 }
+                alignItems: "center",
+                padding: 1
             }}
         >
-            <Box display="flex" sx={{ width: "100%", alignItems: "center", mb: 2 }}>
+            <Box
+                width="100%"
+                display="flex"
+                flexDirection="row"
+                alignItems="center"
+                mb={2}
+            >
                 <IconButton
                     size='large'
                     edge='start'
@@ -213,7 +219,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                         borderRadius: "16px",
                         transition: "all 0.5s ease",
                         "&:hover": {
-                            transform: "scale(1.1)",
+                            transform: "scale(1.05)",
                             backgroundColor: "rgba(30, 80, 255, 0.5)"
                         }
                     }}
@@ -233,7 +239,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     handleVoteQuestion={handleVoteQuestion}
                 />
             )}
-            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <Divider sx={{ width: "100%", marginTop: 2, marginBottom: 2 }} />
             {/* Answers */}
             {answers.length > 0 && (
                 <AnswerList
@@ -243,7 +249,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     isLoading={isLoading}
                 />
             )}
-            <Divider sx={{ marginTop: 2, marginBottom: 2 }} />
+            <Divider sx={{ width: "100%", marginTop: 2, marginBottom: 2 }} />
             {/* Related questions */}
             {relatedQuestions.length > 0 && (
                 <RelatedQuestions

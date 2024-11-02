@@ -8,11 +8,16 @@ import { SpinningHourglass } from '@/utils/Animations';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { GET_RECOMMENDATIONS } from '@/graphql/poi';
 import { useQuery } from '@apollo/client';
-import { RecommendationValue } from '@/shared/constants/types';
+import { CategoryValue, RecommendationValue } from '@/shared/constants/types';
 import StarIcon from '@mui/icons-material/Star';
 
-const Recommendations: React.FC = () => {
+interface RecommendationsProps {
+    categories: Array<CategoryValue>
+};
+
+const Recommendations: React.FC<RecommendationsProps> = ({categories}) => {
     const router = useRouter();
+    const catIds: string[] = categories.map(cat => cat.id);
     const [recList, setRecList] = useState<RecommendationValue[]>([]);
     const [recPage, setRecPage] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -29,27 +34,22 @@ const Recommendations: React.FC = () => {
         GET_RECOMMENDATIONS,
         {
             variables: {
-                catIds: [
-                    "67256db36a861fb8b153a283",
-                    "67256db36a861fb8b153a3d2",
-                    "67256db36a861fb8b153a2c2",
-                    "67256db36a861fb8b153a302"
-                ],
+                catIds: catIds,
                 pageOptions: {
                     limit: 12,
                     page: recPage,
-                    sortOpts: [
-                        { field: "comment.rating", order: "DESC" },
-                        { field: "poi.rating", order: "DESC" },
-                        { field: "poi.reviewsCount", order: "DESC"},
-                    ]
+                    // sortOpts: [
+                    //     { field: "comment.rating", order: "DESC" },
+                    //     { field: "poi.rating", order: "DESC" },
+                    //     { field: "poi.reviewsCount", order: "DESC"},
+                    // ]
                 },
                 location: {
                     near: {
                         latitude: location ? location.latitude : defaultLocation.latitude,
                         longitude: location ? location.longtitude : defaultLocation.longtitude
                     },
-                    maxDistance: location ? 3000 : 100000
+                    // maxDistance: location ? 3000 : 100000
                 }
             },
             fetchPolicy: "network-only"
@@ -104,23 +104,27 @@ const Recommendations: React.FC = () => {
     return (
         <Box
             sx={{
-                width: "90%",
+                width: "95%",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 borderRadius: "16px",
                 overflow: "hidden",
                 position: "relative",
-                padding: 3,
-                mt: 2,
-                mb: 2
             }}
         >
-            <Box width="100%" display="flex" flexDirection="column">
+            <Box
+                width="100%"
+                display="flex"
+                flexDirection="column"
+            >
                 <Typography variant="h6" fontWeight="bold">
                     Recommendations
                 </Typography>
                 <Box
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
                     sx={{
                         width: "100%",
                         borderRadius: "16px"

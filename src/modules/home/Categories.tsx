@@ -5,54 +5,39 @@ import Grid from "@mui/material/Grid2"
 import GetCategoryIcon from '@/modules/home/GetCatIcon';
 import { useRouter } from 'next/navigation';
 import { RouteConfig } from '@/routes/route';
+import { CategoryValue } from '@/shared/constants/types';
 
-const categories = [
-    {
-        "id": "67256db36a861fb8b153a283",
-        "name": "Restaurant"
-    },
-    {
-        "id": "67256db36a861fb8b153a3d2",
-        "name": "Shopping"
-    },
-    {
-        "id": "67256db36a861fb8b153a2c2",
-        "name": "Hotel"
-    },
-    {
-        "id": "67256db36a861fb8b153a302",
-        "name": "Attraction"
-    }
-];
+interface CategoriesProps {
+    categories: Array<CategoryValue>
+};
 
-const Categories: React.FC = () => {
+const Categories: React.FC<CategoriesProps> = ({categories}) => {
     const router = useRouter();
+    
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
 
-    const handleCollapse = () => setOpenCollapse(prev => !prev);
+    // const handleCollapse = () => setOpenCollapse(prev => !prev);
 
     return (
         <Box
             sx={{
-                width: "90%",
+                width: "95%",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 borderRadius: "16px",
                 overflow: "hidden",
                 position: "relative",
-                padding: 3,
-                mt: 2,
-                mb: 2
+                mb: 1
             }}
         >
             <Box width="100%" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
                 <Typography variant="h6" fontWeight="bold">
                     Top Categories
                 </Typography>
-                <Button onClick={handleCollapse} sx={{ textTransform: "none" }}>
+                {/* <Button onClick={handleCollapse} sx={{ textTransform: "none" }}>
                     {openCollapse ? "Show less" : "See all"}
-                </Button>
+                </Button> */}
             </Box>
             {categories.length > 0 && (
                 <Box

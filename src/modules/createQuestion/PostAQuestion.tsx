@@ -131,7 +131,7 @@ const PostAQuestion: React.FC = () => {
     return (
         <Box
             sx={{
-                width: "90%",
+                width: "95%",
                 minWidth: 350,
                 maxWidth: 800,
                 height: "100%",
@@ -149,6 +149,7 @@ const PostAQuestion: React.FC = () => {
                     width: "100%",
                     display: "flex",
                     flexDirection: "column",
+                    alignItems: "center",
                     margin: { xs: 1, md: 0 }
                 }}
             >
@@ -156,7 +157,7 @@ const PostAQuestion: React.FC = () => {
                     <IconButton
                         size='large'
                         edge='start'
-                        onClick={() => { router.push(RouteConfig.Community.Path) }}
+                        onClick={() => { router.back(); }}
                         sx={{ mr: 1 }}
                     >
                         <ChevronLeftIcon />
@@ -176,7 +177,7 @@ const PostAQuestion: React.FC = () => {
                             borderRadius: "16px",
                             transition: "all 0.5s ease",
                             "&:hover": {
-                                transform: "scale(1.1)",
+                                transform: "scale(1.05)",
                                 backgroundColor: "rgba(30, 80, 255, 0.5)"
                             }
                         }}
@@ -184,50 +185,50 @@ const PostAQuestion: React.FC = () => {
                         {isLoading ? `Asking...` : `Ask`}
                     </Button>
                 </Box>
-                <TextField
-                    variant="standard"
-                    label="Title"
-                    {...register("title")}
-                    placeholder="The Title of the Question (Mandatory)"
-                    defaultValue={getValues("title")}
-                    multiline
-                />
-                <TextField
-                    variant="standard"
-                    label="Content"
-                    {...register("content")}
-                    placeholder="The Description of the Question (Mandatory)"
-                    multiline
-                    minRows={8}
-                    sx={{
-                        flexGrow: 1,
-                        "& .MuiInput-underline:before": {
-                            borderBottom: "none",
-                        },
-                        "& .MuiInput-underline:hover:before": {
-                            borderBottom: "none",
-                        },
-                        "& .MuiInput-underline:after": {
-                            borderBottom: "none",
-                        },
-                    }}
-                />
-                {selectedFileUrls.length > 0 && (
-                    <Box mb={2}>
-                        <DisplayImages images={selectedFileUrls} height={300} />
-                    </Box>
-                )}
-                <input
-                    type="file"
-                    multiple
-                    onChange={handleFilesChange}
-                    accept="image/*"
-                    ref={fileInputRef}
-                    style={{ display: "none" }}
-                />
+                <Box
+                    width="95%"
+                    display="flex"
+                    flexDirection="column"
+                    paddingLeft={1}
+                    paddingRight={1}
+                >
+                    <TextField
+                        variant="standard"
+                        label="Title"
+                        {...register("title")}
+                        placeholder="The Title of the Question (Mandatory)"
+                        defaultValue={getValues("title")}
+                        multiline
+                    />
+                    <TextField
+                        variant="standard"
+                        label="Content"
+                        {...register("content")}
+                        placeholder="The Description of the Question (Mandatory)"
+                        multiline
+                        minRows={8}
+                        sx={{
+                            flexGrow: 1,
+                            "& .MuiInput-underline:before": {
+                                borderBottom: "none",
+                            },
+                            "& .MuiInput-underline:hover:before": {
+                                borderBottom: "none",
+                            },
+                            "& .MuiInput-underline:after": {
+                                borderBottom: "none",
+                            },
+                        }}
+                    />
+                    {selectedFileUrls.length > 0 && (
+                        <Box mb={2}>
+                            <DisplayImages images={selectedFileUrls} height={300} />
+                        </Box>
+                    )}
+                </Box>
                 <Box
                     sx={{
-                        width: "100%",
+                        width: "95%",
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
@@ -235,6 +236,14 @@ const PostAQuestion: React.FC = () => {
                         mt: 2
                     }}
                 >
+                    <input
+                        type="file"
+                        multiple
+                        onChange={handleFilesChange}
+                        accept="image/*"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                    />
                     <Button
                         variant="outlined"
                         disabled={isLoading}
@@ -248,7 +257,7 @@ const PostAQuestion: React.FC = () => {
                         variant="contained"
                         disabled={isLoading}
                         sx={{
-                            width: "60%",
+                            // width: "60%",
                             borderRadius: "16px",
                             backgroundColor: tags.length > 0 ? "primary" : "#ccc",
                             textTransform: "none",

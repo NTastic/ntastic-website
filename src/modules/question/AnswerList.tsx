@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Avatar, Box, Button, List, ListItem, Typography } from "@mui/material";
+import { Avatar, Box, Button, Divider, List, ListItem, Typography } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import DisplayImages from "@/utils/DisplayImages";
 import { AnswerValue } from "@/shared/constants/types";
@@ -17,12 +17,15 @@ const AnswerList: React.FC<AnswerListProps> = ({
     answers, handleVoteAnswer, getMoreAnswers, isLoading
 }) => {
     return (
-        <Box width="100%">
+        <Box width="95%">
             <List>
                 {answers && answers.map((item: AnswerValue) => (
                     <ListItem
                         key={item.id}
                         sx={{
+                            width: "100%", 
+                            padding: 0, 
+                            margin: 0,
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "flex-start",
@@ -30,8 +33,15 @@ const AnswerList: React.FC<AnswerListProps> = ({
                             gap: 1
                         }}
                     >
-                        <Box display="flex">
-                            <Avatar sx={{ width: "15px", height: "15px", mr: 1 }} />
+                        <Box 
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                        >
+                            <Avatar 
+                            src={item.author.avatar || "none"}
+                            sx={{ width: "20px", height: "20px", mr: 1 }} 
+                            />
                             <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
                                 {item.author.username}
                             </Typography>
@@ -42,7 +52,13 @@ const AnswerList: React.FC<AnswerListProps> = ({
                             </ReactMarkdown>
                         </Box>
                         {item.images.length > 0 && (
-                            <Box mb={2}>
+                            <Box 
+                            width="100%"
+                            display="flex"
+                            flexDirection="column"
+                            alignItems="center"
+                            mt={1}
+                            mb={1}>
                                 <DisplayImages images={item.images} height={300} />
                             </Box>
                         )}
@@ -72,6 +88,7 @@ const AnswerList: React.FC<AnswerListProps> = ({
                                 Disagree  {item.votes.downvotes}
                             </Button>
                         </Box>
+                        <Divider sx={{ width: "100%", mt: 1, mb: 1 }} />
                     </ListItem>
                 ))}
             </List>
@@ -83,7 +100,7 @@ const AnswerList: React.FC<AnswerListProps> = ({
                 onClick={getMoreAnswers}
                 disabled={isLoading}
             >
-                {isLoading ? <SpinningHourglass/> : "More Answers"}
+                {isLoading ? <SpinningHourglass /> : "More Answers"}
             </Button>
         </Box>
     );

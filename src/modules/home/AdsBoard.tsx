@@ -68,7 +68,7 @@ const AdsBoard: React.FC = () => {
             onMouseOver={handleMouseOver}
             onMouseLeave={handleMouseLeave}
             sx={{
-                width: "90%",
+                width: "100%",
                 height: "300px",
                 display: "flex",
                 flexDirection: "column",
@@ -76,13 +76,12 @@ const AdsBoard: React.FC = () => {
                 borderRadius: "16px",
                 overflow: "hidden",
                 position: "relative",
-                mt: 2,
-                mb: 2
+                mt: 1,
             }}
         >
             <Button
                 sx={{
-                    width: "90%",
+                    width: "95%",
                     height: "70%",
                     borderRadius: "16px",
                     display: "flex",
@@ -92,10 +91,10 @@ const AdsBoard: React.FC = () => {
                     backgroundColor: ads[currentIndex].bg,
                     transition: "all 0.5s ease",
                     transform: isHovered ? "scale(1.03)" : "none",
-                    paddingLeft: 3,
-                    paddingRight: 3,
-                    mt: 2,
-                    mb: 2
+                    paddingLeft: 1,
+                    paddingRight: 1,
+                    mt: 1,
+                    // mb: 1
                 }}
             >
                 <Typography
@@ -111,14 +110,19 @@ const AdsBoard: React.FC = () => {
                 </Typography>
                 <img
                     src={ads[currentIndex].image}
-                    style={{ height: "80%", width: "auto", marginRight: 10 }}
+                    style={{
+                        height: "70%",
+                        width: "auto",
+                        marginRight: 20
+                    }}
                 />
             </Button>
             <Button
                 onClick={prevSlide}
+                variant='text'
                 sx={{
                     position: "absolute",
-                    left: 10,
+                    left: 0,
                     top: "40%",
                     transform: "translateY(-40%)",
                     zIndex: 1,
@@ -128,9 +132,10 @@ const AdsBoard: React.FC = () => {
             </Button>
             <Button
                 onClick={nextSlide}
+                variant='text'
                 sx={{
                     position: "absolute",
-                    right: 10,
+                    right: 0,
                     top: "40%",
                     transform: "translateY(-40%)",
                     zIndex: 1,
@@ -138,7 +143,7 @@ const AdsBoard: React.FC = () => {
             >
                 <ChevronRight />
             </Button>
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row" spacing={1}>
                 {ads.map((_, index) => (
                     <IconButton
                         key={index}
@@ -155,7 +160,7 @@ const AdsBoard: React.FC = () => {
                                 transition: "all 0.5s ease",
                                 color: index === currentIndex ? "coral" : "#ccc",
                                 fontSize: index === currentIndex ? 25 : 15,
-                                
+
                             }}
                         />
                     </IconButton>
