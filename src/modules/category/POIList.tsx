@@ -159,7 +159,7 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "space-around",
+                justifyContent: "space-between",
             }}
         >
             <Box
@@ -280,30 +280,20 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                                 }}
                             >
                                 <Box
-                                    width={isSmall ? "150px" : "200px"}
-                                    height={isSmall ? "150px" : "200px"}
-                                    display="flex"
-                                    flexDirection="column"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                >
-                                    <img
-                                        src={item.photoUrls[0]}
-                                        alt={item.name}
-                                        style={{
-                                            width: isSmall ? "120px" : "180px",
-                                            height: "auto",
-                                            objectFit: "cover",
-                                            borderRadius: "16px"
-                                        }}
-                                        loading="lazy"
-                                    />
-                                </Box>
+                                    component="img"
+                                    sx={{
+                                        height: isSmall ? "100px" : "180px",
+                                        width: isSmall ? "100px" : "180px",
+                                        borderRadius: "16px"
+                                    }}
+                                    alt={item.name}
+                                    src={item.photoUrls[0]}
+                                />
                                 <Box
-                                    flexGrow={1}
+                                    // flexGrow={1}
                                     display="flex"
                                     flexDirection="column"
-                                    alignItems="start"
+                                    alignItems="flex-start"
                                     gap={1}
                                 >
                                     <Typography
@@ -318,9 +308,7 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                                         alignItems="center"
                                         gap={1}
                                     >
-                                        <Icon color="warning">
-                                            <StarIcon />
-                                        </Icon>
+                                        <StarIcon color="warning" />
                                         <Typography
                                             variant={isSmall ? "body2" : "body1"}
                                             color="textSecondary"

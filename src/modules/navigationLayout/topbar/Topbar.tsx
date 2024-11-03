@@ -28,7 +28,7 @@ const Topbar: React.FC = () => {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [auth, setAuth] = React.useState<boolean>(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-    
+
     const { data: userData } = useQuery(
         GET_USER,
         { variables: { getUserId: userId }, skip: !userId }
@@ -91,28 +91,21 @@ const Topbar: React.FC = () => {
                         <Avatar
                             // src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
                             src="https://i.postimg.cc/wvtK5W2D/Wechat-IMG1050.png"
-                            style={{ 
-                                width: isSmall ? '30px' : '50px', 
-                                height: isSmall ? '30px' : '50px', 
-                                objectFit: "cover", 
+                            style={{
+                                width: isSmall ? '30px' : '50px',
+                                height: isSmall ? '30px' : '50px',
+                                objectFit: "cover",
                                 backgroundPosition: "center"
                             }}
                         />
-                        {/* <Typography
-                            variant='h6'
-                            component='div'
-                            sx={{ fontWeight: 'bold', color: '#000' }}
-                        >
-                            NTastic
-                        </Typography> */}
-                        <img
-                        src="https://i.postimg.cc/DyzGrHbS/Wechat-IMG1068.png"
-                        style={{ 
-                            width: "auto", 
-                            height: isSmall ? '30px' : '50px', 
-                            objectFit: "cover", 
-                            backgroundPosition: "center"
-                        }}
+                        <Box
+                            component="img"
+                            sx={{
+                                height: isSmall ? '20px' : '40px',
+                                width: isSmall ? "100px" : "180px",
+                            }}
+                            alt="NTastic"
+                            src="https://i.postimg.cc/DyzGrHbS/Wechat-IMG1068.png"
                         />
                     </Button>
                 </Box>
@@ -121,7 +114,7 @@ const Topbar: React.FC = () => {
                         sx={{
                             position: "absolute",
                             right: isSmall ? "1%" : "3%",
-                            transform: isSmall ? "translateX(1%)": "translateX(3%)",
+                            transform: isSmall ? "translateX(1%)" : "translateX(3%)",
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center"
@@ -189,7 +182,7 @@ const Topbar: React.FC = () => {
                         sx={{
                             position: "absolute",
                             right: isSmall ? "1%" : "3%",
-                            transform: isSmall ? "translateX(1%)": "translateX(3%)",
+                            transform: isSmall ? "translateX(1%)" : "translateX(3%)",
                             borderRadius: "16px"
                         }}
                         onClick={() => {

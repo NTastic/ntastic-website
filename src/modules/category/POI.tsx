@@ -199,10 +199,13 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 onMouseOver={handleMouseOver}
                 onMouseLeave={handleMouseLeave}
             >
-                <img
+                <Box
+                    component="img"
+                    sx={{
+                        height: "80%", 
+                        width: "auto"
+                    }}
                     src={POIImages[currentIndex]}
-                    style={{ height: "80%", width: "auto" }}
-                    loading="lazy"
                 />
                 <IconButton
                     onClick={prevSlide}

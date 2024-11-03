@@ -166,10 +166,14 @@ const Recommendations: React.FC<RecommendationsProps> = ({ categories }) => {
                                         )
                                     }}
                                 >
-                                    <img
+                                    <Box
+                                        component="img"
+                                        sx={{
+                                            width: "100%", 
+                                            height: "auto", 
+                                            borderRadius: "16px"
+                                        }}
                                         src={item.poi.photoUrls[0]}
-                                        loading="lazy"
-                                        style={{ width: "100%", height: "auto", borderRadius: "16px" }}
                                     />
                                     <Typography width="95%" variant="body2" textAlign="start">
                                         {truncateContent(item.title, 20)}

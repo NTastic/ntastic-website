@@ -111,13 +111,14 @@ const AdsBoard: React.FC = () => {
                 >
                     {ads[currentIndex].caption}
                 </Typography>
-                <img
-                    src={ads[currentIndex].image}
-                    style={{
+                <Box
+                    component="img"
+                    sx={{
                         height: isSmall ? "50%" : "70%",
                         width: "auto",
                         marginRight: 20
                     }}
+                    src={ads[currentIndex].image}
                 />
             </Button>
             <IconButton
