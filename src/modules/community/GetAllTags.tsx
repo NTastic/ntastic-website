@@ -57,7 +57,7 @@ const GetAllTags: React.FC<GetAllTagsProps> = ({
             },
             fetchPolicy: "no-cache"
         });
-    const tagList = tagData?.getTags || [];
+    const tagList = tagData?.getTags.filter((tag: { questionCount: number; })=>tag.questionCount > 0) || [];
 
     const isTagSelected = (tagId: string) => {
         return selectedTag === tagId;

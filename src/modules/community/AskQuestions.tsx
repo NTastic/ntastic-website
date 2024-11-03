@@ -1,21 +1,35 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Box, Typography, TextField, Button } from "@mui/material";
+import { Box, Typography, TextField, Button, InputAdornment, IconButton } from "@mui/material";
 import { POST_TITLE, ACCESS_TOKEN } from "@/shared/constants/storage";
 import { useRouter } from "next/navigation";
 import { RouteConfig } from "@/routes/route";
+import { MoreHorizontalIcon } from "lucide-react";
+import { useMutation } from "@apollo/client";
+import { CREATE_QUESTION } from "@/graphql/qa";
 
 const AskQuestions: React.FC = () => {
     const router = useRouter();
     const [inputText, setInputText] = useState<string | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
+    const [submitStatus, setSubmitStatus] = useState<string | null>(null);
     const [auth, setAuth] = React.useState<boolean>(false);
+    const [createQuestion] = useMutation(CREATE_QUESTION);
 
     const handleTextFieldChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputText(event.target.value);
     };
 
-    const handleSubmit = () => {
+    const handleOptionsClick = () => {
+        if (!auth) {
+            router.push(RouteConfig.Login.Path);
+        } else {
+            localStorage.setItem(POST_TITLE, inputText || "");
+            router.push(RouteConfig.PostAQuestion.Path);
+        }
+    };
+
+    const handleSubmit = async () => {
         if (!inputText) {
             return;
         }
@@ -24,6 +38,16 @@ const AskQuestions: React.FC = () => {
         } else {
             localStorage.setItem(POST_TITLE, inputText);
             router.push(RouteConfig.PostAQuestion.Path);
+        }
+
+        const { data: createResponse } = await createQuestion(
+            { variables: { title: inputText } }
+        );
+
+        if (createResponse) {
+            setSubmitStatus("Submit successfully!");
+            // resetForm();
+            router.push(`${RouteConfig.Community.Path}/${createResponse.id}`);
         }
     };
 
@@ -75,32 +99,39 @@ const AskQuestions: React.FC = () => {
                 Ask Questions to NTastic
             </Typography>
             <TextField
-                    variant="outlined"
-                    label="Ask Something"
-                    placeholder="Which hot sauce from Coles or Woolies is the best?"
-                    multiline
-                    minRows={1}
-                    maxRows={3}
-                    onChange={handleTextFieldChange}
-                    sx={{
-                        width: "80%",
+                variant="outlined"
+                label="Ask Something"
+                placeholder="Which hot sauce from Coles or Woolies is the best?"
+                multiline
+                minRows={1}
+                maxRows={3}
+                onChange={handleTextFieldChange}
+                sx={{
+                    width: "80%",
+                    borderRadius: "16px",
+                    border: "none",
+                    backgroundColor: "rgba(255, 255, 255, 0.6)",
+                    transition: "all 0.3s ease",
+                    "&:focus-within": {
+                        backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    }
+                }}
+                InputProps={{
+                    sx: {
                         borderRadius: "16px",
-                        border: "none",
-                        backgroundColor: "rgba(255, 255, 255, 0.6)",
-                        transition: "all 0.3s ease",
-                        "&:focus-within": {
-                            backgroundColor: "rgba(255, 255, 255, 0.9)",
-                        }
-                    }}
-                    InputProps={{
-                        sx: {
-                            borderRadius: "16px",
-                        }
-                    }}
-                    InputLabelProps={{
-                        shrink: !!inputText
-                    }}
-                />
+                    },
+                    endAdornment: (
+                        <InputAdornment position="end">
+                            <IconButton onClick={handleOptionsClick} sx={{ padding: 1, margin: -1 }}>
+                                <MoreHorizontalIcon />
+                            </IconButton>
+                        </InputAdornment>
+                    ),
+                }}
+                InputLabelProps={{
+                    shrink: !!inputText
+                }}
+            />
             <Button
                 variant="contained"
                 sx={{

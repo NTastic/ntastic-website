@@ -110,8 +110,8 @@ export const CREATE_ANSWER = gql`
 `;
 
 export const CREATE_QUESTION = gql`
-    mutation CreateQuestion($title: String!, $content: String!, $tagIds: [ID!]!, $imageIds: [ID!]) {
-        createQuestion(title: $title, content: $content, tagIds: $tagIds, imageIds: $imageIds) {
+    mutation CreateQuestion($title: String!, $content: String, $imageIds: [ID!]) {
+        createQuestion(title: $title, content: $content, imageIds: $imageIds) {
             id
         }
     }

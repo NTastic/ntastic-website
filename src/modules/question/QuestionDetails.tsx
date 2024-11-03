@@ -139,7 +139,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     };
 
     const truncateContent = (content: string, wordLimit: number = 50) => {
-        const words = content.split(" ");
+        const words = content?.split(" ") || [];
         if (words.length > wordLimit) {
             return words.slice(0, wordLimit).join(" ") + " ...";
         }
