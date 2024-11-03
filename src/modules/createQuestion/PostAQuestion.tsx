@@ -187,7 +187,7 @@ const PostAQuestion: React.FC = () => {
                         variant="standard"
                         label="Content"
                         {...register("content")}
-                        placeholder="The Description of the Question (Mandatory)"
+                        placeholder="The Description of the Question"
                         multiline
                         minRows={8}
                         sx={{
