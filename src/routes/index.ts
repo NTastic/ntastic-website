@@ -1,5 +1,5 @@
 export const iconMap: {[key: string]: string} = {
-    "4WD": "/images/road-spikes-solid.svg",
+    "4WDTracks": "/images/road-spikes-solid.svg",
     "Art": "/images/palette-solid.svg",
     "Family": "/images/people-robbery-solid.svg",
     "Fishing": "/images/fish-solid.svg",
