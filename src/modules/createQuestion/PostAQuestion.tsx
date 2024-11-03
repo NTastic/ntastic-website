@@ -12,6 +12,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { SpinningHourglass } from "@/utils/Animations";
 import { compressImage } from "@/utils/CompressFile";
 import DisplayImages from "@/utils/DisplayImages";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 type PostValues = {
     title: string;
@@ -20,6 +21,7 @@ type PostValues = {
 
 const PostAQuestion: React.FC = () => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const postTitle = typeof window !== "undefined" ? localStorage.getItem(POST_TITLE) : "";
     const { register, getValues, handleSubmit, reset: resetForm } = useForm<PostValues>({
         defaultValues: {
@@ -118,7 +120,7 @@ const PostAQuestion: React.FC = () => {
                 maxWidth: 800,
                 height: "100%",
                 overflow: "auto",
-                padding: 3,
+                padding: isSmall ? 1 : 3,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -132,7 +134,6 @@ const PostAQuestion: React.FC = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    margin: { xs: 1, md: 0 }
                 }}
             >
                 <Box display="flex" sx={{ width: "100%", alignItems: "center", mb: 2 }}>

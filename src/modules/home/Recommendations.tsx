@@ -10,13 +10,15 @@ import { GET_RECOMMENDATIONS } from '@/graphql/poi';
 import { useQuery } from '@apollo/client';
 import { CategoryValue, RecommendationValue } from '@/shared/constants/types';
 import StarIcon from '@mui/icons-material/Star';
+import { isSmallScreen } from '@/utils/IsSmallScreen';
 
 interface RecommendationsProps {
     categories: Array<CategoryValue>
 };
 
-const Recommendations: React.FC<RecommendationsProps> = ({categories}) => {
+const Recommendations: React.FC<RecommendationsProps> = ({ categories }) => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const catIds: string[] = categories.map(cat => cat.id);
     const [recList, setRecList] = useState<RecommendationValue[]>([]);
     const [recPage, setRecPage] = useState<number>(1);
@@ -131,7 +133,12 @@ const Recommendations: React.FC<RecommendationsProps> = ({categories}) => {
                     }}
 
                 >
-                    <ImageList variant="masonry" cols={3} gap={8} sx={{ width: "95%" }}>
+                    <ImageList
+                        variant="masonry"
+                        cols={isSmall ? 2 : 3}
+                        gap={isSmall ? 0 : 8}
+                        sx={{ width: "95%" }}
+                    >
                         {recList.map((item) => (
                             <ImageListItem key={item.id}>
                                 <Button
@@ -159,10 +166,14 @@ const Recommendations: React.FC<RecommendationsProps> = ({categories}) => {
                                         )
                                     }}
                                 >
-                                    <img
+                                    <Box
+                                        component="img"
+                                        sx={{
+                                            width: "100%", 
+                                            height: "auto", 
+                                            borderRadius: "16px"
+                                        }}
                                         src={item.poi.photoUrls[0]}
-                                        loading="lazy"
-                                        style={{ width: "100%", height: "auto", borderRadius: "16px" }}
                                     />
                                     <Typography width="95%" variant="body2" textAlign="start">
                                         {truncateContent(item.title, 20)}

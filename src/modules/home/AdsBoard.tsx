@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, IconButton, Stack, Typography } from '@mui/material';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import CircleIcon from '@mui/icons-material/Circle';
+import { isSmallScreen } from '@/utils/IsSmallScreen';
 
 const ads = [
     {
@@ -33,6 +34,7 @@ const ads = [
 ];
 
 const AdsBoard: React.FC = () => {
+    const isSmall = isSmallScreen();
     const [currentIndex, setCurrentIndex] = useState<number>(0);
     const [isHovered, setIsHovered] = useState<boolean>(false);
 
@@ -69,7 +71,7 @@ const AdsBoard: React.FC = () => {
             onMouseLeave={handleMouseLeave}
             sx={{
                 width: "100%",
-                height: "300px",
+                height: isSmall ? "200px" : "300px",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -91,35 +93,36 @@ const AdsBoard: React.FC = () => {
                     backgroundColor: ads[currentIndex].bg,
                     transition: "all 0.5s ease",
                     transform: isHovered ? "scale(1.03)" : "none",
-                    paddingLeft: 1,
-                    paddingRight: 1,
-                    mt: 1,
-                    // mb: 1
+                    paddingLeft: isSmall ? 2 : 1,
+                    paddingRight: isSmall ? 2 : 1,
+                    marginLeft: isSmall ? 1 : 0,
+                    marginRight: isSmall ? 1 : 0,
+                    mt: isSmall ? 0 : 1,
                 }}
             >
                 <Typography
-                    variant="h5"
+                    variant={isSmall ? "h6" : "body1"}
                     color="#000"
                     fontWeight="bold"
                     textAlign="start"
-                    width="40%"
+                    width="50%"
                     flexWrap="wrap"
                     ml={3}
                 >
                     {ads[currentIndex].caption}
                 </Typography>
-                <img
-                    src={ads[currentIndex].image}
-                    style={{
-                        height: "70%",
+                <Box
+                    component="img"
+                    sx={{
+                        height: isSmall ? "50%" : "70%",
                         width: "auto",
                         marginRight: 20
                     }}
+                    src={ads[currentIndex].image}
                 />
             </Button>
-            <Button
+            <IconButton
                 onClick={prevSlide}
-                variant='text'
                 sx={{
                     position: "absolute",
                     left: 0,
@@ -129,10 +132,9 @@ const AdsBoard: React.FC = () => {
                 }}
             >
                 <ChevronLeft />
-            </Button>
-            <Button
+            </IconButton>
+            <IconButton
                 onClick={nextSlide}
-                variant='text'
                 sx={{
                     position: "absolute",
                     right: 0,
@@ -142,7 +144,7 @@ const AdsBoard: React.FC = () => {
                 }}
             >
                 <ChevronRight />
-            </Button>
+            </IconButton>
             <Stack direction="row" spacing={1}>
                 {ads.map((_, index) => (
                     <IconButton
@@ -159,7 +161,7 @@ const AdsBoard: React.FC = () => {
                             sx={{
                                 transition: "all 0.5s ease",
                                 color: index === currentIndex ? "coral" : "#ccc",
-                                fontSize: index === currentIndex ? 25 : 15,
+                                fontSize: index === currentIndex ? (isSmall ? 15 : 25) : (isSmall ? 10 : 15),
 
                             }}
                         />

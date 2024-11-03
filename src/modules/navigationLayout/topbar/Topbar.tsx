@@ -18,9 +18,11 @@ import { ACCESS_TOKEN, USER_ID } from '@/shared/constants/storage';
 import { GET_USER } from '@/graphql/user';
 import { useQuery } from '@apollo/client';
 import { UserValue } from '@/shared/constants/types';
+import { isSmallScreen } from '@/utils/IsSmallScreen';
 
 const Topbar: React.FC = () => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const [userId, setUserId] = useState<string | null>(null);
     const [user, setUser] = useState<UserValue | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
@@ -66,12 +68,12 @@ const Topbar: React.FC = () => {
     }, [userData]);
 
     return (
-        <AppBar position='fixed' sx={{ backgroundColor: '#f8f8f8' }}>
+        <AppBar position='fixed' sx={{ backgroundColor: '#fff' }}>
             <Toolbar>
                 <Box
                     sx={{
                         position: "absolute",
-                        left: "calc(50% + 30px)",
+                        left: "calc(50% + 25px)",
                         transform: "translateX(-50%)"
                     }}
                 >
@@ -87,24 +89,32 @@ const Topbar: React.FC = () => {
                         }}
                     >
                         <Avatar
-                            src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
-                            style={{ width: '50px', height: '50px', objectFit: "cover", backgroundPosition: "center" }}
+                            // src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+                            src="https://i.postimg.cc/wvtK5W2D/Wechat-IMG1050.png"
+                            style={{
+                                width: isSmall ? '30px' : '50px',
+                                height: isSmall ? '30px' : '50px',
+                                objectFit: "cover",
+                                backgroundPosition: "center"
+                            }}
                         />
-                        <Typography
-                            variant='h6'
-                            component='div'
-                            sx={{ fontWeight: 'bold', color: '#000' }}
-                        >
-                            NTastic
-                        </Typography>
+                        <Box
+                            component="img"
+                            sx={{
+                                height: isSmall ? '20px' : '40px',
+                                width: isSmall ? "100px" : "180px",
+                            }}
+                            alt="NTastic"
+                            src="https://i.postimg.cc/DyzGrHbS/Wechat-IMG1068.png"
+                        />
                     </Button>
                 </Box>
                 {auth && (
                     <Box
                         sx={{
                             position: "absolute",
-                            right: "3%",
-                            transform: "translateX(3%)",
+                            right: isSmall ? "1%" : "3%",
+                            transform: isSmall ? "translateX(1%)" : "translateX(3%)",
                             display: "flex",
                             flexDirection: "row",
                             alignItems: "center"
@@ -115,12 +125,12 @@ const Topbar: React.FC = () => {
                             edge='end'
                             color='warning'
                             aria-label='notifications'
-                            sx={{ mr: 1 }}
+                            sx={{ mr: isSmall ? 0 : 1 }}
                         >
                             <NotificationsIcon
                                 sx={{
-                                    width: "25px",
-                                    height: "25px",
+                                    width: isSmall ? "20px" : "25px",
+                                    height: isSmall ? "20px" : "25px",
                                 }}
                             />
                         </IconButton>
@@ -135,8 +145,8 @@ const Topbar: React.FC = () => {
                             <Avatar
                                 src={user?.avatar || "none"}
                                 sx={{
-                                    width: "25px",
-                                    height: "25px",
+                                    width: isSmall ? "20px" : "25px",
+                                    height: isSmall ? "20px" : "25px",
                                     objectFit: "cover",
                                     backgroundPosition: "center",
                                 }}
@@ -171,8 +181,8 @@ const Topbar: React.FC = () => {
                         color='primary'
                         sx={{
                             position: "absolute",
-                            right: "3%",
-                            transform: "translateX(3%)",
+                            right: isSmall ? "1%" : "3%",
+                            transform: isSmall ? "translateX(1%)" : "translateX(3%)",
                             borderRadius: "16px"
                         }}
                         onClick={() => {

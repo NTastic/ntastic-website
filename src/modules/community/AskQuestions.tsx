@@ -4,12 +4,14 @@ import { Box, Typography, TextField, Button, InputAdornment, IconButton } from "
 import { POST_TITLE, ACCESS_TOKEN } from "@/shared/constants/storage";
 import { useRouter } from "next/navigation";
 import { RouteConfig } from "@/routes/route";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 import { MoreHorizontalIcon } from "lucide-react";
 import { useMutation } from "@apollo/client";
 import { CREATE_QUESTION } from "@/graphql/qa";
 
 const AskQuestions: React.FC = () => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const [inputText, setInputText] = useState<string | null>(null);
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [submitStatus, setSubmitStatus] = useState<string | null>(null);
@@ -67,7 +69,7 @@ const AskQuestions: React.FC = () => {
         <Box
             sx={{
                 width: "90%",
-                minHeight: "300px",
+                height: isSmall ? "200px" : "300px",
                 backgroundColor: "rgba(153, 153, 255, 0.8)",
                 backgroundImage: "url(https://i.postimg.cc/JnxsqvLh/uluru.jpg)",
                 backgroundSize: "cover",
@@ -79,19 +81,20 @@ const AskQuestions: React.FC = () => {
                 justifyContent: "space-around",
                 borderRadius: "16px",
                 overflowX: "hidden",
+                overflowY: "hidden",
                 padding: 3,
                 mt: 1,
                 mb: 1
             }}
         >
             <Typography
-                variant="h3"
+                variant={isSmall ? "h6" : "h3"}
                 sx={{
                     width: "100%",
                     fontWeight: "bold",
                     color: "#fff",
                     textAlign: "center",
-                    mt: 2,
+                    mt: isSmall ? 1 : 2,
                     mb: 1
                 }}
             >
@@ -100,16 +103,16 @@ const AskQuestions: React.FC = () => {
             <TextField
                 variant="outlined"
                 label="Ask Something"
-                placeholder="Which hot sauce from Coles or Woolies is the best?"
                 multiline
                 minRows={1}
-                maxRows={3}
+                maxRows={isSmall ? 2 : 3}
                 onChange={handleTextFieldChange}
                 sx={{
                     width: "80%",
                     borderRadius: "16px",
                     border: "none",
                     backgroundColor: "rgba(255, 255, 255, 0.6)",
+                    mb: 1,
                     transition: "all 0.3s ease",
                     "&:focus-within": {
                         backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -118,14 +121,7 @@ const AskQuestions: React.FC = () => {
                 InputProps={{
                     sx: {
                         borderRadius: "16px",
-                    },
-                    endAdornment: (
-                        <InputAdornment position="end">
-                            <IconButton onClick={handleOptionsClick} sx={{ padding: 1, margin: -1 }}>
-                                <MoreHorizontalIcon />
-                            </IconButton>
-                        </InputAdornment>
-                    ),
+                    }
                 }}
                 InputLabelProps={{
                     shrink: !!inputText

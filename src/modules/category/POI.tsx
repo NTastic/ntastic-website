@@ -18,6 +18,7 @@ import { SpinningHourglass } from "@/utils/Animations";
 import { RouteConfig } from "@/routes/route";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 interface POIProps {
     categoryId: string;
@@ -35,6 +36,7 @@ const bottomIconStyle = {
 
 const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const [categoryName, setCategoryName] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryValue[]>([]);
     const [POIData, setPOIData] = useState<POIValue | null>(null);
@@ -160,9 +162,9 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 display: "flex",
                 flexDirection: "column",
                 padding: 1,
-                margin: { xs: 1, md: 0 },
                 alignItems: "center",
-                justifyContent: "space-around"
+                justifyContent: "space-around",
+                // marginBottom: isSmall ? "50px" : "80px"
             }}
         >
             <Box
@@ -171,8 +173,8 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 flexDirection="row"
                 alignItems="center"
                 justifyContent="space-between"
-                mt={2}
-                mb={2}
+                mt={isSmall ? 1 : 2}
+                mb={isSmall ? 1 : 2}
             >
                 <IconButton
                     onClick={() => router.back()}
@@ -197,36 +199,39 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 onMouseOver={handleMouseOver}
                 onMouseLeave={handleMouseLeave}
             >
-                <img
+                <Box
+                    component="img"
+                    sx={{
+                        height: "80%", 
+                        width: "auto"
+                    }}
                     src={POIImages[currentIndex]}
-                    style={{ height: "80%", width: "auto" }}
-                    loading="lazy"
                 />
-                <Button
+                <IconButton
                     onClick={prevSlide}
                     sx={{
                         position: "absolute",
-                        left: 10,
+                        left: isSmall ? 0 : 10,
                         top: "40%",
                         transform: "translateY(-40%)",
                         zIndex: 1,
                     }}
                 >
                     <ChevronLeft />
-                </Button>
-                <Button
+                </IconButton>
+                <IconButton
                     onClick={nextSlide}
                     sx={{
                         position: "absolute",
-                        right: 10,
+                        right: isSmall ? 0 : 10,
                         top: "40%",
                         transform: "translateY(-40%)",
                         zIndex: 1,
                     }}
                 >
                     <ChevronRight />
-                </Button>
-                <Stack direction="row" spacing={2}>
+                </IconButton>
+                <Stack direction="row" spacing={1}>
                     {POIImages.map((_, index) => (
                         <IconButton
                             key={index}
@@ -242,7 +247,7 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                                 sx={{
                                     transition: "all 0.5s ease",
                                     color: index === currentIndex ? "coral" : "#ccc",
-                                    fontSize: index === currentIndex ? 20 : 10,
+                                    fontSize: index === currentIndex ? (isSmall ? 15 : 20) : (isSmall ? 10 : 15),
 
                                 }}
                             />
@@ -259,21 +264,31 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 mt={2}
                 mb={2}
             >
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h5" fontWeight="bold" gutterBottom>
                     {POIData.name}
                 </Typography>
-                <Typography variant="body1">
-                    Stars: {POIData.rating || "unknown"}
-                </Typography>
-                <Typography variant="body1">
-                    Location: {POIData.address || "unknown"}
-                </Typography>
+                <Box display="flex" flexDirection="row" alignItems="start">
+                    <Typography variant="body1" fontWeight="bold" mr={1}>
+                        Rating:
+                    </Typography>
+                    <Typography variant="body1">
+                        {POIData.rating || "unknown"}
+                    </Typography>
+                </Box>
+                <Box display="flex" flexDirection="column" alignItems="start">
+                    <Typography variant="body1" fontWeight="bold" mr={1}>
+                        Location:
+                    </Typography>
+                    <Typography variant="body1">
+                        {POIData.address || "unknown"}
+                    </Typography>
+                </Box>
                 <Box
                     display="flex"
                     flexDirection="column"
                     alignItems="start"
                 >
-                    <Typography variant="body1">
+                    <Typography variant="body1" fontWeight="bold">
                         Opened time:
                     </Typography>
                     {POIData.workingHours.length > 0 ? (
@@ -294,11 +309,11 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                 </Box>
                 <Box
                     display="flex"
-                    flexDirection="row"
-                    alignItems="center"
+                    flexDirection="column"
+                    alignItems="start"
                     gap={1}
                 >
-                    <Typography variant="body1">
+                    <Typography variant="body1" fontWeight="bold">
                         Website:
                     </Typography>
                     {POIData.website ? (
@@ -308,6 +323,7 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                             underline="hover"
                             target="_blank"
                             rel="noopener noreferrer"
+                            flexWrap="wrap"
                         >
                             {POIData.website}
                         </Link>
@@ -320,7 +336,7 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
             </Box>
             <Divider sx={{ width: "100%", marginTop: 2, marginBottom: 2 }} />
             {comments.length > 0 && (
-                <List sx={{ width: "90%" }}>
+                <List sx={{ width: "95%" }}>
                     {comments.map((item) => (
                         <ListItem
                             key={item.id}
@@ -331,7 +347,7 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                                 alignItems: "start",
                                 borderRadius: "16px",
                                 boxShadow: "0 8px 16px rgba(0, 0, 0, 0.15)",
-                                mb: 2
+                                mb: 1
                             }}
                         >
                             <Box display="flex" flexDirection="row" alignItems="center" mb={1}>
@@ -382,18 +398,19 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                     <SpinningHourglass />
                 </Box>
             )}
-            <Box
+            {/* Interaction with the POI */}
+            {/* <Box
                 width="750px"
                 position="fixed"
                 display="flex"
                 flex="row"
                 alignItems="center"
-                bottom="10px"
+                bottom="16px"
                 borderRadius="16px"
                 padding={1}
                 sx={{
                     backgroundColor: "#00FF9C",
-                    left: "calc(50% + 30px)",
+                    left: "calc(50% + 25px)",
                     transform: "translateX(-50%)"
                 }}
             >
@@ -449,7 +466,7 @@ const POI: React.FC<POIProps> = ({ categoryId, poiId }) => {
                         {POIData.reviewsCount || 0}
                     </Typography>
                 </IconButton>
-            </Box>
+            </Box> */}
         </Box>
     );
 };

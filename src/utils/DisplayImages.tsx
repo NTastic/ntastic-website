@@ -1,6 +1,7 @@
 import React from "react";
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import { Box } from "@mui/material";
 
 interface Props {
     images: Array<string>;
@@ -53,14 +54,15 @@ const DisplayImages: React.FC<Props> = ({ images, height }) => {
         >
             {images.map((image) => (
                 <ImageListItem key={image}>
-                    <img
-                        src={image}
-                        style={{
+                    <Box
+                        component="img"
+                        sx={{
                             height: height / rowNum,
                             width: 'auto',
                             display: 'block',
                             margin: 'auto',
                         }}
+                        src={image}
                     />
                 </ImageListItem>
             ))}

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import {
     Box,
@@ -7,7 +8,6 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    Collapse,
 } from "@mui/material";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -18,8 +18,8 @@ import { useRouter } from "next/navigation";
 import { RouteConfig } from "@/routes/route";
 
 const sidebarItems = [
-    "Home", 
-    "Community", 
+    "Home",
+    "Community",
     // "Settings"
 ];
 const iconList: { [key: string]: React.ReactNode } = {
@@ -50,38 +50,41 @@ const Sidebar: React.FC<SidebarProps> = ({
 
     const DrawerList = (
         <Box role="presentation">
-            <List>
-                <ListItem disablePadding>
+            <List
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: 'start',
+                }}
+            >
+                <ListItem
+                    disablePadding
+                >
                     <ListItemButton onClick={open ? handleDrawerClose : handleDrawerOpen}>
-                        <ListItemIcon>
+                        <ListItemIcon
+                            sx={{ justifyContent: "start" }}
+                        >
                             {open ? <ChevronLeftIcon /> : <MenuIcon />}
                         </ListItemIcon>
                     </ListItemButton>
                 </ListItem>
-            </List>
-            <List>
                 {sidebarItems.map((item) => (
-                    <ListItem key={item} disablePadding sx={{ display: 'flex', justifyContent: open ? 'initial' : 'center' }}>
+                    <ListItem
+                        key={item}
+                        disablePadding
+                    >
                         <ListItemButton
-                            sx={{
-                                justifyContent: open ? 'initial' : 'center',
-                                px: 2,
-                                minHeight: 48,
-                                gap: open ? 2 : 0,
-                            }}
                             onClick={() => handleClick(item)}
                         >
                             <ListItemIcon
-                                sx={{
-                                    minWidth: 40,
-                                    justifyContent: 'center',
-                                }}
+                                sx={{ justifyContent: "start", gap: 1 }}
                             >
                                 {iconList[item]}
                             </ListItemIcon>
-                            <Collapse in={open} timeout={500} orientation="horizontal" unmountOnExit>
-                                <ListItemText primary={item} />
-                            </Collapse>
+                            {/* <Collapse in={open} timeout={500} orientation="horizontal" unmountOnExit>
+                                <ListItemText sx={{fontSize: "medium"}}>{item}</ListItemText>
+                            </Collapse> */}
+                            <ListItemText sx={{fontSize: "medium"}}>{item}</ListItemText>
                         </ListItemButton>
                     </ListItem>
                 ))}
@@ -95,12 +98,14 @@ const Sidebar: React.FC<SidebarProps> = ({
             open={open}
             sx={{
                 flexShrink: 0,
-                width: open ? 200 : 60,
+                width: open ? 180 : 50,
                 transition: 'all 0.5s',
                 '& .MuiDrawer-paper': {
-                    width: open ? 200 : 60,
+                    flexShrink: 0,
+                    width: open ? 180 : 50,
                     boxSizing: 'border-box',
                     overflowX: 'hidden',
+                    transition: 'all 0.5s',
                 },
             }}
         >

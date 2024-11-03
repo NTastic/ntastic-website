@@ -10,6 +10,7 @@ import { QuestionsValue } from "@/shared/constants/types";
 import { SpinningHourglass } from "@/utils/Animations";
 import { truncateContent } from "@/utils/TruncateContent";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 interface NewQuestionsProps {
     selectedTag: string;
@@ -21,6 +22,7 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({
     selectedTag, isTagChanged, handleIsTagChanged
 }) => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const [tagIds, setTagIds] = useState<string[]>([]);
     const [questions, setQuestions] = useState<QuestionsValue[]>([]);
     const [queryPage, setQueryPage] = useState<number>(1);
@@ -120,7 +122,10 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({
                                     }
                                 }}
                             >
-                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                                <Typography
+                                    variant={isSmall ? "body1" : "h6"}
+                                    sx={{ fontWeight: "bold" }}
+                                >
                                     {item.title}
                                 </Typography>
                                 <Box
@@ -133,11 +138,17 @@ const NewQuestions: React.FC<NewQuestionsProps> = ({
                                         src={item.author.avatar || "none"}
                                         sx={{ width: "20px", height: "20px", mr: 1 }}
                                     />
-                                    <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
+                                    <Typography
+                                        variant={isSmall ? "caption" : "body2"}
+                                        sx={{ fontSize: "small", color: "#333" }}
+                                    >
                                         {item.author.username}
                                     </Typography>
                                 </Box>
-                                <Typography variant="body1" mb={1}>
+                                <Typography
+                                    variant={isSmall ? "body2" : "body1"}
+                                    mb={1}
+                                >
                                     {truncateContent(item.content, 50)}
                                 </Typography>
                                 {item.images.length > 0 && (

@@ -9,11 +9,11 @@ const Question1: React.FC = () => {
     const router = useRouter();
 
     const labels = [
-        "Tourism",
-        "International Students",
+        "Tourist",
+        "International Student",
         "Local Resident",
         "Backpacker",
-        "With kids",
+        "Parent",
         "Adventure Seeker",
         "Food Lover",
         "Cultural Explorer"

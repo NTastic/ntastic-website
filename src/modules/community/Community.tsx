@@ -35,7 +35,6 @@ const CommunityModule: React.FC = () => {
                 display: "flex",
                 flexDirection: "column",
                 padding: 1,
-                margin: { xs: 1, md: 0 },
                 alignItems: "center",
                 justifyContent: "space-around"
             }}

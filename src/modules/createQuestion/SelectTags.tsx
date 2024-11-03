@@ -111,9 +111,14 @@ export default function SelectTags(
                                         backgroundColor: "#fff"
                                     }}
                                 >
-                                    <img
+                                    <Box
+                                        component="img"
+                                        sx={{
+                                            height: "30px",
+                                            width: "30px",
+                                            backgroundColor: "#fff"
+                                        }}
                                         src={iconMap[item.name]}
-                                        style={{ width: "30px", height: "30px", backgroundColor: "#fff" }}
                                     />
                                 </Avatar>
                                 <Box flexGrow={1}>

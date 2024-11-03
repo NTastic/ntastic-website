@@ -30,7 +30,7 @@ const Home: React.FC = () => {
             }
             setCategories(categories.filter((c) => c !== null));
         }
-    }, categoriesData);
+    }, [categoriesData]);
 
     return (
         <Box
