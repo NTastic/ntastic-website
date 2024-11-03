@@ -17,6 +17,7 @@ import { GET_CATEGORIES, GET_ONE_RECOMMENDATION } from "@/graphql/poi";
 import { useQuery } from "@apollo/client";
 import { RecommendationValue } from "@/shared/constants/types";
 import { SpinningHourglass } from "@/utils/Animations";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 interface RecommendationProps {
     category_id: string;
@@ -26,6 +27,7 @@ interface RecommendationProps {
 
 const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, recommendation_id }) => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const [categoryName, setCategoryName] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryValue[]>([]);
     const [recData, setRecData] = useState<RecommendationValue | null>(null);
@@ -44,11 +46,15 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
     const handleFollow = () => setFollowed(prev => !prev);
 
     const prevSlide = (): void => {
-        setCurrentIndex(prev => (prev - 1 + POIImages.length) % POIImages.length);
+        if (POIImages.length > 1) {
+            setCurrentIndex(prev => (prev - 1 + POIImages.length) % POIImages.length);
+        }
     };
 
     const nextSlide = (): void => {
-        setCurrentIndex(prev => (prev + 1) % POIImages.length);
+        if (POIImages.length > 1) {
+            setCurrentIndex(prev => (prev + 1) % POIImages.length);
+        }
     };
 
     const handleMouseOver = (): void => {
@@ -119,7 +125,6 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                 display: "flex",
                 flexDirection: "column",
                 padding: 1,
-                margin: { xs: 1, md: 0 },
                 alignItems: "center",
                 justifyContent: "space-around"
             }}
@@ -129,20 +134,32 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                 display="flex"
                 flexDirection="row"
                 alignItems="center"
-                mt={2}
-                mb={2}
+                mt={isSmall ? 1 : 2}
+                mb={isSmall ? 1 : 2}
             // position="fixed"
             >
                 <IconButton
                     onClick={() => router.back()}
-                    sx={{ color: "#000", mr: 2 }}
+                    sx={{ color: "#000", mr: isSmall ? 1 : 2 }}
                 >
                     <ChevronLeft />
                 </IconButton>
-                <Avatar sx={{ width: "30px", height: "30px", mr: 2 }} />
-                <Typography variant="h6" fontWeight="bold" flexGrow={1}>
-                    Jack
-                </Typography>
+                <Button
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "start",
+                        textTransform: "none",
+                        color: "#333",
+                        flexGrow: 1
+                    }}
+                >
+                    <Avatar sx={{ width: "30px", height: "30px", mr: 2 }} />
+                    <Typography variant="h6" fontWeight="bold">
+                        Jack
+                    </Typography>
+                </Button>
                 <Button
                     variant="contained"
                     color={followed ? "success" : "warning"}
@@ -177,31 +194,31 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                     style={{ height: "80%", width: "auto" }}
                     loading="lazy"
                 />
-                <Button
+                <IconButton
                     onClick={prevSlide}
                     sx={{
                         position: "absolute",
-                        left: 10,
+                        left: isSmall ? 0 : 10,
                         top: "40%",
                         transform: "translateY(-40%)",
                         zIndex: 1,
                     }}
                 >
                     <ChevronLeft />
-                </Button>
-                <Button
+                </IconButton>
+                <IconButton
                     onClick={nextSlide}
                     sx={{
                         position: "absolute",
-                        right: 10,
+                        right: isSmall ? 0 : 10,
                         top: "40%",
                         transform: "translateY(-40%)",
                         zIndex: 1,
                     }}
                 >
                     <ChevronRight />
-                </Button>
-                <Stack direction="row" spacing={2}>
+                </IconButton>
+                <Stack direction="row" spacing={1}>
                     {POIImages.map((_, index) => (
                         <IconButton
                             key={index}
@@ -217,7 +234,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                                 sx={{
                                     transition: "all 0.5s ease",
                                     color: index === currentIndex ? "coral" : "#ccc",
-                                    fontSize: index === currentIndex ? 25 : 15,
+                                    fontSize: index === currentIndex ? (isSmall ? 20 : 25) : (isSmall ? 10 : 15),
 
                                 }}
                             />
@@ -248,10 +265,10 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                     padding: 2
                 }}
             >
-                <Typography variant="h5">
+                <Typography variant={isSmall ? "h6" : "h5"}>
                     {recData.poi.name}
                 </Typography>
-                <Typography variant="body1" color="textSecondary">
+                <Typography variant={isSmall ? "body2" : "body1"} color="textSecondary">
                     {recData.poi.address}
                 </Typography>
                 <Box
@@ -265,7 +282,8 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                     <ChevronRight />
                 </Box>
             </Button>
-            <Box
+            {/* Interaction with Recommendation */}
+            {/* <Box
                 width="750px"
                 position="fixed"
                 display="flex"
@@ -276,7 +294,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                 padding={1}
                 sx={{
                     backgroundColor: "#00FF9C",
-                    left: "calc(50% + 30px)",
+                    left: "calc(50% + 25px)",
                     transform: "translateX(-50%)"
                 }}
             >
@@ -357,7 +375,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category_id, poi_id, re
                         22
                     </Typography>
                 </IconButton>
-            </Box>
+            </Box> */}
         </Box>
     );
 };

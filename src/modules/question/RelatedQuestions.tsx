@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import { RouteConfig } from "@/routes/route";
 import { useRouter } from "next/navigation";
 import { SpinningHourglass } from "@/utils/Animations";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 interface RelatedQuestionsProps {
     relatedQuestions: RelatedQuestionValue[];
@@ -18,6 +19,7 @@ const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
     relatedQuestions, truncateContent, getMoreRelatedQuestions, isLoading
 }) => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
 
     return (
         <Box width="95%">
@@ -52,21 +54,24 @@ const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
                                 }
                             }}
                         >
-                            <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                            <Typography
+                                variant={isSmall ? "body1" : "h6"}
+                                sx={{ fontWeight: "bold" }}
+                            >
                                 {item.title}
                             </Typography>
-                            <Box display="flex">
-                                <Avatar 
-                                src={item.author.avatar || "none"}
-                                sx={{ width: "20px", height: "20px", mr: 1 }} 
+                            <Box display="flex" mb={1}>
+                                <Avatar
+                                    src={item.author.avatar || "none"}
+                                    sx={{ width: "20px", height: "20px", mr: 1 }}
                                 />
                                 <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
                                     {item.author.username}
                                 </Typography>
                             </Box>
-                            <ReactMarkdown>
+                            <Typography variant={isSmall ? "body2" : "body1"} mb={1}>
                                 {truncateContent(item.content, 50)}
-                            </ReactMarkdown>
+                            </Typography>
                             <Box display="flex" gap={2}>
                                 <Typography variant="body2" sx={{ fontSize: "small", color: "#333" }}>
                                     {item.votes.upvotes} Agree
@@ -87,7 +92,7 @@ const RelatedQuestions: React.FC<RelatedQuestionsProps> = ({
                 onClick={getMoreRelatedQuestions}
                 disabled={isLoading}
             >
-                {isLoading ? <SpinningHourglass/> : "More Related Questions"}
+                {isLoading ? <SpinningHourglass /> : "More Related Questions"}
             </Button>
         </Box>
     );

@@ -23,6 +23,12 @@ export type QuestionsValue = {
     };
 };
 
+export type TagValue = {
+    id: string;
+    name: string;
+    questionCount: number;
+};
+
 export type QuestionValue = {
     id: string;
     author: {

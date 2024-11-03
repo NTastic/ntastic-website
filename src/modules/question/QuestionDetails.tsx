@@ -14,10 +14,12 @@ import QuestionDesc from "@/modules/question/QuestionDesc";
 import RelatedQuestions from "@/modules/question/RelatedQuestions";
 import PostAnAnswer from "@/modules/question/PostAnAnswer";
 import { handleShare } from "@/utils/HandleShare";
+import { truncateContent } from "@/utils/TruncateContent";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
     const router = useRouter();
-
+    const isSmall = isSmallScreen();
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const tagIds = typeof window !== "undefined" ? [localStorage.getItem(SELECTED_TAG)] : [];
     const [isAuth, setIsAuth] = useState<boolean>(false);
@@ -138,14 +140,6 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
         }
     };
 
-    const truncateContent = (content: string, wordLimit: number = 50) => {
-        const words = content.split(" ");
-        if (words.length > wordLimit) {
-            return words.slice(0, wordLimit).join(" ") + " ...";
-        }
-        return content;
-    }
-
     const handleOpenAnswerDialog = () => setOpenAnswerDialog(true);
 
     const handleCloseAnswerDialog = () => setOpenAnswerDialog(false);
@@ -197,7 +191,7 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 display="flex"
                 flexDirection="row"
                 alignItems="center"
-                mb={2}
+                mb={isSmall ? 1 : 2}
             >
                 <IconButton
                     size='large'
@@ -207,7 +201,10 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                 >
                     <ChevronLeftIcon />
                 </IconButton>
-                <Typography variant="h5" sx={{ flexGrow: 1, fontWeight: "bold" }}>
+                <Typography
+                    variant={isSmall ? "h6" : "h5"}
+                    sx={{ flexGrow: 1, fontWeight: "bold" }}
+                >
                     Community
                 </Typography>
                 <Button
@@ -267,8 +264,9 @@ const QuestionDetails: React.FC<{ params: { id: string } }> = ({ params }) => {
                     borderRadius: "16px",
                     position: "fixed",
                     bottom: 10,
-                    left: "calc(50% + 30px)",
+                    left: "calc(50% + 25px)",
                     transform: "translateX(-50%)",
+                    fontSize: isSmall ? "small" : "medium"
                 }}
                 onClick={handleOpenAnswerDialog}
             >

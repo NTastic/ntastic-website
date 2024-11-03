@@ -100,7 +100,8 @@ const Register: React.FC = () => {
                     }}
                 >
                     <Avatar
-                        src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+                        // src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+                        src="https://i.postimg.cc/wvtK5W2D/Wechat-IMG1050.png"
                         sx={{ width: "160px", height: "160px", objectFit: "cover", backgroundPosition: "center" }}
                     />
                     <Box
@@ -187,18 +188,20 @@ const Register: React.FC = () => {
                         checked={isChecked}
                         onChange={handleCheckbox}
                     />
-                    <Typography
-                        variant='body1'
-                        sx={{ color: "#666", fontStyle: "italic", mr: 1 }}
-                    >
-                        By creating an account, you agree to our
-                    </Typography>
-                    <Link
-                        href=""
-                        sx={{ color: "#000", fontWeight: "bolder", fontStyle: "italic" }}
-                    >
-                        Terms and Conditions
-                    </Link>
+                    <Box sx={{ display: "flex", flexDirection: "column" }}>
+                        <Typography
+                            variant='body1'
+                            sx={{ color: "#666", marginRight: 1, display: "inline" }}
+                        >
+                            By creating an account, you agree to our
+                        </Typography>
+                        <Link
+                            // href="/terms-and-conditions"
+                            sx={{ color: "#000", fontWeight: "bolder", display: "inline" }}
+                        >
+                            Terms and Conditions
+                        </Link>
+                    </Box>
                 </Box>
                 <Button
                     type="submit"

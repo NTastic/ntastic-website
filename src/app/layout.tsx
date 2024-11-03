@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { Inter } from "next/font/google";
 import {
   ApolloClient,
@@ -9,12 +9,13 @@ import {
   ApolloLink
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { ACCESS_TOKEN, IS_SM, REFRESH_TOKEN } from "@/shared/constants/storage";
-import { useTheme, useMediaQuery, styled } from "@mui/material";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/shared/constants/storage";
+import { styled } from "@mui/material";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 import { onError } from "@apollo/client/link/error";
 import { refreshAccessToken } from "@/validation/auth/auth";
 import { RouteConfig } from "@/routes/route";
+import '@/app/globals.css';
 
 const URL_GRAPHQL_ENDPOINT = process.env.URL_GRAPHQL_ENDPOINT || "https://dev.ntastic.site/graphql";
 
@@ -98,13 +99,6 @@ const StyledBody = styled('body')(({theme}) => ({
 }));
 
 const RootLayout: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const theme = useTheme();
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm")) ? "true" : "false";
-
-  useEffect(() => {
-    localStorage.setItem(IS_SM, isSmallScreen);
-  }, [isSmallScreen]);
-
   return (
     <html lang="en">
       <head>

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RouteConfig } from "@/routes/route";
 import { GET_CATEGORIES, GET_SUB_CATEGORIES, GET_POI_LIST } from "@/graphql/poi";
 import { useQuery } from "@apollo/client";
@@ -11,41 +11,43 @@ import StarIcon from '@mui/icons-material/Star';
 import { truncateContent } from "@/utils/TruncateContent";
 import { SpinningHourglass } from "@/utils/Animations";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 interface POIListProps {
     categoryId: string;
 };
 
-const buttonStyle = {
+const buttonStyle = (isSmall: boolean) => ({
     borderRadius: "16px",
     margin: 1,
     textTransform: "none",
     backgroundColor: "#d0d0d0",
     color: "#000",
-    fontSize: "small",
+    fontSize: isSmall ? "x-small" : "small",
     transition: "all 0.3s ease",
     "&:hover": {
         backgroundColor: "#3388cc",
         color: "#fff",
         transform: "scale(1.03) translateY(-3px)"
     }
-};
+});
 
-const selectedButtonStyle = {
+const selectedButtonStyle = (isSmall: boolean) => ({
     borderRadius: "16px",
     margin: 1,
     textTransform: "none",
     backgroundColor: "#3388cc",
     color: "#fff",
-    fontSize: "small",
+    fontSize: isSmall ? "x-small" : "small",
     transition: "all 0.3s ease",
     "&:hover": {
         transform: "scale(1.03) translateY(-3px)"
     }
-};
+});
 
 const POIList: React.FC<POIListProps> = ({ categoryId }) => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const [categoryName, setCategoryName] = useState<string | null>(null);
     const [categories, setCategories] = useState<CategoryValue[]>([]);
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
@@ -160,14 +162,25 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                 justifyContent: "space-around",
             }}
         >
-            <Box width="100%" position="relative" mt={2} mb={2}>
-                <Typography width="100%" variant="h4" textAlign="center" fontWeight="bold">
+            <Box
+                width="100%"
+                position="relative"
+                padding={0}
+                mt={2}
+                mb={2}
+            >
+                <Typography
+                    width="100%"
+                    variant={isSmall ? "h5" : "h4"}
+                    textAlign="center"
+                    fontWeight="bold"
+                >
                     {categoryName}
                 </Typography>
                 <IconButton
                     sx={{
                         position: "absolute",
-                        left: "10px",
+                        left: isSmall ? 0 : "10px",
                         top: "50%",
                         transform: "translateY(-50%)"
                     }}
@@ -177,14 +190,31 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                 </IconButton>
             </Box>
             {subCats.length > 0 && (
-                <Box width="100%" display="flex" flexDirection="column" alignItems="center">
-                    <Box width="95%" display="flex" flexDirection="row" alignItems="center">
-                        <Typography variant="body1" fontWeight="bold" flexGrow={1}>
+                <Box
+                    width="100%"
+                    display="flex"
+                    flexDirection="column"
+                    alignItems="center"
+                >
+                    <Box
+                        width="95%"
+                        display="flex"
+                        flexDirection="row"
+                        alignItems="center"
+                    >
+                        <Typography
+                            variant={isSmall ? "body2" : "body1"}
+                            fontWeight="bold"
+                            flexGrow={1}
+                        >
                             Current Display: {selectedSubCatName || "All"}
                         </Typography>
                         <Button
                             onClick={handleCollapse}
-                            sx={{ textTransform: "none" }}
+                            sx={{
+                                textTransform: "none",
+                                fontSize: isSmall ? "small" : "medium"
+                            }}
                         >
                             {openCollapse ? "Show Less" : "Show More"}
                         </Button>
@@ -195,10 +225,10 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                         timeout={500}
                     >
                         <Box width="100%" display="flex" flexDirection="column" alignItems="center">
-                            <Box width="90%" display="flex" flexWrap="wrap">
+                            <Box width="90%" display="flex" flexWrap="wrap" gap={isSmall ? 0 : 1}>
                                 <Button
                                     variant="contained"
-                                    sx={!selectedSubCatId ? selectedButtonStyle : buttonStyle}
+                                    sx={!selectedSubCatId ? selectedButtonStyle(isSmall) : buttonStyle(isSmall)}
                                     onClick={() => handleSelectSubCat(null)}
                                 >
                                     All
@@ -207,7 +237,7 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                                     <Button
                                         key={item.id}
                                         variant="contained"
-                                        sx={selectedSubCatId === item.id ? selectedButtonStyle : buttonStyle}
+                                        sx={selectedSubCatId === item.id ? selectedButtonStyle(isSmall) : buttonStyle(isSmall)}
                                         onClick={() => handleSelectSubCat(item)}
                                     >
                                         {item.name}
@@ -250,8 +280,8 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                                 }}
                             >
                                 <Box
-                                    width="200px"
-                                    height="200px"
+                                    width={isSmall ? "150px" : "200px"}
+                                    height={isSmall ? "150px" : "200px"}
                                     display="flex"
                                     flexDirection="column"
                                     alignItems="center"
@@ -261,8 +291,8 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                                         src={item.photoUrls[0]}
                                         alt={item.name}
                                         style={{
-                                            width: "180px",
-                                            height: "180px",
+                                            width: isSmall ? "120px" : "180px",
+                                            height: "auto",
                                             objectFit: "cover",
                                             borderRadius: "16px"
                                         }}
@@ -276,23 +306,30 @@ const POIList: React.FC<POIListProps> = ({ categoryId }) => {
                                     alignItems="start"
                                     gap={1}
                                 >
-                                    <Typography variant="h6" fontWeight="bold">
+                                    <Typography
+                                        variant={isSmall ? "body1" : "h6"}
+                                        fontWeight="bold"
+                                    >
                                         {item.name}
                                     </Typography>
                                     <Box
                                         display="flex"
                                         flexDirection="row"
+                                        alignItems="center"
                                         gap={1}
                                     >
                                         <Icon color="warning">
                                             <StarIcon />
                                         </Icon>
-                                        <Typography variant="body1" color="textSecondary">
+                                        <Typography
+                                            variant={isSmall ? "body2" : "body1"}
+                                            color="textSecondary"
+                                        >
                                             {item.rating}
                                         </Typography>
                                     </Box>
                                     <Typography variant="body1" color="textSecondary">
-                                        {truncateContent(item.reviewSummary, 20)}
+                                        {truncateContent(item.reviewSummary, isSmall ? 10 : 20)}
                                     </Typography>
                                 </Box>
                             </ListItemButton>

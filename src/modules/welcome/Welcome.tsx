@@ -44,7 +44,8 @@ const Welcome: React.FC = () => {
                     }}
                 >
                     <Avatar
-                        src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+                        // src="https://i.postimg.cc/mkryN7K0/NTastic-icon.png"
+                        src="https://i.postimg.cc/wvtK5W2D/Wechat-IMG1050.png"
                         sx={{ width: "160px", height: "160px", objectFit: "cover", backgroundPosition: "center" }}
                     />
                     <Box

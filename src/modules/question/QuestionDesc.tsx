@@ -3,6 +3,7 @@ import React from "react";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { QuestionValue, AnswerValue } from "@/shared/constants/types";
 import DisplayImages from "@/utils/DisplayImages";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 interface QuestionDescProps {
     question: QuestionValue;
@@ -11,6 +12,8 @@ interface QuestionDescProps {
 };
 
 const QuestionDesc: React.FC<QuestionDescProps> = ({ question, answers, handleVoteQuestion }) => {
+    const isSmall = isSmallScreen();
+
     return (
         <Box
             sx={{
@@ -26,9 +29,12 @@ const QuestionDesc: React.FC<QuestionDescProps> = ({ question, answers, handleVo
                 width="100%"
                 display="flex"
                 flexDirection="column"
-                gap={2}
+                gap={isSmall ? 1 : 2}
             >
-                <Typography variant="h4" sx={{ fontWeight: "bold" }}>
+                <Typography 
+                variant={isSmall ? "h5" : "h4"}
+                sx={{ fontWeight: "bold" }}
+                >
                     {question.title}
                 </Typography>
                 <Box display="flex" flexDirection="row" alignItems="center" mb={1}>

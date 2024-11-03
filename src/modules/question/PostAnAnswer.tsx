@@ -9,6 +9,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { SpinningHourglass } from "@/utils/Animations";
 import { compressImage } from "@/utils/CompressFile";
 import DisplayImages from "@/utils/DisplayImages";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 const transition = React.forwardRef(function transition(
     props: TransitionProps & {
@@ -34,6 +35,7 @@ export default function PostAnAnswer(
         refetchAnswer
     }: PostAnAnswerProps
 ) {
+    const isSmall = isSmallScreen();
     const [answerContent, setAnswerContent] = useState<string | null>(null);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [selectedFileUrls, setSelectedFileUrls] = useState<string[]>([]);
@@ -135,8 +137,8 @@ export default function PostAnAnswer(
                 boxShadow: "0 8px 32px rgba(0, 0, 0, 0.25)",
                 transition: "transform 0.3s ease-in-out",
                 "& .MuiPaper-root": {
-                    minWidth: "500px",
-                    padding: 3,
+                    minWidth: isSmall ? "320px" : "500px",
+                    padding: isSmall ? 1 : 3,
                     borderRadius: "16px",
                     boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)",
                     backdropFilter: "blur(8px)",
@@ -162,7 +164,10 @@ export default function PostAnAnswer(
                 >
                     <CloseIcon />
                 </IconButton>
-                <Typography sx={{ fontWeight: 'bold', fontSize: '1.5rem', textAlign: "center" }}>
+                <Typography
+                    variant={isSmall ? "h6" : "h5"}
+                    sx={{ fontWeight: 'bold', textAlign: "center" }}
+                >
                     Give your idea
                 </Typography>
             </DialogTitle>
@@ -172,7 +177,7 @@ export default function PostAnAnswer(
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    padding: 3
+                    padding: isSmall ? 1 : 3
                 }}
             >
                 <TextField
@@ -224,7 +229,11 @@ export default function PostAnAnswer(
                         disabled={isLoading}
                         onClick={triggerFileInput}
                         startIcon={<UploadIcon />}
-                        sx={{ borderRadius: "16px", textTransform: "none" }}
+                        sx={{
+                            borderRadius: "16px",
+                            textTransform: "none",
+                            fontSize: isSmall ? "small" : "medium",
+                        }}
                     >
                         Upload Images
                     </Button>
@@ -233,7 +242,11 @@ export default function PostAnAnswer(
                         variant="contained"
                         disabled={isLoading}
                         endIcon={isLoading ? <SpinningHourglass /> : null}
-                        sx={{ borderRadius: "16px", textTransform: "none" }}
+                        sx={{
+                            borderRadius: "16px",
+                            textTransform: "none",
+                            fontSize: isSmall ? "small" : "medium"
+                        }}
                     >
                         {isLoading ? `Submitting...` : `Submit`}
                     </Button>

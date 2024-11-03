@@ -6,13 +6,13 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { RouteConfig } from "@/routes/route";
 import { POST_TITLE } from "@/shared/constants/storage";
 import { useForm } from "react-hook-form";
-import SelectTags from "@/modules/createQuestion/SelectTags";
 import { UPLOAD_IMAGE, CREATE_QUESTION } from "@/graphql/qa";
 import { useMutation } from "@apollo/client";
 import UploadIcon from "@mui/icons-material/Upload";
 import { SpinningHourglass } from "@/utils/Animations";
 import { compressImage } from "@/utils/CompressFile";
 import DisplayImages from "@/utils/DisplayImages";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 type PostValues = {
     title: string;
@@ -21,6 +21,7 @@ type PostValues = {
 
 const PostAQuestion: React.FC = () => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const postTitle = typeof window !== "undefined" ? localStorage.getItem(POST_TITLE) : "";
     const { register, getValues, handleSubmit, reset: resetForm } = useForm<PostValues>({
         defaultValues: {
@@ -28,11 +29,9 @@ const PostAQuestion: React.FC = () => {
             content: ""
         }
     });
-    const [tags, setTags] = useState<string[]>([]);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [selectedFileUrls, setSelectedFileUrls] = useState<string[]>([]);
     const MAX_FILES = 6;
-    const [openTagsSelection, setOpenTagsSelection] = useState<boolean>(false);
     const [submitStatus, setSubmitStatus] = useState<string | null>(null);
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [uploadImage] = useMutation(UPLOAD_IMAGE);
@@ -65,17 +64,6 @@ const PostAQuestion: React.FC = () => {
         setSelectedFileUrls(fileUrls);
     };
 
-    const handleSelectTag = (selectedTag: string) => {
-        if (!tags.includes(selectedTag)) {
-            setTags((prevList) => [...prevList, selectedTag]);
-        } else {
-            setTags((prevList) => prevList.filter((tag) => tag !== selectedTag));
-        }
-    };
-
-    const handleOpenTagsSelection = () => setOpenTagsSelection(true);
-    const handleCloseTagsSelection = () => setOpenTagsSelection(false);
-
     const onSubmit = async (data: PostValues) => {
         setIsLoading(true);
         setSubmitStatus(null);
@@ -83,10 +71,6 @@ const PostAQuestion: React.FC = () => {
         let imageIds: string[] = [];
 
         try {
-            if (tags.length === 0) {
-                throw new Error("At least 1 tag is required!");
-            }
-
             if (data.title.length === 0) {
                 throw new Error("Title is required!");
             }
@@ -107,7 +91,7 @@ const PostAQuestion: React.FC = () => {
             }
 
             const { data: createResponse } = await createQuestion(
-                { variables: { title: data.title, content: data.content, tagIds: tags, imageIds: imageIds } }
+                { variables: { title: data.title, content: data.content, imageIds: imageIds } }
             );
 
             if (createResponse) {
@@ -136,7 +120,7 @@ const PostAQuestion: React.FC = () => {
                 maxWidth: 800,
                 height: "100%",
                 overflow: "auto",
-                padding: 3,
+                padding: isSmall ? 1 : 3,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
@@ -150,7 +134,6 @@ const PostAQuestion: React.FC = () => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    margin: { xs: 1, md: 0 }
                 }}
             >
                 <Box display="flex" sx={{ width: "100%", alignItems: "center", mb: 2 }}>
@@ -253,26 +236,6 @@ const PostAQuestion: React.FC = () => {
                     >
                         Upload Images
                     </Button>
-                    <Button
-                        variant="contained"
-                        disabled={isLoading}
-                        sx={{
-                            // width: "60%",
-                            borderRadius: "16px",
-                            backgroundColor: tags.length > 0 ? "primary" : "#ccc",
-                            textTransform: "none",
-                            color: "#333",
-                            transition: "all 0.5s ease",
-                            "&:hover": {
-                                backgroundColor: "#b3b",
-                                color: "#ddd",
-                                transform: "translateY(-5px)"
-                            }
-                        }}
-                        onClick={() => handleOpenTagsSelection()}
-                    >
-                        + Add Tags to the question
-                    </Button>
                 </Box>
                 {submitStatus && (
                     <Typography
@@ -301,12 +264,6 @@ const PostAQuestion: React.FC = () => {
                     </Typography>
                 )}
             </Box>
-            <SelectTags
-                open={openTagsSelection}
-                tags={tags}
-                handleSelectTag={handleSelectTag}
-                handleCloseTagsSelection={handleCloseTagsSelection}
-            />
         </Box>
     );
 };

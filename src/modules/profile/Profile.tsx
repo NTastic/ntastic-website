@@ -9,6 +9,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { SpinningHourglass } from "@/utils/Animations";
 import { truncateContent } from "@/utils/TruncateContent";
 import { RouteConfig } from "@/routes/route";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
 interface ProfileProps {
     user_id: string
@@ -16,6 +17,7 @@ interface ProfileProps {
 
 const Profile: React.FC<ProfileProps> = ({ user_id }) => {
     const router = useRouter();
+    const isSmall = isSmallScreen();
     const [user, setUser] = useState<UserValue | null>(null);
     const [questions, setQuestions] = useState<ProfileQuestionValue[]>([]);
     const [answers, setAnswers] = useState<ProfileAnswerValue[]>([]);
@@ -79,7 +81,6 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                 display: "flex",
                 flexDirection: "column",
                 padding: 1,
-                margin: { xs: 1, md: 0 },
                 alignItems: "center",
                 justifyContent: "space-around"
             }}
@@ -92,13 +93,13 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
             </Box>
             {/* Avatar, Recommendation, Followers, Following */}
             <Box
-                width="100%"
+                width="95%"
                 display="flex"
-                flexDirection="row"
+                flexDirection={isSmall ? "column" : "row"}
                 alignItems="center"
-                justifyContent="space-around"
-                mt={2}
-                mb={2}
+                justifyContent="space-between"
+                mt={isSmall ? 1 : 2}
+                mb={isSmall ? 1 : 2}
             >
                 <Box display="flex" flexDirection="column" alignItems="center">
                     <Avatar
@@ -115,63 +116,70 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                         {user.username}
                     </Typography>
                 </Box>
-                <Button
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        textTransform: "none",
-                        color: "#333"
-                    }}
+                <Box
+                    display="flex"
+                    flexDirection="row"
+                    alignItems="center"
+                    justifyContent="space-around"
                 >
-                    <Typography variant="body1">
-                        23
-                    </Typography>
-                    <Typography variant="body2">
-                        Recommendations
-                    </Typography>
-                </Button>
-                <Button
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        textTransform: "none",
-                        color: "#333"
-                    }}
-                >
-                    <Typography variant="body1">
-                        100
-                    </Typography>
-                    <Typography variant="body2">
-                        Followers
-                    </Typography>
-                </Button>
-                <Button
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        textTransform: "none",
-                        color: "#333"
-                    }}
-                >
-                    <Typography variant="body1">
-                        34
-                    </Typography>
-                    <Typography variant="body2">
-                        Following
-                    </Typography>
-                </Button>
+                    <Button
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            textTransform: "none",
+                            color: "#333"
+                        }}
+                    >
+                        <Typography variant="body1">
+                            23
+                        </Typography>
+                        <Typography variant="body2">
+                            Recommendations
+                        </Typography>
+                    </Button>
+                    <Button
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            textTransform: "none",
+                            color: "#333"
+                        }}
+                    >
+                        <Typography variant="body1">
+                            100
+                        </Typography>
+                        <Typography variant="body2">
+                            Followers
+                        </Typography>
+                    </Button>
+                    <Button
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            textTransform: "none",
+                            color: "#333"
+                        }}
+                    >
+                        <Typography variant="body1">
+                            34
+                        </Typography>
+                        <Typography variant="body2">
+                            Following
+                        </Typography>
+                    </Button>
+                </Box>
             </Box>
             {/* User Discription */}
-            <Box width="90%" mb={2}>
+            <Box width="95%" mb={2}>
                 <Typography variant="body1" color="textPrimary">
                     {user.description || "This user is mysterious ..."}
                 </Typography>
             </Box>
             {/* Edit Profile Button */}
-            <Box width="90%">
+            <Box width="95%">
                 <Button
                     sx={{
                         backgroundColor: "#bdbdbd",
@@ -188,7 +196,7 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
             </Box>
             {/* Questions & Answers Button */}
             <Box
-                width="90%"
+                width="95%"
                 display="flex"
                 flexDirection="row"
                 alignItems="center"
@@ -255,7 +263,10 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                                         }
                                     }}
                                 >
-                                    <Typography variant="h6" fontWeight="bold">
+                                    <Typography
+                                        variant={isSmall ? "body1" : "h6"}
+                                        fontWeight="bold"
+                                    >
                                         {item.title}
                                     </Typography>
                                     <Box
@@ -266,18 +277,24 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                                         <Avatar
                                             src={item.author.avatar || "none"}
                                             sx={{
-                                                width: "15px",
-                                                height: "15px",
+                                                width: "20px",
+                                                height: "20px",
                                                 objectFit: "cover",
                                                 backgroundPosition: "center",
                                                 mr: 1
                                             }}
                                         />
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography
+                                            variant={isSmall ? "caption" : "body2"}
+                                            color="textSecondary"
+                                        >
                                             {item.author.username}
                                         </Typography>
                                     </Box>
-                                    <Typography variant="body1" color="textPrimary">
+                                    <Typography
+                                        variant={isSmall ? "body2" : "body1"}
+                                        color="textPrimary"
+                                    >
                                         {item.content}
                                     </Typography>
                                     <Box
@@ -286,10 +303,16 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                                         alignItems="center"
                                         gap={1}
                                     >
-                                        <Typography variant="body2" color="textSecondary">
-                                            {item.votes.upvotes} Agree
+                                        <Typography
+                                            variant={isSmall ? "caption" : "body2"}
+                                            color="textSecondary"
+                                        >
+                                            {item.votes.upvotes} Agrees
                                         </Typography>
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography
+                                            variant={isSmall ? "caption" : "body2"}
+                                            color="textSecondary"
+                                        >
                                             {item.answers.totalItems} Answers
                                         </Typography>
                                     </Box>
@@ -328,7 +351,10 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                                         }
                                     }}
                                 >
-                                    <Typography variant="h6" fontWeight="bold">
+                                    <Typography
+                                        variant={isSmall ? "body1" : "h6"}
+                                        fontWeight="bold"
+                                    >
                                         {item.question.title}
                                     </Typography>
                                     <Box
@@ -339,18 +365,24 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                                         <Avatar
                                             src={item.question.author.avatar || "none"}
                                             sx={{
-                                                width: "15px",
-                                                height: "15px",
+                                                width: "20px",
+                                                height: "20px",
                                                 objectFit: "cover",
                                                 backgroundPosition: "center",
                                                 mr: 1
                                             }}
                                         />
-                                        <Typography variant="body2" color="textSecondary">
+                                        <Typography
+                                            variant={isSmall ? "caption" : "body2"}
+                                            color="textSecondary"
+                                        >
                                             {item.question.author.username}
                                         </Typography>
                                     </Box>
-                                    <Typography variant="body1" color="textPrimary">
+                                    <Typography
+                                        variant={isSmall ? "body2" : "body1"}
+                                        color="textPrimary"
+                                    >
                                         {truncateContent(item.content, 30)}
                                     </Typography>
                                     <Box
@@ -359,8 +391,11 @@ const Profile: React.FC<ProfileProps> = ({ user_id }) => {
                                         alignItems="center"
                                         gap={1}
                                     >
-                                        <Typography variant="body2" color="textSecondary">
-                                            {item.votes.upvotes} Agree
+                                        <Typography
+                                            variant={isSmall ? "caption" : "body2"}
+                                            color="textSecondary"
+                                        >
+                                            {item.votes.upvotes} Agrees
                                         </Typography>
                                     </Box>
                                 </ListItemButton>

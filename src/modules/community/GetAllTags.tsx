@@ -1,42 +1,38 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_TAGS } from "@/graphql/qa";
+import { TagValue } from "@/shared/constants/types";
 import { Box, Button } from "@mui/material";
+import { isSmallScreen } from "@/utils/IsSmallScreen";
 
-const buttonStyle = {
+const buttonStyle = (isSmall : boolean) => ({
     borderRadius: "32px",
     margin: 1,
     textTransform: "none",
     backgroundColor: "#d0d0d0",
     color: "#000",
-    fontSize: "large",
+    fontSize: isSmall ? "small" : "large",
     transition: "all 0.3s ease",
     "&:hover": {
         backgroundColor: "#3388cc",
         color: "#fff",
         transform: "scale(1.03) translateY(-3px)"
     }
-};
+});
 
-const selectedButtonStyle = {
+const selectedButtonStyle = (isSmall : boolean) => ({
     borderRadius: "32px",
     margin: 1,
     textTransform: "none",
     backgroundColor: "#3388cc",
     color: "#fff",
-    fontSize: "large",
+    fontSize: isSmall ? "small" : "large",
     transition: "all 0.3s ease",
     "&:hover": {
         transform: "scale(1.03) translateY(-3px)"
     }
-};
-
-type TagValue = {
-    id: string;
-    name: string;
-    questionCount: number;
-};
+});
 
 interface GetAllTagsProps {
     selectedTag: string;
@@ -46,6 +42,8 @@ interface GetAllTagsProps {
 const GetAllTags: React.FC<GetAllTagsProps> = ({
     selectedTag, handleSelectTag
 }) => {
+    const isSmall = isSmallScreen();
+    const [tagList, setTagList] = useState<TagValue[]>([]);
     const { data: tagData } = useQuery(
         GET_TAGS,
         {
@@ -57,11 +55,16 @@ const GetAllTags: React.FC<GetAllTagsProps> = ({
             },
             fetchPolicy: "no-cache"
         });
-    const tagList = tagData?.getTags || [];
 
     const isTagSelected = (tagId: string) => {
         return selectedTag === tagId;
     };
+
+    useEffect(() => {
+        if (tagData) {
+            setTagList(tagData.getTags);
+        }
+    }, [tagData]);
 
     return (
         <Box
@@ -83,17 +86,17 @@ const GetAllTags: React.FC<GetAllTagsProps> = ({
                 {tagList.length > 0 && (
                     <Button
                         variant="contained"
-                        sx={selectedTag !== "" ? buttonStyle : selectedButtonStyle}
+                        sx={selectedTag !== "" ? buttonStyle(isSmall) : selectedButtonStyle(isSmall)}
                         onClick={() => handleSelectTag(null)}
                     >
                         All
                     </Button>
                 )}
-                {tagList.length > 0 && tagList.map((item: TagValue) => (
+                {tagList.length > 0 && tagList.slice(0, 10).map((item: TagValue) => (
                     <Button
                         key={item.id}
                         variant="contained"
-                        sx={isTagSelected(item.id) ? selectedButtonStyle : buttonStyle}
+                        sx={isTagSelected(item.id) ? selectedButtonStyle(isSmall) : buttonStyle(isSmall)}
                         onClick={() => handleSelectTag(item.id)}
                     >
                         {item.name}

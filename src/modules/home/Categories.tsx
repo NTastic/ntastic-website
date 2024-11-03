@@ -6,14 +6,15 @@ import GetCategoryIcon from '@/modules/home/GetCatIcon';
 import { useRouter } from 'next/navigation';
 import { RouteConfig } from '@/routes/route';
 import { CategoryValue } from '@/shared/constants/types';
+import { isSmallScreen } from '@/utils/IsSmallScreen';
 
 interface CategoriesProps {
     categories: Array<CategoryValue>
 };
 
-const Categories: React.FC<CategoriesProps> = ({categories}) => {
+const Categories: React.FC<CategoriesProps> = ({ categories }) => {
     const router = useRouter();
-    
+    const isSmall = isSmallScreen();
     const [openCollapse, setOpenCollapse] = useState<boolean>(false);
 
     // const handleCollapse = () => setOpenCollapse(prev => !prev);
@@ -28,7 +29,7 @@ const Categories: React.FC<CategoriesProps> = ({categories}) => {
                 borderRadius: "16px",
                 overflow: "hidden",
                 position: "relative",
-                mb: 1
+                mb: isSmall ? 0 : 1
             }}
         >
             <Box width="100%" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between">
@@ -44,8 +45,12 @@ const Categories: React.FC<CategoriesProps> = ({categories}) => {
                     width="100%"
                     padding={1}
                 >
-                    <Collapse in={openCollapse} collapsedSize={130} timeout={500}>
-                        <Grid container spacing={2} columns={16}>
+                    <Collapse
+                        in={openCollapse}
+                        collapsedSize={isSmall ? 80 : 130}
+                        timeout={500}
+                    >
+                        <Grid container spacing={isSmall ? 0 : 2} columns={16}>
                             {categories.map((item) => (
                                 <Grid size={4} key={item.id}>
                                     <Button
@@ -63,7 +68,7 @@ const Categories: React.FC<CategoriesProps> = ({categories}) => {
                                         }}
                                     >
                                         <GetCategoryIcon category={item.name} />
-                                        <Typography>
+                                        <Typography variant={isSmall ? "body2" : "body1"}>
                                             {item.name}
                                         </Typography>
                                     </Button>
