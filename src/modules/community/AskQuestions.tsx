@@ -46,8 +46,7 @@ const AskQuestions: React.FC = () => {
 
         if (createResponse) {
             setSubmitStatus("Submit successfully!");
-            // resetForm();
-            router.push(`${RouteConfig.Community.Path}/${createResponse.id}`);
+            router.push(`${RouteConfig.Community.Path}/${createResponse.createQuestion.id}`);
         }
     };
 
